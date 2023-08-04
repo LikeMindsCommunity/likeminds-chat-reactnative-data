@@ -1,0 +1,31 @@
+{
+  "name": "reactnative-chat-data",
+  "version": "1.0.0",
+  "description": "LikeMinds ReactNative SDK for chat APIs",
+  "main": "dist/index.js",
+  "module": "dist/index.m.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
+  },
+  "author": "LikeMinds",
+  "homepage": "https://likeminds.community/",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "microbundle": "^0.15.1",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.83.0",
+    "webpack-cli": "^5.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LikeMindsCommunity/ReactNative-Chat-Data.git"
+  },
+  "dependencies": {
+    "@likeminds.community/chat-js-beta": "^1.1.77"
+  }
+}
