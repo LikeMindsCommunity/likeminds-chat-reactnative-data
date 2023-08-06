@@ -1,4 +1,4 @@
-import DLClient from "@likeminds.community/chat-js-beta";
+import DLClient from "@likeminds.community/chat-js";
 
 class LMChatClient {
   private static apiKey: string | null = null;
