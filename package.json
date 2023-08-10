@@ -26,7 +26,8 @@
     "url": "git+https://github.com/LikeMindsCommunity/ReactNative-Chat-Data.git"
   },
   "dependencies": {
-    "@likeminds.community/chat-js": "^1.5.0",
-    "firebase": "^10.1.0"
+    "@likeminds.community/chat-js": "1.5.0",
+    "@likeminds.community/chat-js-beta": "^1.1.80",
+    "firebase": "10.1.0"
   }
 }
