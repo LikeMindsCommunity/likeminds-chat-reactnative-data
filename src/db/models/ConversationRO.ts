@@ -1,0 +1,48 @@
+import { AttachmentRO } from "./AttachmentRO";
+import { ChatroomRO } from "./ChatroomRO";
+import { CommunityRO } from "./CommunityRO";
+import { LinkRO } from "./LinkRO";
+import { MemberRO } from "./MemberRO";
+import { PollRO } from "./PollRO";
+import { ReactionRO } from "./ReactionRO";
+
+export interface ConversationRO {
+  id: string;
+  chatroomId: string;
+  communityId: string;
+  member?: MemberRO | null;
+  answer: string;
+  state: number;
+  createdEpoch: bigint;
+  createdAt?: string | null;
+  attachments: AttachmentRO[];
+  link?: LinkRO | null;
+  date?: string | null;
+  isEdited?: boolean | null;
+  lastSeen: boolean;
+  replyConversationId?: string | null;
+  replyConversation?: ConversationRO | null;
+  deletedBy?: string | null;
+  attachmentCount?: number | null;
+  attachmentsUploaded?: boolean | null;
+  uploadWorkerUUID?: string | null;
+  localSavedEpoch: bigint;
+  temporaryId?: string | null;
+  reactions: ReactionRO[];
+  isAnonymous?: boolean | null;
+  allowAddOption?: boolean | null;
+  pollType?: number | null;
+  pollTypeText?: string | null;
+  submitTypeText?: string | null;
+  expiryTime?: bigint | null;
+  multipleSelectNum?: number | null;
+  multipleSelectState?: number | null;
+  polls: PollRO[];
+  pollAnswerText?: string | null;
+  toShowResults?: boolean | null;
+  replyChatRoomId?: string | null;
+  lastUpdatedAt: bigint;
+  deletedByMember?: MemberRO | null;
+  community?: CommunityRO[] | null;
+  chatroom?: ChatroomRO[] | null;
+}
