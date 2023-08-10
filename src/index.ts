@@ -127,10 +127,6 @@ import { SearchMembersResponse } from "./pages/user/responseModels/SearchMembers
 import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberResponse";
 import UserClass from "./pages/user/userClass";
 
-//DB
-import { db } from "./utils/firebase";
-import { onValue, ref } from "firebase/database";
-
 class LMChatClient {
   private static apiKey: string | null = null;
   private static platformCode: string | null = null;

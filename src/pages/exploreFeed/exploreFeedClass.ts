@@ -5,8 +5,6 @@ import { ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore
 import { ExploreFeedResponse } from "./responseModels/ExploreFeedResponse";
 
 class ExploreFeed {
-  private static dlClient: DLClient;
-
   async getExploreFeed(
     exploreFeedData: ExploreFeedData,
     dlClient: DLClient

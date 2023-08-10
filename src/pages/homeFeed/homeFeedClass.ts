@@ -12,12 +12,8 @@ import {
 } from "@likeminds.community/chat-js/dist/pages/home-feed/types";
 import { GetInvitesResponse } from "./responseModels/GetInvitesResponse";
 import { Success } from "src/shared/responseModels/Success";
-import { onValue, ref } from "firebase/database";
 
 class HomeFeedClass {
-  private static dlClient: DLClient;
-  private static fbDatabase;
-
   async getHomeFeed(
     homeFeed: HomeFeed,
     dlClient: DLClient

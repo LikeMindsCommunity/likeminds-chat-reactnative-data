@@ -23,8 +23,6 @@ import { CanDMFeedResponse } from "./responseModels/CanDMFeedResponse";
 import LMChatClient from "@likeminds.community/chat-js";
 
 class DirectMessage {
-  private static dlClient: DLClient;
-
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed,
     dlClient: DLClient

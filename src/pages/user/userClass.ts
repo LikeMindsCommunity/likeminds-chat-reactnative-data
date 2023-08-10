@@ -24,8 +24,6 @@ import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
 import { Success } from "src/shared/responseModels/Success";
 
 class UserClass {
-  private static dlClient: DLClient;
-
   async initiateUser(
     initUser: InitUser,
     dlClient: DLClient

@@ -9,8 +9,6 @@ import { SearchChatroomResponse } from "./responseModels/SearchChatroomResponse"
 import { SearchConversationResponse } from "./responseModels/SearchConversationResponse";
 
 class SearchClass {
-  private static dlClient: DLClient;
-
   async searchChatroom(
     searchType: SearchType,
     dlClient: DLClient

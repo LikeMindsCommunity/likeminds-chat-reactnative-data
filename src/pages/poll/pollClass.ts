@@ -13,8 +13,6 @@ import { AddPollResponse } from "./responseModels/AddPollResponse";
 import { Success } from "src/shared/responseModels/Success";
 
 class PollClass {
-  private static dlClient: DLClient;
-
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest,
     dlClient: DLClient
