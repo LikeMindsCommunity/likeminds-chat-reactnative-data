@@ -18,9 +18,13 @@ class HomeFeedClass {
   private static dlClient: DLClient;
   private static fbDatabase;
 
-  async getHomeFeed(homeFeed: HomeFeed): Promise<LMResponse<HomeFeedResponse>> {
+  async getHomeFeed(
+    homeFeed: HomeFeed,
+    dlClient: DLClient
+  ): Promise<LMResponse<HomeFeedResponse>> {
     try {
-      const resp = await HomeFeedClass.dlClient.getHomeFeed(homeFeed);
+      // const params = ModelConverter.requestBodyGenerator(homeFeed);
+      const resp = await dlClient.getHomeFeed(homeFeed);
       const convertedResp: HomeFeedResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<HomeFeedResponse>(convertedResp, null, true);
@@ -33,9 +37,13 @@ class HomeFeedClass {
     }
   }
 
-  async getInvites(invite: INVITE): Promise<LMResponse<GetInvitesResponse>> {
+  async getInvites(
+    invite: INVITE,
+    dlClient: DLClient
+  ): Promise<LMResponse<GetInvitesResponse>> {
     try {
-      const resp = await HomeFeedClass.dlClient.getInvites(invite);
+      // const params = ModelConverter.requestBodyGenerator(invite);
+      const resp = await dlClient.getInvites(invite);
       const convertedResp: GetInvitesResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetInvitesResponse>(convertedResp, null, true);
@@ -48,9 +56,13 @@ class HomeFeedClass {
     }
   }
 
-  async sendInvites(participant: Participant): Promise<LMResponse<Success>> {
+  async sendInvites(
+    participant: Participant,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const resp = await HomeFeedClass.dlClient.sendInvites(participant);
+      // const params = ModelConverter.requestBodyGenerator(participant);
+      const resp = await dlClient.sendInvites(participant);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -62,9 +74,13 @@ class HomeFeedClass {
     }
   }
 
-  async registerDevice(device: Device): Promise<LMResponse<Success>> {
+  async registerDevice(
+    device: Device,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const resp = await HomeFeedClass.dlClient.registerDevice(device);
+      // const params = ModelConverter.requestBodyGenerator(device);
+      const resp = await dlClient.registerDevice(device);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -76,9 +92,13 @@ class HomeFeedClass {
     }
   }
 
-  async inviteAction(iaType: IaType): Promise<LMResponse<Success>> {
+  async inviteAction(
+    iaType: IaType,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const resp = await HomeFeedClass.dlClient.inviteAction(iaType);
+      // const params = ModelConverter.requestBodyGenerator(iaType);
+      const resp = await dlClient.inviteAction(iaType);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -90,33 +110,29 @@ class HomeFeedClass {
     }
   }
 
-  fbInstance() {
+  fbInstance(dlClient: DLClient) {
     try {
-      HomeFeedClass.fbDatabase = HomeFeedClass.dlClient.fbInstance();
-      return HomeFeedClass.fbDatabase;
+      return dlClient.fbInstance();
     } catch (error) {
-      return new LMResponse<Success>(
-        null,
-        error.message || "An error occured",
-        false
-      );
+      return error.message;
+      // return new LMResponse<Success>(
+      //   null,
+      //   error.message || "An error occured",
+      //   false
+      // );
     }
   }
 
-  homeFeedListener(callback: any, route: any) {
+  homeFeedListener(callback: any, route: any, dlClient: DLClient) {
     try {
-      const query = ref(HomeFeedClass.fbDatabase, route);
-      return onValue(query, (snapshot) => {
-        if (snapshot.exists()) {
-          callback(snapshot.val());
-        }
-      });
+      return dlClient.homeFeedListener(callback, route);
     } catch (error) {
-      return new LMResponse<Success>(
-        null,
-        error.message || "An error occured",
-        false
-      );
+      return error.message;
+      // return new LMResponse<Success>(
+      //   null,
+      //   error.message || "An error occured",
+      //   false
+      // );
     }
   }
 }

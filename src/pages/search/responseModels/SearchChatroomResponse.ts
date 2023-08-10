@@ -1,13 +1,7 @@
+import { Attachment } from "src/shared/responseModels/Attachment";
 import { ChatroomResponse } from "src/shared/responseModels/Chatroom";
+import { Community } from "src/shared/responseModels/Community";
 import { Member } from "src/shared/responseModels/Member";
-
-interface Attachment {
-  // Define properties for the Attachment here
-}
-
-interface Community {
-  // Define properties for the Community here
-}
 
 interface SearchChatroom {
   attachments: Attachment[];

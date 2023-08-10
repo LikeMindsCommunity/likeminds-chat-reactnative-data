@@ -9,15 +9,11 @@ interface MemberRight {
   subTitle?: string;
 }
 
-interface Data {
+export interface ProfileDataResponse {
   createdAt: string;
   editRequired: boolean;
   member: Member;
   memberRights: MemberRight[];
   state: number;
   toolState: number;
-}
-
-export interface ProfileDataResponse {
-  data: Data;
 }

@@ -30,13 +30,13 @@ export class ModelConverter<S, C> {
   }
 
   //   this will convert the snake case response object to camel case
-  static responseBodyParser(obj) {
+  static responseParser(obj) {
     if (typeof obj !== "object" || obj === null) {
       return obj;
     }
 
     if (Array.isArray(obj)) {
-      return obj.map((item) => this.responseBodyParser(item));
+      return obj.map((item) => this.responseParser(item));
     }
 
     const result: any = {};
@@ -45,10 +45,14 @@ export class ModelConverter<S, C> {
         const camelKey = key.replace(/_([a-z])/g, (match, letter) =>
           letter.toUpperCase()
         );
-        result[camelKey] = this.responseBodyParser(obj[key]);
+        result[camelKey] = this.responseParser(obj[key]);
       }
     }
 
     return result;
+  }
+
+  static responseBodyParser(resp) {
+    return this.responseParser(resp?.data);
   }
 }

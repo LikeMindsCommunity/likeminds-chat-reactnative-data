@@ -26,10 +26,6 @@ interface UserInvite {
   updatedAt: number;
 }
 
-interface Data {
-  userInvites: UserInvite[];
-}
-
 export interface GetInvitesResponse {
-  data: Data;
+  userInvites: UserInvite[];
 }

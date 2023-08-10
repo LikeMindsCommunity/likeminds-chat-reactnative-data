@@ -8,10 +8,12 @@ class ExploreFeed {
   private static dlClient: DLClient;
 
   async getExploreFeed(
-    exploreFeedData: ExploreFeedData
+    exploreFeedData: ExploreFeedData,
+    dlClient: DLClient
   ): Promise<LMResponse<ExploreFeedResponse>> {
     try {
-      const resp = await ExploreFeed.dlClient.getExploreFeed(exploreFeedData);
+      // const params = ModelConverter.requestBodyGenerator(exploreFeedData);
+      const resp = await dlClient.getExploreFeed(exploreFeedData);
       const convertedResp: ExploreFeedResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<ExploreFeedResponse>(convertedResp, null, true);

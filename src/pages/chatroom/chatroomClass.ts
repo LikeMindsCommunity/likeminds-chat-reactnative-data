@@ -40,20 +40,15 @@ import { EditConversationResponse } from "./responseModels/EditConversationRespo
 import { DeleteConversationsResponse } from "./responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
+import LMChatClient from "@likeminds.community/chat-js";
 
 class ChatroomClass {
-  private static dlClient: DLClient;
-
-  // public static build(dlClient: DLClient): ChatroomClass {
-  //   this.dlClient = dlClient;
-  //   const chatroomClass = new ChatroomClass();
-  //   return chatroomClass;
-  // }
-
-  async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Success>> {
+  async muteChatroom(
+    muteChatroom: MuteChatroom,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(muteChatroom);
-      const resp = await ChatroomClass.dlClient.muteChatroom(params);
+      const resp = await dlClient.muteChatroom(muteChatroom);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true); //(data,errorMsg,success)
     } catch (error) {
@@ -66,11 +61,11 @@ class ChatroomClass {
   }
 
   async followChatroom(
-    followChatroom: FollowChatroom
+    followChatroom: FollowChatroom,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(followChatroom);
-      const resp = await ChatroomClass.dlClient.followChatroom(params);
+      const resp = await dlClient.followChatroom(followChatroom);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true); //(data,errorMsg,success)
     } catch (error) {
@@ -82,10 +77,12 @@ class ChatroomClass {
     }
   }
 
-  async getChatroom(chatroom: Chatroom): Promise<LMResponse<ChatroomResponse>> {
+  async getChatroom(
+    chatroom: Chatroom,
+    dlClient: DLClient
+  ): Promise<LMResponse<ChatroomResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(chatroom);
-      const resp = await ChatroomClass.dlClient.getChatroom(params);
+      const resp = await dlClient.getChatroom(chatroom);
       const convertedResp: ChatroomResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<ChatroomResponse>(convertedResp, null, true);
@@ -98,10 +95,12 @@ class ChatroomClass {
     }
   }
 
-  async markReadChatroom(markRead: MarkRead): Promise<LMResponse<Success>> {
+  async markReadChatroom(
+    markRead: MarkRead,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(markRead);
-      const resp = await ChatroomClass.dlClient.markReadChatroom(params);
+      const resp = await dlClient.markReadChatroom(markRead);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -114,11 +113,11 @@ class ChatroomClass {
   }
 
   async shareChatroomUrl(
-    shareChatroom: ShareChatroom
+    shareChatroom: ShareChatroom,
+    dlClient: DLClient
   ): Promise<LMResponse<ShareChatroomUrlResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(shareChatroom);
-      const resp = await ChatroomClass.dlClient.shareChatroomUrl(params);
+      const resp = await dlClient.shareChatroomUrl(shareChatroom);
       const convertedResp: ShareChatroomUrlResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<ShareChatroomUrlResponse>(
@@ -136,11 +135,11 @@ class ChatroomClass {
   }
 
   async setChatroomTopic(
-    setChatroom: SetChatroom
+    setChatroom: SetChatroom,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(setChatroom);
-      const resp = await ChatroomClass.dlClient.setChatroomTopic(params);
+      const resp = await dlClient.setChatroomTopic(setChatroom);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -153,11 +152,11 @@ class ChatroomClass {
   }
 
   async getTaggingList(
-    taggingList: TaggingList
+    taggingList: TaggingList,
+    dlClient: DLClient
   ): Promise<LMResponse<GetTaggingListResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(taggingList);
-      const resp = await ChatroomClass.dlClient.setChatroomTopic(params);
+      const resp = await dlClient.getTaggingList(taggingList);
       const convertedResp: GetTaggingListResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetTaggingListResponse>(convertedResp, null, true);
@@ -171,11 +170,11 @@ class ChatroomClass {
   }
 
   async getConversation(
-    conversation: Conversation
+    conversation: Conversation,
+    dlClient: DLClient
   ): Promise<LMResponse<GetConversationsResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(conversation);
-      const resp = await ChatroomClass.dlClient.getConversation(params);
+      const resp = await dlClient.getConversation(conversation);
       const convertedResp: GetConversationsResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetConversationsResponse>(
@@ -193,11 +192,12 @@ class ChatroomClass {
   }
 
   async postConversation(
-    postConversation: PostConversation
+    postConversation: PostConversation,
+    dlClient: DLClient
   ): Promise<LMResponse<PostConversationsResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(postConversation);
-      const resp = await ChatroomClass.dlClient.postConversation(params);
+      // const params = ModelConverter.requestBodyGenerator(postConversation);
+      const resp = await dlClient.postConversation(postConversation);
       const convertedResp: PostConversationsResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<PostConversationsResponse>(
@@ -215,11 +215,12 @@ class ChatroomClass {
   }
 
   async editConversation(
-    conversationId: EditConversation
+    conversationId: EditConversation,
+    dlClient: DLClient
   ): Promise<LMResponse<EditConversationResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(conversationId);
-      const resp = await ChatroomClass.dlClient.editConversation(params);
+      // const params = ModelConverter.requestBodyGenerator(conversationId);
+      const resp = await dlClient.editConversation(conversationId);
       const convertedResp: EditConversationResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<EditConversationResponse>(
@@ -237,11 +238,12 @@ class ChatroomClass {
   }
 
   async deleteConversation(
-    deleteConversation: DeleteConversation
+    deleteConversation: DeleteConversation,
+    dlClient: DLClient
   ): Promise<LMResponse<DeleteConversationsResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(deleteConversation);
-      const resp = await ChatroomClass.dlClient.deleteConversation(params);
+      // const params = ModelConverter.requestBodyGenerator(deleteConversation);
+      const resp = await dlClient.deleteConversation(deleteConversation);
       const convertedResp: DeleteConversationsResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DeleteConversationsResponse>(
@@ -258,10 +260,13 @@ class ChatroomClass {
     }
   }
 
-  async putReaction(putReaction: PutReaction): Promise<LMResponse<Success>> {
+  async putReaction(
+    putReaction: PutReaction,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(putReaction);
-      const resp = await ChatroomClass.dlClient.putReaction(params);
+      // const params = ModelConverter.requestBodyGenerator(putReaction);
+      const resp = await dlClient.putReaction(putReaction);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -274,11 +279,12 @@ class ChatroomClass {
   }
 
   async deleteReaction(
-    deleteReaction: DeleteReaction
+    deleteReaction: DeleteReaction,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(deleteReaction);
-      const resp = await ChatroomClass.dlClient.deleteReaction(params);
+      // const params = ModelConverter.requestBodyGenerator(deleteReaction);
+      const resp = await dlClient.deleteReaction(deleteReaction);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -291,11 +297,12 @@ class ChatroomClass {
   }
 
   async putMultimedia(
-    putMultimedia: PutMultimedia
+    putMultimedia: PutMultimedia,
+    dlClient: DLClient
   ): Promise<LMResponse<PutMultimediaResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(putMultimedia);
-      const resp = await ChatroomClass.dlClient.putMultimedia(params);
+      // const params = ModelConverter.requestBodyGenerator(putMultimedia);
+      const resp = await dlClient.putMultimedia(putMultimedia);
       const convertedResp: PutMultimediaResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<PutMultimediaResponse>(convertedResp, null, true);
@@ -309,11 +316,12 @@ class ChatroomClass {
   }
 
   async decodeUrl(
-    decodeUrl: DecodeUrl
+    decodeUrl: DecodeUrl,
+    dlClient: DLClient
   ): Promise<LMResponse<DecodeUrlResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(decodeUrl);
-      const resp = await ChatroomClass.dlClient.decodeUrl(params);
+      // const params = ModelConverter.requestBodyGenerator(decodeUrl);
+      const resp = await dlClient.decodeUrl(decodeUrl);
       const convertedResp: DecodeUrlResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DecodeUrlResponse>(convertedResp, null, true);
@@ -327,11 +335,12 @@ class ChatroomClass {
   }
 
   async getReportTags(
-    getReportTags: GetReportTags
+    getReportTags: GetReportTags,
+    dlClient: DLClient
   ): Promise<LMResponse<GetReportTagsResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(getReportTags);
-      const resp = await ChatroomClass.dlClient.getReportTags(params);
+      // const params = ModelConverter.requestBodyGenerator(getReportTags);
+      const resp = await dlClient.getReportTags(getReportTags);
       const convertedResp: GetReportTagsResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetReportTagsResponse>(convertedResp, null, true);
@@ -344,10 +353,13 @@ class ChatroomClass {
     }
   }
 
-  async pushReport(pushReport: PushReport): Promise<LMResponse<Success>> {
+  async pushReport(
+    pushReport: PushReport,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(pushReport);
-      const resp = await ChatroomClass.dlClient.pushReport(params);
+      // const params = ModelConverter.requestBodyGenerator(pushReport);
+      const resp = await dlClient.pushReport(pushReport);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -360,11 +372,12 @@ class ChatroomClass {
   }
 
   async leaveSecretChatroom(
-    leaveSecretChatroom: LeaveSecretChatroom
+    leaveSecretChatroom: LeaveSecretChatroom,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(leaveSecretChatroom);
-      const resp = await ChatroomClass.dlClient.leaveSecretChatroom(params);
+      // const params = ModelConverter.requestBodyGenerator(leaveSecretChatroom);
+      const resp = await dlClient.leaveSecretChatroom(leaveSecretChatroom);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -377,11 +390,12 @@ class ChatroomClass {
   }
 
   async profileData(
-    profile: Profile
+    profile: Profile,
+    dlClient: DLClient
   ): Promise<LMResponse<ProfileDataResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(profile);
-      const resp = await ChatroomClass.dlClient.profileData(params);
+      // const params = ModelConverter.requestBodyGenerator(profile);
+      const resp = await dlClient.profileData(profile);
       const convertedResp: ProfileDataResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<ProfileDataResponse>(convertedResp, null, true);
@@ -395,11 +409,12 @@ class ChatroomClass {
   }
 
   async viewParticipants(
-    participantsType: ParticipantsType
+    participantsType: ParticipantsType,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(participantsType);
-      const resp = await ChatroomClass.dlClient.viewParticipants(params);
+      // const params = ModelConverter.requestBodyGenerator(participantsType);
+      const resp = await dlClient.viewParticipants(participantsType);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -412,11 +427,12 @@ class ChatroomClass {
   }
 
   async conversationsFetch(
-    cmetaType: CmetaType
+    cmetaType: CmetaType,
+    dlClient: DLClient
   ): Promise<LMResponse<FetchConversationResponse>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(cmetaType);
-      const resp = await ChatroomClass.dlClient.conversationsFetch(params);
+      // const params = ModelConverter.requestBodyGenerator(cmetaType);
+      const resp = await dlClient.conversationsFetch(cmetaType);
       const convertedResp: FetchConversationResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<FetchConversationResponse>(
@@ -434,25 +450,30 @@ class ChatroomClass {
   }
 
   //TODO
-  // async fetchChatroomHome(chatroom: CHTYPE): Promise<any> {
-  //   try {
-  //     const params = ModelConverter.requestBodyGenerator(cmetaType);
-  //     const resp = await ChatroomClass.dlClient.conversationsFetch(params);
-  //     const convertedResp: GetConversationResponse =
-  //       ModelConverter.responseBodyParser(resp);
-  //     return new LMResponse<GetConversationResponse>(convertedResp, null, true);
-  //   } catch (error) {
-  //     return new LMResponse<GetConversationResponse>(
-  //       null,
-  //       error.message || "An error occured",
-  //       false
-  //     );
-  //   }
-
-  async crSeenFn(crSeen: CRSeen): Promise<LMResponse<Success>> {
+  async fetchChatroomHome(
+    chatroom: CHTYPE,
+    dlClient: DLClient
+  ): Promise<LMResponse<any>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(crSeen);
-      const resp = await ChatroomClass.dlClient.crSeenFn(params);
+      const resp = await dlClient.fetchChatroomHome(chatroom);
+      const convertedResp = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<any>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<any>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async crSeenFn(
+    crSeen: CRSeen,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
+    try {
+      // const params = ModelConverter.requestBodyGenerator(crSeen);
+      const resp = await dlClient.crSeenFn(crSeen);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -464,10 +485,13 @@ class ChatroomClass {
     }
   }
 
-  async chatroomSeen(chatroomSeen: ChatroomSeen): Promise<LMResponse<Success>> {
+  async chatroomSeen(
+    chatroomSeen: ChatroomSeen,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const params = ModelConverter.requestBodyGenerator(chatroomSeen);
-      const resp = await ChatroomClass.dlClient.chatroomSeen(params);
+      // const params = ModelConverter.requestBodyGenerator(chatroomSeen);
+      const resp = await dlClient.chatroomSeen(chatroomSeen);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {

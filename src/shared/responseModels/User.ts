@@ -2,15 +2,15 @@ import { SDKClientInfo } from "./SDKClientInfo";
 
 export interface User {
   id: string;
-  image_url: string;
-  is_guest: boolean;
+  imageUrl: string;
+  isGuest: boolean;
   name: string;
   organisation_name: string | null;
-  sdk_client_info: SDKClientInfo | null;
-  is_deleted?: boolean | null;
-  custom_title?: string | null;
-  updated_at?: number | null;
-  user_unique_id: string;
+  sdkClientInfo: SDKClientInfo | null;
+  isDeleted?: boolean | null;
+  customTitle?: string | null;
+  updatedAt?: number | null;
+  userUniqueId: string;
   uuid: string;
-  is_owner?: boolean | null;
+  isOwner?: boolean | null;
 }

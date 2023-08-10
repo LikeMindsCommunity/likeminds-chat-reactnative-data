@@ -12,10 +12,12 @@ class SearchClass {
   private static dlClient: DLClient;
 
   async searchChatroom(
-    searchType: SearchType
+    searchType: SearchType,
+    dlClient: DLClient
   ): Promise<LMResponse<SearchChatroomResponse>> {
     try {
-      const resp = await SearchClass.dlClient.searchChatroom(searchType);
+      // const params = ModelConverter.requestBodyGenerator(searchType);
+      const resp = await dlClient.searchChatroom(searchType);
       const convertedResp: SearchChatroomResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchChatroomResponse>(convertedResp, null, true);
@@ -29,12 +31,12 @@ class SearchClass {
   }
 
   async searchConversation(
-    searchConversation: SearchConversation
+    searchConversation: SearchConversation,
+    dlClient: DLClient
   ): Promise<LMResponse<SearchConversationResponse>> {
     try {
-      const resp = await SearchClass.dlClient.searchConversation(
-        searchConversation
-      );
+      // const params = ModelConverter.requestBodyGenerator(searchConversation);
+      const resp = await dlClient.searchConversation(searchConversation);
       const convertedResp: SearchConversationResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchConversationResponse>(

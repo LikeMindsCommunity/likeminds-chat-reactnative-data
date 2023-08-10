@@ -5,4 +5,5 @@ export interface Community {
   membersCount: number | null;
   updatedAt: number | null;
   relationshipNeeded: boolean | true;
+  hideDmTab: boolean | false;
 }

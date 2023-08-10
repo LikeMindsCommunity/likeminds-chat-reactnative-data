@@ -160,7 +160,7 @@ class LMChatClient {
       );
     }
 
-    this.dlClient = new DLClient({
+    LMChatClient.dlClient = new DLClient({
       xApiKey: this.apiKey!,
       xPlatformCode: this.platformCode!,
       xVersionCode: this.versionCode!,
@@ -182,143 +182,186 @@ class LMChatClient {
   userClient = new UserClass();
 
   async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Success>> {
-    return this.chatroomClient.muteChatroom(muteChatroom);
+    return this.chatroomClient.muteChatroom(
+      muteChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async followChatroom(
     followChatroom: FollowChatroom
   ): Promise<LMResponse<Success>> {
-    return this.chatroomClient.followChatroom(followChatroom);
+    return this.chatroomClient.followChatroom(
+      followChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async getChatroom(chatroom: Chatroom): Promise<LMResponse<ChatroomResponse>> {
-    return this.chatroomClient.getChatroom(chatroom);
+    return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
   async markReadChatroom(markRead: MarkRead): Promise<LMResponse<Success>> {
-    return this.chatroomClient.markReadChatroom(markRead);
+    return this.chatroomClient.markReadChatroom(
+      markRead,
+      LMChatClient.dlClient
+    );
   }
 
   async shareChatroomUrl(
     shareChatroom: ShareChatroom
   ): Promise<LMResponse<ShareChatroomUrlResponse>> {
-    return this.chatroomClient.shareChatroomUrl(shareChatroom);
+    return this.chatroomClient.shareChatroomUrl(
+      shareChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async setChatroomTopic(
     setChatroom: SetChatroom
   ): Promise<LMResponse<Success>> {
-    return this.chatroomClient.setChatroomTopic(setChatroom);
+    return this.chatroomClient.setChatroomTopic(
+      setChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async getTaggingList(
     taggingList: TaggingList
   ): Promise<LMResponse<GetTaggingListResponse>> {
-    return this.chatroomClient.getTaggingList(taggingList);
+    return this.chatroomClient.getTaggingList(
+      taggingList,
+      LMChatClient.dlClient
+    );
   }
 
   async getConversation(
     conversation: Conversation
   ): Promise<LMResponse<GetConversationsResponse>> {
-    return this.chatroomClient.getConversation(conversation);
+    return this.chatroomClient.getConversation(
+      conversation,
+      LMChatClient.dlClient
+    );
   }
 
   async postConversation(
     postConversation: PostConversation
   ): Promise<LMResponse<PostConversationsResponse>> {
-    return this.chatroomClient.postConversation(postConversation);
+    return this.chatroomClient.postConversation(
+      postConversation,
+      LMChatClient.dlClient
+    );
   }
 
   async editConversation(
     conversationId: EditConversation
   ): Promise<LMResponse<EditConversationResponse>> {
-    return this.chatroomClient.editConversation(conversationId);
+    return this.chatroomClient.editConversation(
+      conversationId,
+      LMChatClient.dlClient
+    );
   }
 
   async deleteConversation(
     deleteConversation: DeleteConversation
   ): Promise<LMResponse<DeleteConversationsResponse>> {
-    return this.chatroomClient.deleteConversation(deleteConversation);
+    return this.chatroomClient.deleteConversation(
+      deleteConversation,
+      LMChatClient.dlClient
+    );
   }
 
   async putReaction(putReaction: PutReaction): Promise<LMResponse<Success>> {
-    return this.chatroomClient.putReaction(putReaction);
+    return this.chatroomClient.putReaction(putReaction, LMChatClient.dlClient);
   }
 
   async deleteReaction(
     deleteReaction: DeleteReaction
   ): Promise<LMResponse<Success>> {
-    return this.chatroomClient.deleteReaction(deleteReaction);
+    return this.chatroomClient.deleteReaction(
+      deleteReaction,
+      LMChatClient.dlClient
+    );
   }
 
   async putMultimedia(
     putMultimedia: PutMultimedia
   ): Promise<LMResponse<PutMultimediaResponse>> {
-    return this.chatroomClient.putMultimedia(putMultimedia);
+    return this.chatroomClient.putMultimedia(
+      putMultimedia,
+      LMChatClient.dlClient
+    );
   }
 
   async decodeUrl(
     decodeUrl: DecodeUrl
   ): Promise<LMResponse<DecodeUrlResponse>> {
-    return this.chatroomClient.decodeUrl(decodeUrl);
+    return this.chatroomClient.decodeUrl(decodeUrl, LMChatClient.dlClient);
   }
 
   async getReportTags(
     getReportTags: GetReportTags
   ): Promise<LMResponse<GetReportTagsResponse>> {
-    return this.chatroomClient.getReportTags(getReportTags);
+    return this.chatroomClient.getReportTags(
+      getReportTags,
+      LMChatClient.dlClient
+    );
   }
 
   async pushReport(pushReport: PushReport): Promise<LMResponse<Success>> {
-    return this.chatroomClient.pushReport(pushReport);
+    return this.chatroomClient.pushReport(pushReport, LMChatClient.dlClient);
   }
 
   async leaveSecretChatroom(
     leaveSecretChatroom: LeaveSecretChatroom
   ): Promise<LMResponse<Success>> {
-    return this.chatroomClient.leaveSecretChatroom(leaveSecretChatroom);
+    return this.chatroomClient.leaveSecretChatroom(
+      leaveSecretChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async profileData(
     profile: Profile
   ): Promise<LMResponse<ProfileDataResponse>> {
-    return this.chatroomClient.profileData(profile);
+    return this.chatroomClient.profileData(profile, LMChatClient.dlClient);
   }
 
   async viewParticipants(
     participantsType: ParticipantsType
   ): Promise<LMResponse<Success>> {
-    return this.chatroomClient.viewParticipants(participantsType);
+    return this.chatroomClient.viewParticipants(
+      participantsType,
+      LMChatClient.dlClient
+    );
   }
 
   async conversationsFetch(
     cmetaType: CmetaType
   ): Promise<LMResponse<FetchConversationResponse>> {
-    return this.chatroomClient.conversationsFetch(cmetaType);
+    return this.chatroomClient.conversationsFetch(
+      cmetaType,
+      LMChatClient.dlClient
+    );
   }
 
   //TODO
-  // async fetchChatroomHome(chatroom: CHTYPE): Promise<any> {
-  //   try {
-  //     const params = ModelConverter.requestBodyGenerator(cmetaType);
-  //     const resp = await LMChatClient.dlClient.conversationsFetch(params);
-  //     const convertedResp: GetConversationResponse =
-  //       ModelConverter.responseBodyParser(resp);
-  //     return new LMResponse<GetConversationResponse>(convertedResp, null, true);
-  //   } catch (error) {
-  //     return new LMResponse<GetConversationResponse>(
-  //       null,
-  //       error.message || "An error occured",
-  //       false
-  //     );
-  //   }
+  async fetchChatroomHome(chatroom: CHTYPE): Promise<LMResponse<any>> {
+    return this.chatroomClient.fetchChatroomHome(
+      chatroom,
+      LMChatClient.dlClient
+    );
+  }
 
   async crSeenFn(crSeen: CRSeen): Promise<LMResponse<Success>> {
-    return this.chatroomClient.crSeenFn(crSeen);
+    return this.chatroomClient.crSeenFn(crSeen, LMChatClient.dlClient);
   }
 
   async chatroomSeen(chatroomSeen: ChatroomSeen): Promise<LMResponse<Success>> {
-    return this.chatroomClient.chatroomSeen(chatroomSeen);
+    return this.chatroomClient.chatroomSeen(
+      chatroomSeen,
+      LMChatClient.dlClient
+    );
   }
 
   //DIRECT MESSAGE
@@ -326,85 +369,110 @@ class LMChatClient {
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed
   ): Promise<LMResponse<FetchDMResponse>> {
-    return this.directMessageClient.fetchDMFeed(fetchDMFeed);
+    return this.directMessageClient.fetchDMFeed(
+      fetchDMFeed,
+      LMChatClient.dlClient
+    );
   }
 
   async checkDMStatus(
     checkDMStatus: CheckDMStatus
   ): Promise<LMResponse<DMStatusResponse>> {
-    return this.directMessageClient.checkDMStatus(checkDMStatus);
+    return this.directMessageClient.checkDMStatus(
+      checkDMStatus,
+      LMChatClient.dlClient
+    );
   }
 
   async checkDMLimit(
     checkDMLimit: CheckDMLimit
   ): Promise<LMResponse<DMLimitResponse>> {
-    return this.directMessageClient.checkDMLimit(checkDMLimit);
+    return this.directMessageClient.checkDMLimit(
+      checkDMLimit,
+      LMChatClient.dlClient
+    );
   }
 
   async createDMChatroom(
     createDMChatroom: CreateDMChatroom
   ): Promise<LMResponse<CreateDMChatroomResponse>> {
-    return this.directMessageClient.createDMChatroom(createDMChatroom);
+    return this.directMessageClient.createDMChatroom(
+      createDMChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async sendDMRequest(
     sendDMRequest: SendDMRequest
   ): Promise<LMResponse<SendDMRequestResponse>> {
-    return this.directMessageClient.sendDMRequest(sendDMRequest);
+    return this.directMessageClient.sendDMRequest(
+      sendDMRequest,
+      LMChatClient.dlClient
+    );
   }
 
   async blockMember(
     blockMember: BlockMember
   ): Promise<LMResponse<BlockDMRequestResponse>> {
-    return this.directMessageClient.blockMember(blockMember);
+    return this.directMessageClient.blockMember(
+      blockMember,
+      LMChatClient.dlClient
+    );
   }
 
   async checkDMTab(): Promise<LMResponse<CheckDMTabResponse>> {
-    return this.directMessageClient.checkDMTab();
+    return this.directMessageClient.checkDMTab(LMChatClient.dlClient);
   }
 
   async getDMFeed(cid: CID): Promise<LMResponse<GetDMFeedResponse>> {
-    return this.directMessageClient.getDMFeed(cid);
+    return this.directMessageClient.getDMFeed(cid, LMChatClient.dlClient);
   }
 
   async canDmFeed(dmCan: CANDM): Promise<LMResponse<CanDMFeedResponse>> {
-    return this.directMessageClient.canDmFeed(dmCan);
+    return this.directMessageClient.canDmFeed(dmCan, LMChatClient.dlClient);
   }
 
   //EXPLORE FEED
   async getExploreFeed(
     exploreFeedData: ExploreFeedData
   ): Promise<LMResponse<ExploreFeedResponse>> {
-    return this.exploreFeedClient.getExploreFeed(exploreFeedData);
+    return this.exploreFeedClient.getExploreFeed(
+      exploreFeedData,
+      LMChatClient.dlClient
+    );
   }
 
   //HomeFeed
   async getHomeFeed(homeFeed: HomeFeed): Promise<LMResponse<HomeFeedResponse>> {
-    return this.homeFeedClient.getHomeFeed(homeFeed);
+    return this.homeFeedClient.getHomeFeed(homeFeed, LMChatClient.dlClient);
   }
 
   async getInvites(invite: INVITE): Promise<LMResponse<GetInvitesResponse>> {
-    return this.homeFeedClient.getInvites(invite);
+    return this.homeFeedClient.getInvites(invite, LMChatClient.dlClient);
   }
 
   async sendInvites(participant: Participant): Promise<LMResponse<Success>> {
-    return this.homeFeedClient.sendInvites(participant);
+    return this.homeFeedClient.sendInvites(participant, LMChatClient.dlClient);
   }
 
   async registerDevice(device: Device): Promise<LMResponse<Success>> {
-    return this.homeFeedClient.registerDevice(device);
+    return this.homeFeedClient.registerDevice(device, LMChatClient.dlClient);
   }
 
   async inviteAction(iaType: IaType): Promise<LMResponse<Success>> {
-    return this.homeFeedClient.inviteAction(iaType);
+    return this.homeFeedClient.inviteAction(iaType, LMChatClient.dlClient);
   }
 
   fbInstance() {
-    return this.homeFeedClient.fbInstance();
+    return this.homeFeedClient.fbInstance(LMChatClient.dlClient);
   }
 
   homeFeedListener(callback: any, route: any) {
-    return this.homeFeedClient.homeFeedListener(callback, route);
+    return this.homeFeedClient.homeFeedListener(
+      callback,
+      route,
+      LMChatClient.dlClient
+    );
   }
 
   // homeFeedListener(callback: any, route: any) {
@@ -421,25 +489,34 @@ class LMChatClient {
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest
   ): Promise<LMResponse<PostPollConversationResponse>> {
-    return this.pollClient.postPollConversation(postPollConversationRequest);
+    return this.pollClient.postPollConversation(
+      postPollConversationRequest,
+      LMChatClient.dlClient
+    );
   }
 
   async getPollUsers(
     getPollUsersRequest: GetPollUsersRequest
   ): Promise<LMResponse<GetPollUsersResponse>> {
-    return this.pollClient.getPollUsers(getPollUsersRequest);
+    return this.pollClient.getPollUsers(
+      getPollUsersRequest,
+      LMChatClient.dlClient
+    );
   }
 
   async addPollOption(
     addPollOptionRequest: AddPollOptionRequest
   ): Promise<LMResponse<AddPollResponse>> {
-    return this.pollClient.addPollOption(addPollOptionRequest);
+    return this.pollClient.addPollOption(
+      addPollOptionRequest,
+      LMChatClient.dlClient
+    );
   }
 
   async submitPoll(
     submitPollRequest: SubmitPollRequest
   ): Promise<LMResponse<Success>> {
-    return this.pollClient.submitPoll(submitPollRequest);
+    return this.pollClient.submitPoll(submitPollRequest, LMChatClient.dlClient);
   }
 
   //Search
@@ -447,58 +524,64 @@ class LMChatClient {
   async searchChatroom(
     searchType: SearchType
   ): Promise<LMResponse<SearchChatroomResponse>> {
-    return this.searchClient.searchChatroom(searchType);
+    return this.searchClient.searchChatroom(searchType, LMChatClient.dlClient);
   }
 
   async searchConversation(
     searchConversation: SearchConversation
   ): Promise<LMResponse<SearchConversationResponse>> {
-    return this.searchClient.searchConversation(searchConversation);
+    return this.searchClient.searchConversation(
+      searchConversation,
+      LMChatClient.dlClient
+    );
   }
 
   //User
   initiateUser(initUser: InitUser): Promise<LMResponse<InitiateUserResponse>> {
-    return this.userClient.initiateUser(initUser);
+    return this.userClient.initiateUser(initUser, LMChatClient.dlClient);
   }
 
   async logout(logout: Logout): Promise<LMResponse<Success>> {
-    return this.userClient.logout(logout);
+    return this.userClient.logout(logout, LMChatClient.dlClient);
   }
 
   async getProfile(
     getProfile: GetProfile
   ): Promise<LMResponse<GetProfileResponse>> {
-    return this.userClient.getProfile(getProfile);
+    return this.userClient.getProfile(getProfile, LMChatClient.dlClient);
   }
 
   async getMemberChatroom(
     getMemberChatroom: GetMemberChatroom
   ): Promise<LMResponse<GetMemberResponse>> {
-    return this.userClient.getMemberChatroom(getMemberChatroom);
+    return this.userClient.getMemberChatroom(
+      getMemberChatroom,
+      LMChatClient.dlClient
+    );
   }
 
   async getQuestions(): Promise<LMResponse<GetQuestionsResponse>> {
-    return this.userClient.getQuestions();
+    return this.userClient.getQuestions(LMChatClient.dlClient);
   }
 
   async getMemberState(): Promise<LMResponse<GetMemberStateResponse>> {
-    return this.userClient.getMemberState();
+    return this.userClient.getMemberState(LMChatClient.dlClient);
   }
 
   async editProfile(editProfile: EditProfile): Promise<LMResponse<Success>> {
-    return this.userClient.editProfile(editProfile);
+    return this.userClient.editProfile(editProfile, LMChatClient.dlClient);
   }
 
   async searchMembers(
     search: Search
   ): Promise<LMResponse<SearchMembersResponse>> {
-    return this.userClient.searchMembers(search);
+    return this.userClient.searchMembers(search, LMChatClient.dlClient);
   }
 
   async getAllMembers(
     getAllMembers: GetAllMembers
   ): Promise<LMResponse<GetAllMembersResponse>> {
-    return this.userClient.getAllMembers(getAllMembers);
+    return this.userClient.getAllMembers(getAllMembers, LMChatClient.dlClient);
   }
 
   //   dmAllMembers(userType: USERTYPE): Promise<any> {

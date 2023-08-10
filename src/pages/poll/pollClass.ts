@@ -16,10 +16,14 @@ class PollClass {
   private static dlClient: DLClient;
 
   async postPollConversation(
-    postPollConversationRequest: PostPollConversationRequest
+    postPollConversationRequest: PostPollConversationRequest,
+    dlClient: DLClient
   ): Promise<LMResponse<PostPollConversationResponse>> {
     try {
-      const resp = await PollClass.dlClient.postPollConversation(
+      // const params = ModelConverter.requestBodyGenerator(
+      //   postPollConversationRequest
+      // );
+      const resp = await dlClient.postPollConversation(
         postPollConversationRequest
       );
       const convertedResp: PostPollConversationResponse =
@@ -39,10 +43,12 @@ class PollClass {
   }
 
   async getPollUsers(
-    getPollUsersRequest: GetPollUsersRequest
+    getPollUsersRequest: GetPollUsersRequest,
+    dlClient: DLClient
   ): Promise<LMResponse<GetPollUsersResponse>> {
     try {
-      const resp = await PollClass.dlClient.getPollUsers(getPollUsersRequest);
+      // const params = ModelConverter.requestBodyGenerator(getPollUsersRequest);
+      const resp = await dlClient.getPollUsers(getPollUsersRequest);
       const convertedResp: GetPollUsersResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetPollUsersResponse>(convertedResp, null, true);
@@ -56,10 +62,12 @@ class PollClass {
   }
 
   async addPollOption(
-    addPollOptionRequest: AddPollOptionRequest
+    addPollOptionRequest: AddPollOptionRequest,
+    dlClient: DLClient
   ): Promise<LMResponse<AddPollResponse>> {
     try {
-      const resp = await PollClass.dlClient.addPollOption(addPollOptionRequest);
+      // const params = ModelConverter.requestBodyGenerator(addPollOptionRequest);
+      const resp = await dlClient.addPollOption(addPollOptionRequest);
       const convertedResp: AddPollResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<AddPollResponse>(convertedResp, null, true);
@@ -73,10 +81,12 @@ class PollClass {
   }
 
   async submitPoll(
-    submitPollRequest: SubmitPollRequest
+    submitPollRequest: SubmitPollRequest,
+    dlClient: DLClient
   ): Promise<LMResponse<Success>> {
     try {
-      const resp = await PollClass.dlClient.submitPoll(submitPollRequest);
+      // const params = ModelConverter.requestBodyGenerator(submitPollRequest);
+      const resp = await dlClient.submitPoll(submitPollRequest);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {

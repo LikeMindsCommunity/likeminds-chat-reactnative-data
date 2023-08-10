@@ -1,4 +1,5 @@
 import { Member } from "src/shared/responseModels/Member";
+import { MemberAction } from "src/shared/responseModels/MemberAction";
 
 interface QuestionAnswer {
   answer: string;
@@ -6,9 +7,6 @@ interface QuestionAnswer {
   imageUrl: string;
   memberId: number;
   questionId: number;
-}
-interface MemberAction {
-  // Define properties for the member action object here
 }
 
 export interface GetProfileResponse {

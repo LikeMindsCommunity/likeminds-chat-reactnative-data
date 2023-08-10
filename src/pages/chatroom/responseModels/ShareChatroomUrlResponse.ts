@@ -5,8 +5,5 @@ interface ChatroomShare {
 }
 
 export interface ShareChatroomUrlResponse {
-  success: boolean;
-  data: {
-    chatroomShare: ChatroomShare;
-  };
+  chatroomShare: ChatroomShare;
 }

@@ -27,13 +27,24 @@ class UserClass {
   private static dlClient: DLClient;
 
   async initiateUser(
-    initUser: InitUser
+    initUser: InitUser,
+    dlClient: DLClient
   ): Promise<LMResponse<InitiateUserResponse>> {
     try {
-      const resp = await UserClass.dlClient.initiateUser(initUser);
+      // const params = ModelConverter.requestBodyGenerator(initUser);
+      // console.log("params", params);
+      const resp = await dlClient.initiateUser(initUser);
+      console.log("respInitial", resp);
       const convertedResp: InitiateUserResponse =
         ModelConverter.responseBodyParser(resp);
-      return new LMResponse<InitiateUserResponse>(convertedResp, null, true);
+      console.log("convertedResp", convertedResp);
+      const temp = new LMResponse<InitiateUserResponse>(
+        convertedResp,
+        null,
+        true
+      );
+      console.log("tempuserClass", temp);
+      return temp;
     } catch (error) {
       return new LMResponse<InitiateUserResponse>(
         null,
@@ -43,9 +54,13 @@ class UserClass {
     }
   }
 
-  async logout(logout: Logout): Promise<LMResponse<Success>> {
+  async logout(
+    logout: Logout,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const resp = await UserClass.dlClient.logout(logout);
+      // const params = ModelConverter.requestBodyGenerator(logout);
+      const resp = await dlClient.logout(logout);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -58,10 +73,12 @@ class UserClass {
   }
 
   async getProfile(
-    getProfile: GetProfile
+    getProfile: GetProfile,
+    dlClient: DLClient
   ): Promise<LMResponse<GetProfileResponse>> {
     try {
-      const resp = await UserClass.dlClient.getProfile(getProfile);
+      // const params = ModelConverter.requestBodyGenerator(getProfile);
+      const resp = await dlClient.getProfile(getProfile);
       const convertedResp: GetProfileResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetProfileResponse>(convertedResp, null, true);
@@ -75,12 +92,12 @@ class UserClass {
   }
 
   async getMemberChatroom(
-    getMemberChatroom: GetMemberChatroom
+    getMemberChatroom: GetMemberChatroom,
+    dlClient: DLClient
   ): Promise<LMResponse<GetMemberResponse>> {
     try {
-      const resp = await UserClass.dlClient.getMemberChatroom(
-        getMemberChatroom
-      );
+      // const params = ModelConverter.requestBodyGenerator(getMemberChatroom);
+      const resp = await dlClient.getMemberChatroom(getMemberChatroom);
       const convertedResp: GetMemberResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetMemberResponse>(convertedResp, null, true);
@@ -93,9 +110,11 @@ class UserClass {
     }
   }
 
-  async getQuestions(): Promise<LMResponse<GetQuestionsResponse>> {
+  async getQuestions(
+    dlClient: DLClient
+  ): Promise<LMResponse<GetQuestionsResponse>> {
     try {
-      const resp = await UserClass.dlClient.getQuestions();
+      const resp = await dlClient.getQuestions();
       const convertedResp: GetQuestionsResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetQuestionsResponse>(convertedResp, null, true);
@@ -108,12 +127,22 @@ class UserClass {
     }
   }
 
-  async getMemberState(): Promise<LMResponse<GetMemberStateResponse>> {
+  async getMemberState(
+    dlClient: DLClient
+  ): Promise<LMResponse<GetMemberStateResponse>> {
     try {
-      const resp = await UserClass.dlClient.getMemberState();
+      const resp = await dlClient.getMemberState();
+      console.log("respGetMember", resp);
       const convertedResp: GetMemberStateResponse =
         ModelConverter.responseBodyParser(resp);
-      return new LMResponse<GetMemberStateResponse>(convertedResp, null, true);
+      console.log("convertedRespGetMember", convertedResp);
+      const temp = new LMResponse<GetMemberStateResponse>(
+        convertedResp,
+        null,
+        true
+      );
+      console.log("tempGetMemberState", temp);
+      return temp;
     } catch (error) {
       return new LMResponse<GetMemberStateResponse>(
         null,
@@ -123,9 +152,13 @@ class UserClass {
     }
   }
 
-  async editProfile(editProfile: EditProfile): Promise<LMResponse<Success>> {
+  async editProfile(
+    editProfile: EditProfile,
+    dlClient: DLClient
+  ): Promise<LMResponse<Success>> {
     try {
-      const resp = await UserClass.dlClient.editProfile(editProfile);
+      // const params = ModelConverter.requestBodyGenerator(editProfile);
+      const resp = await dlClient.editProfile(editProfile);
       const convertedResp: Success = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Success>(convertedResp, null, true);
     } catch (error) {
@@ -138,10 +171,12 @@ class UserClass {
   }
 
   async searchMembers(
-    search: Search
+    search: Search,
+    dlClient: DLClient
   ): Promise<LMResponse<SearchMembersResponse>> {
     try {
-      const resp = await UserClass.dlClient.searchMembers(search);
+      // const params = ModelConverter.requestBodyGenerator(search);
+      const resp = await dlClient.searchMembers(search);
       const convertedResp: SearchMembersResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchMembersResponse>(convertedResp, null, true);
@@ -155,10 +190,12 @@ class UserClass {
   }
 
   async getAllMembers(
-    getAllMembers: GetAllMembers
+    getAllMembers: GetAllMembers,
+    dlClient: DLClient
   ): Promise<LMResponse<GetAllMembersResponse>> {
     try {
-      const resp = await UserClass.dlClient.getAllMembers(getAllMembers);
+      // const params = ModelConverter.requestBodyGenerator(getAllMembers);
+      const resp = await dlClient.getAllMembers(getAllMembers);
       const convertedResp: GetAllMembersResponse =
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
