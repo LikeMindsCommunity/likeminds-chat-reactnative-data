@@ -40,7 +40,6 @@ import { EditConversationResponse } from "./responseModels/EditConversationRespo
 import { DeleteConversationsResponse } from "./responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
-import LMChatClient from "@likeminds.community/chat-js";
 
 class ChatroomClass {
   async muteChatroom(

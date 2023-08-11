@@ -20,7 +20,6 @@ import { CreateDMChatroomResponse } from "./responseModels/CreateDMChatroomRespo
 import { BlockDMRequestResponse } from "./responseModels/BlockDMRequestResponse";
 import { GetDMFeedResponse } from "./responseModels/GetDMFeedResponse";
 import { CanDMFeedResponse } from "./responseModels/CanDMFeedResponse";
-import LMChatClient from "@likeminds.community/chat-js";
 
 class DirectMessage {
   async fetchDMFeed(
