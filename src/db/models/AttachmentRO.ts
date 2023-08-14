@@ -29,6 +29,7 @@ export class AttachmentRO extends Realm.Object<AttachmentRO> {
 
   static schema: Realm.ObjectSchema = {
     name: ATTACHMENT_RO,
+    embedded: true,
     properties: {
       id: STRING,
       url: STRING,

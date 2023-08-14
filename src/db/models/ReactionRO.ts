@@ -8,6 +8,7 @@ export class ReactionRO extends Realm.Object<ReactionRO> {
 
   static schema: Realm.ObjectSchema = {
     name: REACTION_RO,
+    embedded: true,
     properties: {
       member: OPTIONAL_MEMBER_RO,
       reaction: STRING,

@@ -1,5 +1,6 @@
 import {
   BOOLEAN,
+  ID,
   INT,
   MEMBER_RO,
   OPTINAL_SDK_CLIENT_INFO_RO,
@@ -44,5 +45,6 @@ export class MemberRO extends Realm.Object<MemberRO> {
       uuid: STRING,
       sdkClientInfoRO: OPTINAL_SDK_CLIENT_INFO_RO,
     },
+    primaryKey: ID,
   };
 }

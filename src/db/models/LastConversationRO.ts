@@ -1,4 +1,5 @@
 import {
+  ID,
   INT,
   LAST_CONVERSATION_RO,
   LIST_ATTACHMENT_RO,
@@ -52,5 +53,6 @@ export class LastConversationRO extends Realm.Object<LastConversationRO> {
       link: OPTIONAL_LINK_RO,
       deletedByMember: OPTIONAL_MEMBER_RO,
     },
+    primaryKey: ID,
   };
 }

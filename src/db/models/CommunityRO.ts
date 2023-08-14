@@ -20,8 +20,8 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
   updatedAt?: number | null;
   relationshipNeeded!: boolean;
   downloadableContentTypes?: Realm.List<string> | null;
-  conversations!: ConversationRO[];
-  chatrooms!: ChatroomRO[];
+  conversations!: Realm.List<ConversationRO>;
+  chatrooms!: Realm.List<ChatroomRO>;
 
   static schema: Realm.ObjectSchema = {
     name: COMMUNITY_RO,

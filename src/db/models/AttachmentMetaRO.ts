@@ -8,6 +8,7 @@ export class AttachmentMetaRO extends Realm.Object<AttachmentMetaRO> {
 
   static schema: Realm.ObjectSchema = {
     name: ATTACHMENT_META_RO,
+    embedded: true,
     properties: {
       numberOfPage: OPTIONAL_INT,
       size: OPTIONAL_INT,

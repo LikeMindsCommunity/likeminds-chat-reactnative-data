@@ -1,4 +1,21 @@
-import { BOOLEAN, CONVERSATION_RO, INT, LIST_ATTACHMENT_RO, LIST_POLL_RO, LIST_REACTION_RO, OPTIONAL_BOOLEAN, OPTIONAL_INT, OPTIONAL_LINK_RO, OPTIONAL_LIST_CHATROOM_RO, OPTIONAL_LIST_COMMUNITY_RO, OPTIONAL_MEMBER_RO, OPTIONAL_STRING, OPTONAL_CONVERSATION_RO, STRING } from "../constants";
+import {
+  BOOLEAN,
+  CONVERSATION_RO,
+  ID,
+  INT,
+  LIST_ATTACHMENT_RO,
+  LIST_POLL_RO,
+  LIST_REACTION_RO,
+  OPTIONAL_BOOLEAN,
+  OPTIONAL_INT,
+  OPTIONAL_LINK_RO,
+  OPTIONAL_LIST_CHATROOM_RO,
+  OPTIONAL_LIST_COMMUNITY_RO,
+  OPTIONAL_MEMBER_RO,
+  OPTIONAL_STRING,
+  OPTONAL_CONVERSATION_RO,
+  STRING,
+} from "../constants";
 import { AttachmentRO } from "./AttachmentRO";
 import { ChatroomRO } from "./ChatroomRO";
 import { CommunityRO } from "./CommunityRO";
@@ -6,7 +23,7 @@ import { LinkRO } from "./LinkRO";
 import { MemberRO } from "./MemberRO";
 import { PollRO } from "./PollRO";
 import { ReactionRO } from "./ReactionRO";
-import Realm from 'realm';
+import Realm from "realm";
 
 export class ConversationRO extends Realm.Object<ConversationRO> {
   id!: string;
@@ -90,6 +107,6 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       community: OPTIONAL_LIST_COMMUNITY_RO,
       chatroom: OPTIONAL_LIST_CHATROOM_RO,
     },
+    primaryKey: ID,
   };
 }
-

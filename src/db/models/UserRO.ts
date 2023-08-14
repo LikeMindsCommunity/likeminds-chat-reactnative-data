@@ -1,5 +1,6 @@
 import {
   BOOLEAN,
+  ID,
   INT,
   OPTINAL_SDK_CLIENT_INFO_RO,
   OPTIONAL_BOOLEAN,
@@ -38,5 +39,6 @@ export class UserRO extends Realm.Object<UserRO> {
       customTitle: OPTIONAL_STRING,
       uuid: STRING,
     },
+    primaryKey: ID,
   };
 }

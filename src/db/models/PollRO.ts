@@ -21,6 +21,7 @@ export class PollRO extends Realm.Object<PollRO> {
 
   static schema: Realm.ObjectSchema = {
     name: POLL_RO,
+    embedded: true,
     properties: {
       id: STRING,
       text: STRING,

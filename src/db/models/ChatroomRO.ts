@@ -1,6 +1,7 @@
 import {
   BOOLEAN,
   CHATROOM_RO,
+  ID,
   INT,
   LIST_CONVERSATION_RO,
   LIST_INT,
@@ -51,7 +52,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   relationshipNeeded!: boolean;
   draftConversation?: string | null;
   isSecret?: boolean | null;
-  secretChatRoomParticipants!: number[];
+  secretChatRoomParticipants!: Realm.List<number>;
   secretChatRoomLeft?: boolean | null;
   conversations!: Realm.List<ConversationRO>;
   topicId?: string | null;
@@ -117,5 +118,6 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       lastConversationId: OPTIONAL_STRING,
       communities: OPTIONAL_LIST_COMMUNITY_RO,
     },
+    primaryKey: ID,
   };
 }

@@ -11,6 +11,7 @@ export class LinkRO extends Realm.Object<LinkRO> {
 
   static schema: Realm.ObjectSchema = {
     name: LINK_RO,
+    embedded: true,
     properties: {
       url: STRING,
       chatroomId: STRING,

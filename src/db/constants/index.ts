@@ -30,13 +30,16 @@ export const FLOAT = "float";
 export const OPTIONAL_FLOAT = "float?";
 
 // schema list
-export const LIST_STRING = "list<string>";
-export const OPTIONAL_LIST_STRING = "list<string>?";
-export const LIST_INT = "list<int>";
-export const LIST_CONVERSATION_RO = "list<ConversationRO>";
-export const LIST_CHATROOM_RO = "list<ChatroomRO>";
-export const OPTIONAL_LIST_CHATROOM_RO = "list<ChatroomRO>?";
-export const LIST_REACTION_RO = "list<ReactionRO>";
-export const OPTIONAL_LIST_COMMUNITY_RO = "list<CommunityRO>?";
-export const LIST_POLL_RO = "list<PollRO>";
-export const LIST_ATTACHMENT_RO = "list<AttachmentRO>";
+export const LIST_STRING = "string[]";
+export const OPTIONAL_LIST_STRING = "string[]?";
+export const LIST_INT = "int[]";
+export const LIST_CONVERSATION_RO = "ConversationRO[]";
+export const LIST_CHATROOM_RO = "ChatroomRO[]";
+export const OPTIONAL_LIST_CHATROOM_RO = "ChatroomRO[]?";
+export const LIST_REACTION_RO = "ReactionRO[]";
+export const OPTIONAL_LIST_COMMUNITY_RO = "CommunityRO[]?";
+export const LIST_POLL_RO = "PollRO[]";
+export const LIST_ATTACHMENT_RO = "AttachmentRO[]";
+
+// others
+export const ID = "id";

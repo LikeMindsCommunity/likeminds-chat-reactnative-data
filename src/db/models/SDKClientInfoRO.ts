@@ -9,6 +9,7 @@ export class SDKClientInfoRO extends Realm.Object<SDKClientInfoRO> {
 
   static schema: Realm.ObjectSchema = {
     name: SDK_CLIENT_INFO_RO,
+    embedded: true,
     properties: {
       community: INT,
       user: STRING,
