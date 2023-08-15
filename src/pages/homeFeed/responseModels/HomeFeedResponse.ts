@@ -1,7 +1,7 @@
-import { ChatroomResponse } from "src/shared/responseModels/Chatroom";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
 
 export interface HomeFeedResponse {
-  myChatrooms: ChatroomResponse[];
+  myChatrooms: Chatroom[];
   totalChatroomCount: number;
   totalPages: number;
   totalUnseenCount: number;

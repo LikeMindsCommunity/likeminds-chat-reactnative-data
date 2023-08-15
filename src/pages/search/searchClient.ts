@@ -8,13 +8,12 @@ import {
 import { SearchChatroomResponse } from "./responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./responseModels/SearchConversationResponse";
 
-class SearchClass {
+class SearchClient {
   async searchChatroom(
     searchType: SearchType,
     dlClient: DLClient
   ): Promise<LMResponse<SearchChatroomResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(searchType);
       const resp = await dlClient.searchChatroom(searchType);
       const convertedResp: SearchChatroomResponse =
         ModelConverter.responseBodyParser(resp);
@@ -33,7 +32,6 @@ class SearchClass {
     dlClient: DLClient
   ): Promise<LMResponse<SearchConversationResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(searchConversation);
       const resp = await dlClient.searchConversation(searchConversation);
       const convertedResp: SearchConversationResponse =
         ModelConverter.responseBodyParser(resp);
@@ -52,4 +50,4 @@ class SearchClass {
   }
 }
 
-export { SearchClass as default };
+export { SearchClient as default };

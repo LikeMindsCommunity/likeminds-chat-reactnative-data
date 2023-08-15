@@ -1,12 +1,12 @@
 import { Attachment } from "src/shared/responseModels/Attachment";
-import { ChatroomResponse } from "src/shared/responseModels/Chatroom";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
 import { Community } from "src/shared/responseModels/Community";
 import { Member } from "src/shared/responseModels/Member";
 
 interface SearchChatroom {
   attachments: Attachment[];
   attendingStatus: boolean;
-  chatroom: ChatroomResponse;
+  chatroom: Chatroom;
   community: Community;
   followStatus: boolean;
   id: number;

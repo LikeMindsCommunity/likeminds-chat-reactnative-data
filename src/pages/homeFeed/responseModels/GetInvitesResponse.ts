@@ -1,27 +1,12 @@
-import { ChatroomResponse } from "src/shared/responseModels/Chatroom";
-
-interface InviteReceiver {
-  id: number;
-  imageLink: string;
-  isGuest: boolean;
-  name: string;
-  userUniqueId: string;
-}
-
-interface InviteSender {
-  id: number;
-  imageLink: string;
-  isGuest: boolean;
-  name: string;
-  userUniqueId: string;
-}
+import { Chatroom } from "src/shared/responseModels/Chatroom";
+import { Member } from "src/shared/responseModels/Member";
 
 interface UserInvite {
-  chatroom: ChatroomResponse;
+  chatroom: Chatroom;
   createdAt: number;
   id: number;
-  inviteReceiver: InviteReceiver;
-  inviteSender: InviteSender;
+  inviteReceiver: Member;
+  inviteSender: Member;
   inviteStatus: number;
   updatedAt: number;
 }

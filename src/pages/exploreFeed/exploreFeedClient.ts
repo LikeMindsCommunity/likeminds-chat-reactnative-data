@@ -4,13 +4,12 @@ import { ModelConverter } from "../../utils/ModelConverter";
 import { ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
 import { ExploreFeedResponse } from "./responseModels/ExploreFeedResponse";
 
-class ExploreFeed {
+class ExploreFeedClient {
   async getExploreFeed(
     exploreFeedData: ExploreFeedData,
     dlClient: DLClient
   ): Promise<LMResponse<ExploreFeedResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(exploreFeedData);
       const resp = await dlClient.getExploreFeed(exploreFeedData);
       const convertedResp: ExploreFeedResponse =
         ModelConverter.responseBodyParser(resp);
@@ -25,4 +24,4 @@ class ExploreFeed {
   }
 }
 
-export { ExploreFeed as default };
+export { ExploreFeedClient as default };

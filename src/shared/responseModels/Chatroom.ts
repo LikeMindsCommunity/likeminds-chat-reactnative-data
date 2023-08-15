@@ -3,7 +3,7 @@ import { Reaction } from "./Reaction";
 import { Conversation } from "./Conversation";
 import { Cohort } from "./Cohort";
 
-export interface ChatroomResponse {
+export interface Chatroom {
   member: Member | null;
   id: string;
   title: string;

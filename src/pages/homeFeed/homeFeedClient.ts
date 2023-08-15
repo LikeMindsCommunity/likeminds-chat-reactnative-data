@@ -11,15 +11,14 @@ import {
   Participant,
 } from "@likeminds.community/chat-js/dist/pages/home-feed/types";
 import { GetInvitesResponse } from "./responseModels/GetInvitesResponse";
-import { Success } from "src/shared/responseModels/Success";
+import { Nothing } from "src/shared/responseModels/Nothing";
 
-class HomeFeedClass {
+class HomeFeedClient {
   async getHomeFeed(
     homeFeed: HomeFeed,
     dlClient: DLClient
   ): Promise<LMResponse<HomeFeedResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(homeFeed);
       const resp = await dlClient.getHomeFeed(homeFeed);
       const convertedResp: HomeFeedResponse =
         ModelConverter.responseBodyParser(resp);
@@ -38,7 +37,6 @@ class HomeFeedClass {
     dlClient: DLClient
   ): Promise<LMResponse<GetInvitesResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(invite);
       const resp = await dlClient.getInvites(invite);
       const convertedResp: GetInvitesResponse =
         ModelConverter.responseBodyParser(resp);
@@ -55,14 +53,13 @@ class HomeFeedClass {
   async sendInvites(
     participant: Participant,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(participant);
       const resp = await dlClient.sendInvites(participant);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -73,14 +70,13 @@ class HomeFeedClass {
   async registerDevice(
     device: Device,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(device);
       const resp = await dlClient.registerDevice(device);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -91,14 +87,13 @@ class HomeFeedClass {
   async inviteAction(
     iaType: IaType,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(iaType);
       const resp = await dlClient.inviteAction(iaType);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -111,11 +106,6 @@ class HomeFeedClass {
       return dlClient.fbInstance();
     } catch (error) {
       return error.message;
-      // return new LMResponse<Success>(
-      //   null,
-      //   error.message || "An error occured",
-      //   false
-      // );
     }
   }
 
@@ -124,13 +114,8 @@ class HomeFeedClass {
       return dlClient.homeFeedListener(callback, route);
     } catch (error) {
       return error.message;
-      // return new LMResponse<Success>(
-      //   null,
-      //   error.message || "An error occured",
-      //   false
-      // );
     }
   }
 }
 
-export { HomeFeedClass as default };
+export { HomeFeedClient as default };

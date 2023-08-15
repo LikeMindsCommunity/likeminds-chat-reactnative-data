@@ -1,6 +1,6 @@
-import { ChatroomResponse } from "src/shared/responseModels/Chatroom";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
 
 export interface FetchDMResponse {
-  dmChatrooms: ChatroomResponse[];
+  dmChatrooms: Chatroom[];
   totalPages: number;
 }

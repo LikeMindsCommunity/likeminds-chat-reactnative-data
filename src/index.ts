@@ -1,11 +1,11 @@
 import DLClient from "@likeminds.community/chat-js";
 
 //Chatroom
-import ChatroomClass from "./pages/chatroom/chatroomClass";
+import ChatroomClient from "./pages/chatroom/chatroomClient";
 import {
   FollowChatroom,
   MuteChatroom,
-  Chatroom,
+  Chatroom as ChatroomRequest,
   MarkRead,
   ShareChatroom,
   SetChatroom,
@@ -21,22 +21,22 @@ import {
   GetReportTags,
   PushReport,
   LeaveSecretChatroom,
-  Profile,
   ParticipantsType,
   CmetaType,
   CHTYPE,
   CRSeen,
   ChatroomSeen,
+  FollowChatroomWithUuid,
+  ChatroomSeenWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../src/core/services/lmresponse";
-import { ChatroomResponse } from "./shared/responseModels/Chatroom";
+import { Chatroom } from "./shared/responseModels/Chatroom";
 import { ShareChatroomUrlResponse } from "./pages/chatroom/responseModels/ShareChatroomUrlResponse";
 import { GetTaggingListResponse } from "./pages/chatroom/responseModels/GetTaggingListResponse";
 import { GetConversationsResponse } from "./pages/chatroom/responseModels/GetConversationsResponse";
 import { PutMultimediaResponse } from "./pages/chatroom/responseModels/PutMultimediaResponse";
 import { DecodeUrlResponse } from "./pages/chatroom/responseModels/DecodeUrlResponse";
-import { ProfileDataResponse } from "./pages/chatroom/responseModels/ProfileDataResponse";
-import { Success } from "./shared/responseModels/Success";
+import { Nothing } from "./shared/responseModels/Nothing";
 import { PostConversationsResponse } from "./pages/chatroom/responseModels/PostConversationResponse";
 import { EditConversationResponse } from "./pages/chatroom/responseModels/EditConversationResponse";
 import { DeleteConversationsResponse } from "./pages/chatroom/responseModels/DeleteConversationsResponse";
@@ -53,12 +53,15 @@ import {
   BlockMember,
   CID,
   CANDM,
+  CreateDMChatroomWithUuid,
+  CheckDMLimitWithUuid,
+  CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
 import { DMStatusResponse } from "./pages/directMessage/responseModels/DMStatusResponse";
 import { DMLimitResponse } from "./pages/directMessage/responseModels/DMLimitResponse";
 import { SendDMRequestResponse } from "./pages/directMessage/responseModels/SendDMRequestResponse";
 import { CheckDMTabResponse } from "./pages/directMessage/responseModels/CheckDMTabResponse";
-import DirectMessage from "./pages/directMessage/directMessageClass";
+import DirectMessageClient from "./pages/directMessage/directMessageClient";
 import { CreateDMChatroomResponse } from "./pages/directMessage/responseModels/CreateDMChatroomResponse";
 import { FetchDMResponse } from "./pages/directMessage/responseModels/FetchDMResponse";
 import { BlockDMRequestResponse } from "./pages/directMessage/responseModels/BlockDMRequestResponse";
@@ -68,7 +71,7 @@ import { CanDMFeedResponse } from "./pages/directMessage/responseModels/CanDMFee
 //Explore Feed
 import { ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
 import { ExploreFeedResponse } from "./pages/exploreFeed/responseModels/ExploreFeedResponse";
-import ExploreFeed from "./pages/exploreFeed/exploreFeedClass";
+import ExploreFeedClient from "./pages/exploreFeed/exploreFeedClient";
 
 //HomeFeed
 import {
@@ -80,10 +83,10 @@ import {
   Participant,
 } from "@likeminds.community/chat-js/dist/pages/home-feed/types";
 import { HomeFeedResponse } from "./pages/homeFeed/responseModels/HomeFeedResponse";
-import HomeFeedClass from "./pages/homeFeed/homeFeedClass";
+import HomeFeedClient from "./pages/homeFeed/homeFeedClient";
 import { GetInvitesResponse } from "./pages/homeFeed/responseModels/GetInvitesResponse";
 
-//POLL
+//Poll
 import {
   PostPollConversationRequest,
   GetPollUsersRequest,
@@ -93,7 +96,7 @@ import {
 import { PostPollConversationResponse } from "./pages/poll/responseModels/PostPollConversationResponse";
 import { GetPollUsersResponse } from "./pages/poll/responseModels/GetPollUserResponse";
 import { AddPollResponse } from "./pages/poll/responseModels/AddPollResponse";
-import PollClass from "./pages/poll/pollClass";
+import PollClient from "./pages/poll/pollClient";
 
 //Search
 import {
@@ -102,7 +105,7 @@ import {
 } from "@likeminds.community/chat-js/dist/pages/search/types";
 import { SearchChatroomResponse } from "./pages/search/responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./pages/search/responseModels/SearchConversationResponse";
-import SearchClass from "./pages/search/searchClass";
+import SearchClient from "./pages/search/searchClient";
 
 //User
 import {
@@ -117,15 +120,13 @@ import {
   PROFILE,
   Members,
   Search,
+  InitUserWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./pages/user/responseModels/InitUserResponse";
-import { GetProfileResponse } from "./pages/user/responseModels/GetProfileResponse";
-import { GetMemberResponse } from "./pages/user/responseModels/GetMemberChatroomResponse";
-import { GetQuestionsResponse } from "./pages/user/responseModels/GetQuestionsResponse";
 import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberStateResponse";
 import { SearchMembersResponse } from "./pages/user/responseModels/SearchMembersResponse";
 import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberResponse";
-import UserClass from "./pages/user/userClass";
+import UserClient from "./pages/user/userClient";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -163,21 +164,20 @@ class LMChatClient {
       xSdkSource: "chat",
     });
 
-    //Q: is this the right way to create lmChatClient obj
     const lmChatClient = new LMChatClient();
 
     return lmChatClient;
   }
 
-  chatroomClient = new ChatroomClass();
-  directMessageClient = new DirectMessage();
-  exploreFeedClient = new ExploreFeed();
-  homeFeedClient = new HomeFeedClass();
-  pollClient = new PollClass();
-  searchClient = new SearchClass();
-  userClient = new UserClass();
+  chatroomClient = new ChatroomClient();
+  directMessageClient = new DirectMessageClient();
+  exploreFeedClient = new ExploreFeedClient();
+  homeFeedClient = new HomeFeedClient();
+  pollClient = new PollClient();
+  searchClient = new SearchClient();
+  userClient = new UserClient();
 
-  async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Success>> {
+  async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.muteChatroom(
       muteChatroom,
       LMChatClient.dlClient
@@ -185,19 +185,19 @@ class LMChatClient {
   }
 
   async followChatroom(
-    followChatroom: FollowChatroom
-  ): Promise<LMResponse<Success>> {
+    followChatroom: FollowChatroomWithUuid
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.followChatroom(
       followChatroom,
       LMChatClient.dlClient
     );
   }
 
-  async getChatroom(chatroom: Chatroom): Promise<LMResponse<ChatroomResponse>> {
+  async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
-  async markReadChatroom(markRead: MarkRead): Promise<LMResponse<Success>> {
+  async markReadChatroom(markRead: MarkRead): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.markReadChatroom(
       markRead,
       LMChatClient.dlClient
@@ -215,7 +215,7 @@ class LMChatClient {
 
   async setChatroomTopic(
     setChatroom: SetChatroom
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.setChatroomTopic(
       setChatroom,
       LMChatClient.dlClient
@@ -267,13 +267,13 @@ class LMChatClient {
     );
   }
 
-  async putReaction(putReaction: PutReaction): Promise<LMResponse<Success>> {
+  async putReaction(putReaction: PutReaction): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.putReaction(putReaction, LMChatClient.dlClient);
   }
 
   async deleteReaction(
     deleteReaction: DeleteReaction
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.deleteReaction(
       deleteReaction,
       LMChatClient.dlClient
@@ -304,28 +304,22 @@ class LMChatClient {
     );
   }
 
-  async pushReport(pushReport: PushReport): Promise<LMResponse<Success>> {
+  async pushReport(pushReport: PushReport): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.pushReport(pushReport, LMChatClient.dlClient);
   }
 
   async leaveSecretChatroom(
     leaveSecretChatroom: LeaveSecretChatroom
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.leaveSecretChatroom(
       leaveSecretChatroom,
       LMChatClient.dlClient
     );
   }
 
-  async profileData(
-    profile: Profile
-  ): Promise<LMResponse<ProfileDataResponse>> {
-    return this.chatroomClient.profileData(profile, LMChatClient.dlClient);
-  }
-
   async viewParticipants(
     participantsType: ParticipantsType
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.viewParticipants(
       participantsType,
       LMChatClient.dlClient
@@ -349,19 +343,20 @@ class LMChatClient {
     );
   }
 
-  async crSeenFn(crSeen: CRSeen): Promise<LMResponse<Success>> {
+  async crSeenFn(crSeen: CRSeen): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.crSeenFn(crSeen, LMChatClient.dlClient);
   }
 
-  async chatroomSeen(chatroomSeen: ChatroomSeen): Promise<LMResponse<Success>> {
+  async chatroomSeen(
+    chatroomSeen: ChatroomSeenWithUuid
+  ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.chatroomSeen(
       chatroomSeen,
       LMChatClient.dlClient
     );
   }
 
-  //DIRECT MESSAGE
-
+  //DM
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed
   ): Promise<LMResponse<FetchDMResponse>> {
@@ -381,7 +376,7 @@ class LMChatClient {
   }
 
   async checkDMLimit(
-    checkDMLimit: CheckDMLimit
+    checkDMLimit: CheckDMLimitWithUuid
   ): Promise<LMResponse<DMLimitResponse>> {
     return this.directMessageClient.checkDMLimit(
       checkDMLimit,
@@ -390,7 +385,7 @@ class LMChatClient {
   }
 
   async createDMChatroom(
-    createDMChatroom: CreateDMChatroom
+    createDMChatroom: CreateDMChatroomWithUuid
   ): Promise<LMResponse<CreateDMChatroomResponse>> {
     return this.directMessageClient.createDMChatroom(
       createDMChatroom,
@@ -424,11 +419,13 @@ class LMChatClient {
     return this.directMessageClient.getDMFeed(cid, LMChatClient.dlClient);
   }
 
-  async canDmFeed(dmCan: CANDM): Promise<LMResponse<CanDMFeedResponse>> {
+  async canDmFeed(
+    dmCan: CANDMWithUuid
+  ): Promise<LMResponse<CanDMFeedResponse>> {
     return this.directMessageClient.canDmFeed(dmCan, LMChatClient.dlClient);
   }
 
-  //EXPLORE FEED
+  //ExploreFeed
   async getExploreFeed(
     exploreFeedData: ExploreFeedData
   ): Promise<LMResponse<ExploreFeedResponse>> {
@@ -447,15 +444,15 @@ class LMChatClient {
     return this.homeFeedClient.getInvites(invite, LMChatClient.dlClient);
   }
 
-  async sendInvites(participant: Participant): Promise<LMResponse<Success>> {
+  async sendInvites(participant: Participant): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.sendInvites(participant, LMChatClient.dlClient);
   }
 
-  async registerDevice(device: Device): Promise<LMResponse<Success>> {
+  async registerDevice(device: Device): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.registerDevice(device, LMChatClient.dlClient);
   }
 
-  async inviteAction(iaType: IaType): Promise<LMResponse<Success>> {
+  async inviteAction(iaType: IaType): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.inviteAction(iaType, LMChatClient.dlClient);
   }
 
@@ -471,17 +468,7 @@ class LMChatClient {
     );
   }
 
-  // homeFeedListener(callback: any, route: any) {
-  //   const query = ref(db, route);
-  //   return onValue(query, (snapshot) => {
-  //     if (snapshot.exists()) {
-  //       callback(snapshot.val());
-  //     }
-  //   });
-  // }
-
-  //POLL
-
+  //Poll
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest
   ): Promise<LMResponse<PostPollConversationResponse>> {
@@ -511,12 +498,11 @@ class LMChatClient {
 
   async submitPoll(
     submitPollRequest: SubmitPollRequest
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     return this.pollClient.submitPoll(submitPollRequest, LMChatClient.dlClient);
   }
 
   //Search
-
   async searchChatroom(
     searchType: SearchType
   ): Promise<LMResponse<SearchChatroomResponse>> {
@@ -533,39 +519,18 @@ class LMChatClient {
   }
 
   //User
-  initiateUser(initUser: InitUser): Promise<LMResponse<InitiateUserResponse>> {
+  initiateUser(
+    initUser: InitUserWithUuid
+  ): Promise<LMResponse<InitiateUserResponse>> {
     return this.userClient.initiateUser(initUser, LMChatClient.dlClient);
   }
 
-  async logout(logout: Logout): Promise<LMResponse<Success>> {
+  async logout(logout: Logout): Promise<LMResponse<Nothing>> {
     return this.userClient.logout(logout, LMChatClient.dlClient);
-  }
-
-  async getProfile(
-    getProfile: GetProfile
-  ): Promise<LMResponse<GetProfileResponse>> {
-    return this.userClient.getProfile(getProfile, LMChatClient.dlClient);
-  }
-
-  async getMemberChatroom(
-    getMemberChatroom: GetMemberChatroom
-  ): Promise<LMResponse<GetMemberResponse>> {
-    return this.userClient.getMemberChatroom(
-      getMemberChatroom,
-      LMChatClient.dlClient
-    );
-  }
-
-  async getQuestions(): Promise<LMResponse<GetQuestionsResponse>> {
-    return this.userClient.getQuestions(LMChatClient.dlClient);
   }
 
   async getMemberState(): Promise<LMResponse<GetMemberStateResponse>> {
     return this.userClient.getMemberState(LMChatClient.dlClient);
-  }
-
-  async editProfile(editProfile: EditProfile): Promise<LMResponse<Success>> {
-    return this.userClient.editProfile(editProfile, LMChatClient.dlClient);
   }
 
   async searchMembers(
@@ -579,18 +544,6 @@ class LMChatClient {
   ): Promise<LMResponse<GetAllMembersResponse>> {
     return this.userClient.getAllMembers(getAllMembers, LMChatClient.dlClient);
   }
-
-  //   dmAllMembers(userType: USERTYPE): Promise<any> {
-  //     return this.networkLibrary.makeAuthenticatedRequest(
-  //         `${environment.apiUrl}${API.DM_ALL_MEMBERS}?community_id=${userType.community_id}&member_state=${userType.member_state}&page=${userType.page}`
-  //     );
-  // }
-
-  // allMembers(userType: USERTYPE): Promise<any> {
-  //     return this.networkLibrary.makeAuthenticatedRequest(
-  //         `${environment.apiUrl}${API.COMMUNITY_MEMBERS}?community_id=${userType.community_id}&chatroom_id=${userType.chatroom_id}&page=${userType.page}`
-  //     );
-  // }
 }
 
 export { LMChatClient as default };

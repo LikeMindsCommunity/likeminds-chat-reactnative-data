@@ -2,7 +2,7 @@ import {
   FollowChatroom,
   MuteChatroom,
   MarkRead,
-  Chatroom,
+  Chatroom as ChatroomRequest,
   ShareChatroom,
   SetChatroom,
   TaggingList,
@@ -17,41 +17,41 @@ import {
   GetReportTags,
   PushReport,
   LeaveSecretChatroom,
-  Profile,
   ParticipantsType,
   CHTYPE,
   CmetaType,
   CRSeen,
   ChatroomSeen,
+  ChatroomSeenWithUuid,
+  FollowChatroomWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../../core/services/lmresponse";
-import { ChatroomResponse } from "../../shared/responseModels/Chatroom";
+import { Chatroom } from "../../shared/responseModels/Chatroom";
 import { ShareChatroomUrlResponse } from "./responseModels/ShareChatroomUrlResponse";
 import { GetTaggingListResponse } from "./responseModels/GetTaggingListResponse";
 import { GetConversationsResponse } from "./responseModels/GetConversationsResponse";
 import { PutMultimediaResponse } from "./responseModels/PutMultimediaResponse";
 import { DecodeUrlResponse } from "./responseModels/DecodeUrlResponse";
-import { ProfileDataResponse } from "./responseModels/ProfileDataResponse";
 import { ModelConverter } from "src/utils/ModelConverter";
 import DLClient from "@likeminds.community/chat-js";
-import { Success } from "src/shared/responseModels/Success";
+import { Nothing } from "src/shared/responseModels/Nothing";
 import { PostConversationsResponse } from "./responseModels/PostConversationResponse";
 import { EditConversationResponse } from "./responseModels/EditConversationResponse";
 import { DeleteConversationsResponse } from "./responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
 
-class ChatroomClass {
+class ChatroomClient {
   async muteChatroom(
     muteChatroom: MuteChatroom,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
       const resp = await dlClient.muteChatroom(muteChatroom);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true); //(data,errorMsg,success)
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occurred",
         false
@@ -60,33 +60,22 @@ class ChatroomClass {
   }
 
   async followChatroom(
-    followChatroom: FollowChatroom,
+    followChatroom: FollowChatroomWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
-    try {
-      const resp = await dlClient.followChatroom(followChatroom);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true); //(data,errorMsg,success)
-    } catch (error) {
-      return new LMResponse<Success>(
-        null,
-        error.message || "An error occurred",
-        false
-      );
-    }
+  ): Promise<LMResponse<Nothing>> {
+    return await dlClient.followChatroomWithUuid(followChatroom);
   }
 
   async getChatroom(
-    chatroom: Chatroom,
+    chatroom: ChatroomRequest,
     dlClient: DLClient
-  ): Promise<LMResponse<ChatroomResponse>> {
+  ): Promise<LMResponse<Chatroom>> {
     try {
       const resp = await dlClient.getChatroom(chatroom);
-      const convertedResp: ChatroomResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<ChatroomResponse>(convertedResp, null, true);
+      const convertedResp: Chatroom = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Chatroom>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<ChatroomResponse>(
+      return new LMResponse<Chatroom>(
         null,
         error.message || "An error occured",
         false
@@ -97,13 +86,13 @@ class ChatroomClass {
   async markReadChatroom(
     markRead: MarkRead,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
       const resp = await dlClient.markReadChatroom(markRead);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -136,13 +125,13 @@ class ChatroomClass {
   async setChatroomTopic(
     setChatroom: SetChatroom,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
       const resp = await dlClient.setChatroomTopic(setChatroom);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -195,7 +184,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<PostConversationsResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(postConversation);
       const resp = await dlClient.postConversation(postConversation);
       const convertedResp: PostConversationsResponse =
         ModelConverter.responseBodyParser(resp);
@@ -218,7 +206,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<EditConversationResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(conversationId);
       const resp = await dlClient.editConversation(conversationId);
       const convertedResp: EditConversationResponse =
         ModelConverter.responseBodyParser(resp);
@@ -241,7 +228,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<DeleteConversationsResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(deleteConversation);
       const resp = await dlClient.deleteConversation(deleteConversation);
       const convertedResp: DeleteConversationsResponse =
         ModelConverter.responseBodyParser(resp);
@@ -262,14 +248,13 @@ class ChatroomClass {
   async putReaction(
     putReaction: PutReaction,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(putReaction);
       const resp = await dlClient.putReaction(putReaction);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -280,14 +265,13 @@ class ChatroomClass {
   async deleteReaction(
     deleteReaction: DeleteReaction,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(deleteReaction);
       const resp = await dlClient.deleteReaction(deleteReaction);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -300,7 +284,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<PutMultimediaResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(putMultimedia);
       const resp = await dlClient.putMultimedia(putMultimedia);
       const convertedResp: PutMultimediaResponse =
         ModelConverter.responseBodyParser(resp);
@@ -319,7 +302,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<DecodeUrlResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(decodeUrl);
       const resp = await dlClient.decodeUrl(decodeUrl);
       const convertedResp: DecodeUrlResponse =
         ModelConverter.responseBodyParser(resp);
@@ -338,7 +320,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<GetReportTagsResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(getReportTags);
       const resp = await dlClient.getReportTags(getReportTags);
       const convertedResp: GetReportTagsResponse =
         ModelConverter.responseBodyParser(resp);
@@ -355,14 +336,13 @@ class ChatroomClass {
   async pushReport(
     pushReport: PushReport,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(pushReport);
       const resp = await dlClient.pushReport(pushReport);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -373,33 +353,13 @@ class ChatroomClass {
   async leaveSecretChatroom(
     leaveSecretChatroom: LeaveSecretChatroom,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(leaveSecretChatroom);
       const resp = await dlClient.leaveSecretChatroom(leaveSecretChatroom);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
-  }
-
-  async profileData(
-    profile: Profile,
-    dlClient: DLClient
-  ): Promise<LMResponse<ProfileDataResponse>> {
-    try {
-      // const params = ModelConverter.requestBodyGenerator(profile);
-      const resp = await dlClient.profileData(profile);
-      const convertedResp: ProfileDataResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<ProfileDataResponse>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<ProfileDataResponse>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -410,14 +370,13 @@ class ChatroomClass {
   async viewParticipants(
     participantsType: ParticipantsType,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(participantsType);
       const resp = await dlClient.viewParticipants(participantsType);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -430,7 +389,6 @@ class ChatroomClass {
     dlClient: DLClient
   ): Promise<LMResponse<FetchConversationResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(cmetaType);
       const resp = await dlClient.conversationsFetch(cmetaType);
       const convertedResp: FetchConversationResponse =
         ModelConverter.responseBodyParser(resp);
@@ -469,14 +427,13 @@ class ChatroomClass {
   async crSeenFn(
     crSeen: CRSeen,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(crSeen);
       const resp = await dlClient.crSeenFn(crSeen);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -485,22 +442,11 @@ class ChatroomClass {
   }
 
   async chatroomSeen(
-    chatroomSeen: ChatroomSeen,
+    chatroomSeen: ChatroomSeenWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
-    try {
-      // const params = ModelConverter.requestBodyGenerator(chatroomSeen);
-      const resp = await dlClient.chatroomSeen(chatroomSeen);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<Success>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
+  ): Promise<LMResponse<Nothing>> {
+    return await dlClient.chatroomSeenWithUuid(chatroomSeen);
   }
 }
 
-export { ChatroomClass as default };
+export { ChatroomClient as default };
