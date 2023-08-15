@@ -50,17 +50,9 @@ class UserClient {
   ): Promise<LMResponse<GetMemberStateResponse>> {
     try {
       const resp = await dlClient.getMemberState();
-      console.log("respGetMember", resp);
       const convertedResp: GetMemberStateResponse =
         ModelConverter.responseBodyParser(resp);
-      console.log("convertedRespGetMember", convertedResp);
-      const temp = new LMResponse<GetMemberStateResponse>(
-        convertedResp,
-        null,
-        true
-      );
-      console.log("tempGetMemberState", temp);
-      return temp;
+      return new LMResponse<GetMemberStateResponse>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<GetMemberStateResponse>(
         null,
