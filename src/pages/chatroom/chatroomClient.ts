@@ -40,6 +40,7 @@ import { EditConversationResponse } from "./responseModels/EditConversationRespo
 import { DeleteConversationsResponse } from "./responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
+import { FetchChatroomHome } from "./responseModels/FetchChatroomHomeResponse";
 
 class ChatroomClient {
   async muteChatroom(
@@ -406,17 +407,16 @@ class ChatroomClient {
     }
   }
 
-  //TODO
   async fetchChatroomHome(
     chatroom: CHTYPE,
     dlClient: DLClient
-  ): Promise<LMResponse<any>> {
+  ): Promise<LMResponse<FetchChatroomHome>> {
     try {
       const resp = await dlClient.fetchChatroomHome(chatroom);
       const convertedResp = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<any>(convertedResp, null, true);
+      return new LMResponse<FetchChatroomHome>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<any>(
+      return new LMResponse<FetchChatroomHome>(
         null,
         error.message || "An error occured",
         false

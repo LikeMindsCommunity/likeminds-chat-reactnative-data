@@ -42,6 +42,7 @@ import { EditConversationResponse } from "./pages/chatroom/responseModels/EditCo
 import { DeleteConversationsResponse } from "./pages/chatroom/responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./pages/chatroom/responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./pages/chatroom/responseModels/FetchConversationResponse";
+import { FetchChatroomHome } from "./pages/chatroom/responseModels/FetchChatroomHomeResponse";
 
 //DM
 import {
@@ -335,8 +336,9 @@ class LMChatClient {
     );
   }
 
-  //TODO
-  async fetchChatroomHome(chatroom: CHTYPE): Promise<LMResponse<any>> {
+  async fetchChatroomHome(
+    chatroom: CHTYPE
+  ): Promise<LMResponse<FetchChatroomHome>> {
     return this.chatroomClient.fetchChatroomHome(
       chatroom,
       LMChatClient.dlClient

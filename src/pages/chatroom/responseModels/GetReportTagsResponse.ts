@@ -1,7 +1,4 @@
-interface ReportTag {
-  id: number;
-  name: string;
-}
+import { ReportTag } from "src/shared/responseModels/ReportTag";
 
 export interface GetReportTagsResponse {
   tags: ReportTag[];
