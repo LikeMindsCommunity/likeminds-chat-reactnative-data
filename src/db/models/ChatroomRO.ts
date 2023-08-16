@@ -1,8 +1,11 @@
 import {
   BOOLEAN,
+  CHATROOMS,
   CHATROOM_RO,
+  COMMUNITY_RO,
   ID,
   INT,
+  LINKING_OBJECTS,
   LIST_CONVERSATION_RO,
   LIST_INT,
   LIST_REACTION_RO,
@@ -67,7 +70,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   isConversationStored!: boolean;
   isDraft?: boolean | null;
   lastConversationId?: string | null;
-  communities?: Realm.List<CommunityRO> | null;
+  communities?: Realm.Results<CommunityRO> | null;
 
   static schema: Realm.ObjectSchema = {
     name: CHATROOM_RO,
@@ -116,7 +119,11 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       isConversationStored: BOOLEAN,
       isDraft: OPTIONAL_BOOLEAN,
       lastConversationId: OPTIONAL_STRING,
-      communities: OPTIONAL_LIST_COMMUNITY_RO,
+      communities: {
+        type: LINKING_OBJECTS,
+        objectType: COMMUNITY_RO,
+        property: CHATROOMS,
+      },
     },
     primaryKey: ID,
   };

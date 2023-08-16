@@ -43,3 +43,8 @@ export const LIST_ATTACHMENT_RO = "AttachmentRO[]";
 
 // others
 export const ID = "id";
+export const LINKING_OBJECTS = "linkingObjects";
+export const COMMUNITY = "community";
+export const COMMUNITIES = "communities";
+export const CONVERSATIONS = "conversations";
+export const CHATROOMS = "chatrooms";

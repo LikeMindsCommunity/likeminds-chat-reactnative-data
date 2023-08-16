@@ -1,8 +1,12 @@
 import {
   BOOLEAN,
+  CHATROOM_RO,
+  COMMUNITY_RO,
+  CONVERSATIONS,
   CONVERSATION_RO,
   ID,
   INT,
+  LINKING_OBJECTS,
   LIST_ATTACHMENT_RO,
   LIST_POLL_RO,
   LIST_REACTION_RO,
@@ -62,8 +66,8 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   replyChatRoomId?: string | null;
   lastUpdatedAt!: number;
   deletedByMember?: MemberRO | null;
-  community?: Realm.List<CommunityRO> | null;
-  chatroom?: Realm.List<ChatroomRO> | null;
+  community?: Realm.Results<CommunityRO> | null;
+  chatroom?: Realm.Results<ChatroomRO> | null;
 
   static schema: Realm.ObjectSchema = {
     name: CONVERSATION_RO,
@@ -104,8 +108,16 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       replyChatRoomId: OPTIONAL_STRING,
       lastUpdatedAt: INT,
       deletedByMember: OPTIONAL_MEMBER_RO,
-      community: OPTIONAL_LIST_COMMUNITY_RO,
-      chatroom: OPTIONAL_LIST_CHATROOM_RO,
+      community: {
+        type: LINKING_OBJECTS,
+        objectType: COMMUNITY_RO,
+        property: CONVERSATIONS,
+      },
+      chatroom: {
+        type: LINKING_OBJECTS,
+        objectType: CHATROOM_RO,
+        property: CONVERSATIONS,
+      },
     },
     primaryKey: ID,
   };
