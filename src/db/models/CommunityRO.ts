@@ -1,6 +1,7 @@
 import {
   BOOLEAN,
   COMMUNITY_RO,
+  ID,
   LIST_CHATROOM_RO,
   LIST_CONVERSATION_RO,
   OPTIONAL_INT,
@@ -36,5 +37,6 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
       conversations: LIST_CONVERSATION_RO,
       chatrooms: LIST_CHATROOM_RO,
     },
+    primaryKey: ID,
   };
 }
