@@ -101,7 +101,7 @@ class HomeFeedClient {
     }
   }
 
-  fbInstance(dlClient: DLClient) {
+  firebaseInstance(dlClient: DLClient) {
     try {
       return dlClient.fbInstance();
     } catch (error) {

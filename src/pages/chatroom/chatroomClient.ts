@@ -40,7 +40,6 @@ import { EditConversationResponse } from "./responseModels/EditConversationRespo
 import { DeleteConversationsResponse } from "./responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
-import { FetchChatroomHome } from "./responseModels/FetchChatroomHomeResponse";
 
 class ChatroomClient {
   async muteChatroom(
@@ -158,7 +157,7 @@ class ChatroomClient {
     }
   }
 
-  async getConversation(
+  async getConversations(
     conversation: Conversation,
     dlClient: DLClient
   ): Promise<LMResponse<GetConversationsResponse>> {
@@ -224,7 +223,7 @@ class ChatroomClient {
     }
   }
 
-  async deleteConversation(
+  async deleteConversations(
     deleteConversation: DeleteConversation,
     dlClient: DLClient
   ): Promise<LMResponse<DeleteConversationsResponse>> {
@@ -368,7 +367,7 @@ class ChatroomClient {
     }
   }
 
-  async viewParticipants(
+  async getParticipants(
     participantsType: ParticipantsType,
     dlClient: DLClient
   ): Promise<LMResponse<Nothing>> {
@@ -385,7 +384,7 @@ class ChatroomClient {
     }
   }
 
-  async conversationsFetch(
+  async getConversationMeta(
     cmetaType: CmetaType,
     dlClient: DLClient
   ): Promise<LMResponse<FetchConversationResponse>> {
@@ -400,40 +399,6 @@ class ChatroomClient {
       );
     } catch (error) {
       return new LMResponse<FetchConversationResponse>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
-  }
-
-  async fetchChatroomHome(
-    chatroom: CHTYPE,
-    dlClient: DLClient
-  ): Promise<LMResponse<FetchChatroomHome>> {
-    try {
-      const resp = await dlClient.fetchChatroomHome(chatroom);
-      const convertedResp = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<FetchChatroomHome>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<FetchChatroomHome>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
-  }
-
-  async crSeenFn(
-    crSeen: CRSeen,
-    dlClient: DLClient
-  ): Promise<LMResponse<Nothing>> {
-    try {
-      const resp = await dlClient.crSeenFn(crSeen);
-      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Nothing>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false

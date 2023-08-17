@@ -42,7 +42,6 @@ import { EditConversationResponse } from "./pages/chatroom/responseModels/EditCo
 import { DeleteConversationsResponse } from "./pages/chatroom/responseModels/DeleteConversationsResponse";
 import { GetReportTagsResponse } from "./pages/chatroom/responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./pages/chatroom/responseModels/FetchConversationResponse";
-import { FetchChatroomHome } from "./pages/chatroom/responseModels/FetchChatroomHomeResponse";
 
 //DM
 import {
@@ -232,10 +231,10 @@ class LMChatClient {
     );
   }
 
-  async getConversation(
+  async getConversations(
     conversation: Conversation
   ): Promise<LMResponse<GetConversationsResponse>> {
-    return this.chatroomClient.getConversation(
+    return this.chatroomClient.getConversations(
       conversation,
       LMChatClient.dlClient
     );
@@ -259,10 +258,10 @@ class LMChatClient {
     );
   }
 
-  async deleteConversation(
+  async deleteConversations(
     deleteConversation: DeleteConversation
   ): Promise<LMResponse<DeleteConversationsResponse>> {
-    return this.chatroomClient.deleteConversation(
+    return this.chatroomClient.deleteConversations(
       deleteConversation,
       LMChatClient.dlClient
     );
@@ -318,35 +317,22 @@ class LMChatClient {
     );
   }
 
-  async viewParticipants(
+  async getParticipants(
     participantsType: ParticipantsType
   ): Promise<LMResponse<Nothing>> {
-    return this.chatroomClient.viewParticipants(
+    return this.chatroomClient.getParticipants(
       participantsType,
       LMChatClient.dlClient
     );
   }
 
-  async conversationsFetch(
+  async getConversationMeta(
     cmetaType: CmetaType
   ): Promise<LMResponse<FetchConversationResponse>> {
-    return this.chatroomClient.conversationsFetch(
+    return this.chatroomClient.getConversationMeta(
       cmetaType,
       LMChatClient.dlClient
     );
-  }
-
-  async fetchChatroomHome(
-    chatroom: CHTYPE
-  ): Promise<LMResponse<FetchChatroomHome>> {
-    return this.chatroomClient.fetchChatroomHome(
-      chatroom,
-      LMChatClient.dlClient
-    );
-  }
-
-  async crSeenFn(crSeen: CRSeen): Promise<LMResponse<Nothing>> {
-    return this.chatroomClient.crSeenFn(crSeen, LMChatClient.dlClient);
   }
 
   async chatroomSeen(
@@ -417,10 +403,6 @@ class LMChatClient {
     return this.directMessageClient.checkDMTab(LMChatClient.dlClient);
   }
 
-  async getDMFeed(cid: CID): Promise<LMResponse<GetDMFeedResponse>> {
-    return this.directMessageClient.getDMFeed(cid, LMChatClient.dlClient);
-  }
-
   async canDmFeed(
     dmCan: CANDMWithUuid
   ): Promise<LMResponse<CanDMFeedResponse>> {
@@ -458,8 +440,8 @@ class LMChatClient {
     return this.homeFeedClient.inviteAction(iaType, LMChatClient.dlClient);
   }
 
-  fbInstance() {
-    return this.homeFeedClient.fbInstance(LMChatClient.dlClient);
+  firebaseInstance() {
+    return this.homeFeedClient.firebaseInstance(LMChatClient.dlClient);
   }
 
   homeFeedListener(callback: any, route: any) {
