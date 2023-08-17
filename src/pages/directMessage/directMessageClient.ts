@@ -2,35 +2,34 @@ import { ModelConverter } from "../../utils/ModelConverter";
 import {
   FetchDMFeed,
   CheckDMStatus,
-  CheckDMLimit,
   CreateDMChatroom,
+  CheckDMLimit,
   SendDMRequest,
   BlockMember,
   CID,
   CANDM,
+  CheckDMLimitWithUuid,
+  CreateDMChatroomWithUuid,
+  CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
+import { DMLimitResponse } from "./responseModels/DMLimitResponse";
 import DLClient from "@likeminds.community/chat-js";
 import { FetchDMResponse } from "./responseModels/FetchDMResponse";
 import { DMStatusResponse } from "./responseModels/DMStatusResponse";
-import { DMLimitResponse } from "./responseModels/DMLimitResponse";
 import { SendDMRequestResponse } from "./responseModels/SendDMRequestResponse";
 import { CheckDMTabResponse } from "./responseModels/CheckDMTabResponse";
-import LMResponse from "../../core/services/lmresponse";
+import LMResponse from "src/core/services/lmresponse";
 import { CreateDMChatroomResponse } from "./responseModels/CreateDMChatroomResponse";
 import { BlockDMRequestResponse } from "./responseModels/BlockDMRequestResponse";
 import { GetDMFeedResponse } from "./responseModels/GetDMFeedResponse";
 import { CanDMFeedResponse } from "./responseModels/CanDMFeedResponse";
-import LMChatClient from "@likeminds.community/chat-js";
 
-class DirectMessage {
-  private static dlClient: DLClient;
-
+class DirectMessageClient {
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed,
     dlClient: DLClient
   ): Promise<LMResponse<FetchDMResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(fetchDMFeed);
       const resp = await dlClient.fetchDMFeed(fetchDMFeed);
       const convertedResp: FetchDMResponse =
         ModelConverter.responseBodyParser(resp);
@@ -49,7 +48,6 @@ class DirectMessage {
     dlClient: DLClient
   ): Promise<LMResponse<DMStatusResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(checkDMStatus);
       const resp = await dlClient.checkDMStatus(checkDMStatus);
       const convertedResp: DMStatusResponse =
         ModelConverter.responseBodyParser(resp);
@@ -64,44 +62,17 @@ class DirectMessage {
   }
 
   async checkDMLimit(
-    checkDMLimit: CheckDMLimit,
+    checkDMLimit: CheckDMLimitWithUuid,
     dlClient: DLClient
   ): Promise<LMResponse<DMLimitResponse>> {
-    try {
-      // const params = ModelConverter.requestBodyGenerator(checkDMLimit);
-      const resp = await dlClient.checkDMLimit(checkDMLimit);
-      const convertedResp: DMLimitResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<DMLimitResponse>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<DMLimitResponse>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
+    return await dlClient.checkDMLimitWithUuid(checkDMLimit);
   }
+
   async createDMChatroom(
-    createDMChatroom: CreateDMChatroom,
+    createDMChatroom: CreateDMChatroomWithUuid,
     dlClient: DLClient
   ): Promise<LMResponse<CreateDMChatroomResponse>> {
-    try {
-      // const params = ModelConverter.requestBodyGenerator(createDMChatroom);
-      const resp = await dlClient.createDMChatroom(createDMChatroom);
-      const convertedResp: CreateDMChatroomResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<CreateDMChatroomResponse>(
-        convertedResp,
-        null,
-        true
-      );
-    } catch (error) {
-      return new LMResponse<CreateDMChatroomResponse>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
+    return await dlClient.createDMChatroomWithUuid(createDMChatroom);
   }
 
   async sendDMRequest(
@@ -109,7 +80,6 @@ class DirectMessage {
     dlClient: DLClient
   ): Promise<LMResponse<SendDMRequestResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(sendDMRequest);
       const resp = await dlClient.sendDMRequest(sendDMRequest);
       const convertedResp: SendDMRequestResponse =
         ModelConverter.responseBodyParser(resp);
@@ -128,7 +98,6 @@ class DirectMessage {
     dlClient: DLClient
   ): Promise<LMResponse<BlockDMRequestResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(blockMember);
       const resp = await dlClient.blockMember(blockMember);
       const convertedResp: BlockDMRequestResponse =
         ModelConverter.responseBodyParser(resp);
@@ -164,7 +133,6 @@ class DirectMessage {
     dlClient: DLClient
   ): Promise<LMResponse<GetDMFeedResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(cid);
       const resp = await dlClient.getDMFeed(cid);
       const convertedResp: GetDMFeedResponse =
         ModelConverter.responseBodyParser(resp);
@@ -179,23 +147,11 @@ class DirectMessage {
   }
 
   async canDmFeed(
-    dmCan: CANDM,
+    dmCan: CANDMWithUuid,
     dlClient: DLClient
   ): Promise<LMResponse<CanDMFeedResponse>> {
-    try {
-      // const params = ModelConverter.requestBodyGenerator(dmCan);
-      const resp = await dlClient.canDmFeed(dmCan);
-      const convertedResp: CanDMFeedResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<CanDMFeedResponse>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<CanDMFeedResponse>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
+    return await dlClient.canDmFeedWithUuid(dmCan);
   }
 }
 
-export { DirectMessage as default };
+export { DirectMessageClient as default };

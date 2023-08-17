@@ -10,19 +10,14 @@ import {
 import { PostPollConversationResponse } from "./responseModels/PostPollConversationResponse";
 import { GetPollUsersResponse } from "./responseModels/GetPollUserResponse";
 import { AddPollResponse } from "./responseModels/AddPollResponse";
-import { Success } from "src/shared/responseModels/Success";
+import { Nothing } from "src/shared/responseModels/Nothing";
 
-class PollClass {
-  private static dlClient: DLClient;
-
+class PollClient {
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest,
     dlClient: DLClient
   ): Promise<LMResponse<PostPollConversationResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(
-      //   postPollConversationRequest
-      // );
       const resp = await dlClient.postPollConversation(
         postPollConversationRequest
       );
@@ -47,7 +42,6 @@ class PollClass {
     dlClient: DLClient
   ): Promise<LMResponse<GetPollUsersResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(getPollUsersRequest);
       const resp = await dlClient.getPollUsers(getPollUsersRequest);
       const convertedResp: GetPollUsersResponse =
         ModelConverter.responseBodyParser(resp);
@@ -66,7 +60,6 @@ class PollClass {
     dlClient: DLClient
   ): Promise<LMResponse<AddPollResponse>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(addPollOptionRequest);
       const resp = await dlClient.addPollOption(addPollOptionRequest);
       const convertedResp: AddPollResponse =
         ModelConverter.responseBodyParser(resp);
@@ -83,14 +76,13 @@ class PollClass {
   async submitPoll(
     submitPollRequest: SubmitPollRequest,
     dlClient: DLClient
-  ): Promise<LMResponse<Success>> {
+  ): Promise<LMResponse<Nothing>> {
     try {
-      // const params = ModelConverter.requestBodyGenerator(submitPollRequest);
       const resp = await dlClient.submitPoll(submitPollRequest);
-      const convertedResp: Success = ModelConverter.responseBodyParser(resp);
-      return new LMResponse<Success>(convertedResp, null, true);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      return new LMResponse<Success>(
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
@@ -99,4 +91,4 @@ class PollClass {
   }
 }
 
-export { PollClass as default };
+export { PollClient as default };

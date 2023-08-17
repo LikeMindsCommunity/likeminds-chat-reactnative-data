@@ -1,6 +1,5 @@
 import { Chatroom } from "src/shared/responseModels/Chatroom";
 
-export interface CreateDMChatroomResponse {
+export interface FetchChatroomHome {
   chatroom: Chatroom;
-  chatroomLocal: Chatroom;
 }

@@ -20,10 +20,6 @@ class LMResponse<T> {
   public getStatus(): boolean {
     return this.success;
   }
-
-  // public isSuccess(): boolean {
-  //     return this.status >= 200 && this.status < 300;
-  // }
 }
 
 export default LMResponse;

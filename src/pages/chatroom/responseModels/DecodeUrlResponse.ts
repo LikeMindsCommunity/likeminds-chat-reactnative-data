@@ -1,9 +1,4 @@
-interface LinkOGTags {
-  title?: string | null;
-  image?: string | null;
-  description?: string | null;
-  url?: string | null;
-}
+import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 
 export interface DecodeUrlResponse {
   ogTags: LinkOGTags;

@@ -1,6 +1,6 @@
 import { Conversation } from "../../../shared/responseModels/Conversation";
 
 export interface GetConversationsResponse {
-  conversations: Conversation[] | null;
+  conversations?: Conversation[];
   count: number;
 }
