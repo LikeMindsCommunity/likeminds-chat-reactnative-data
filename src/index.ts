@@ -128,9 +128,11 @@ import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberSta
 import { SearchMembersResponse } from "./pages/user/responseModels/SearchMembersResponse";
 import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberResponse";
 import UserClient from "./pages/user/userClient";
-import SyncClient from "./sync/api/chatroom";
+import SyncClient from "./sync/api";
 import SyncChatroomRequest from "./sync/model/syncChatroomRequest";
 import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
+import SyncConversationRequest from "./sync/model/syncConversationRequest";
+import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -557,6 +559,12 @@ class LMChatClient {
   ): Promise<LMResponse<SyncChatroomResponse>> {
     return this.syncClient.syncChatroom(request, LMChatClient.dlClient);
   }
+
+  async syncConversation(
+    request: SyncConversationRequest
+  ): Promise<LMResponse<SyncConversationResponse>> {
+    return this.syncClient.syncConversation(request, LMChatClient.dlClient);
+  }
 }
 
-export { LMChatClient, SyncChatroomRequest };
+export { LMChatClient, SyncChatroomRequest, SyncConversationRequest };
