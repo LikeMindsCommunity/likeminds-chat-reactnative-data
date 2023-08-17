@@ -128,6 +128,9 @@ import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberSta
 import { SearchMembersResponse } from "./pages/user/responseModels/SearchMembersResponse";
 import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberResponse";
 import UserClient from "./pages/user/userClient";
+import SyncClient from "./sync/api/chatroom";
+import SyncChatroomRequest from "./sync/model/syncChatroomRequest";
+import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -177,6 +180,7 @@ class LMChatClient {
   pollClient = new PollClient();
   searchClient = new SearchClient();
   userClient = new UserClient();
+  syncClient = new SyncClient();
 
   async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.muteChatroom(
@@ -546,6 +550,13 @@ class LMChatClient {
   ): Promise<LMResponse<GetAllMembersResponse>> {
     return this.userClient.getAllMembers(getAllMembers, LMChatClient.dlClient);
   }
+
+  // Sync
+  async syncChatroom(
+    request: SyncChatroomRequest
+  ): Promise<LMResponse<SyncChatroomResponse>> {
+    return this.syncClient.syncChatroom(request, LMChatClient.dlClient);
+  }
 }
 
-export { LMChatClient as default };
+export { LMChatClient, SyncChatroomRequest };
