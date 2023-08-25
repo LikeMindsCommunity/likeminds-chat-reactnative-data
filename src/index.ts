@@ -132,6 +132,12 @@ import SyncChatroomRequest from "./sync/model/syncChatroomRequest";
 import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
+import {
+  getChatroomData,
+  getCommunityData,
+  saveChatroomResponse,
+  saveCommunityData,
+} from "./Data/Db/dbhelper";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -546,6 +552,19 @@ class LMChatClient {
     request: SyncConversationRequest
   ): Promise<LMResponse<SyncConversationResponse>> {
     return this.syncClient.syncConversation(request, LMChatClient.dlClient);
+  }
+
+  saveCommunityData(communityData) {
+    return saveCommunityData(communityData);
+  }
+  saveChatroomResponse(data: any, chatrooms: any[], communityId: string) {
+    return saveChatroomResponse(data, chatrooms, communityId);
+  }
+  getCommunityData() {
+    return getCommunityData();
+  }
+  getChatroomData() {
+    return getChatroomData();
   }
 }
 
