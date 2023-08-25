@@ -2,26 +2,23 @@ class SyncConversationRequest {
   // Properties of the request class
   page: number;
   pageSize: number;
-  chatroomTypes: number[];
+  chatroomId: string;
   maxTimestamp: number;
   minTimestamp: number;
-  isLocalDb: boolean;
 
   // Public constructor to create the request object
   constructor(
     page: number,
     pageSize: number,
-    chatroomTypes: number[],
+    chatroomId: string,
     maxTimestamp: number,
-    minTimestamp: number,
-    isLocalDb: boolean
+    minTimestamp: number
   ) {
     this.page = page;
     this.pageSize = pageSize;
-    this.chatroomTypes = chatroomTypes;
+    this.chatroomId = chatroomId;
     this.maxTimestamp = maxTimestamp;
     this.minTimestamp = minTimestamp;
-    this.isLocalDb = isLocalDb;
   }
 
   // Static builder method to create the request object
@@ -33,10 +30,9 @@ class SyncConversationRequest {
 export class SyncConversationRequestBuilder {
   private page: number;
   private pageSize: number;
-  private chatroomTypes: number[];
+  private chatroomId: string;
   private maxTimestamp: number;
   private minTimestamp: number;
-  private isLocalDb: boolean;
 
   public setPage(page: number): SyncConversationRequestBuilder {
     this.page = page;
@@ -48,10 +44,8 @@ export class SyncConversationRequestBuilder {
     return this;
   }
 
-  public setChatroomTypes(
-    chatroomTypes: number[]
-  ): SyncConversationRequestBuilder {
-    this.chatroomTypes = chatroomTypes;
+  public setChatroomId(chatroomId: string): SyncConversationRequestBuilder {
+    this.chatroomId = chatroomId;
     return this;
   }
 
@@ -65,19 +59,13 @@ export class SyncConversationRequestBuilder {
     return this;
   }
 
-  public setIsLocalDb(isLocalDb: boolean): SyncConversationRequestBuilder {
-    this.isLocalDb = isLocalDb;
-    return this;
-  }
-
   public build(): SyncConversationRequest {
     return new SyncConversationRequest(
       this.page,
       this.pageSize,
-      this.chatroomTypes,
+      this.chatroomId,
       this.maxTimestamp,
-      this.minTimestamp,
-      this.isLocalDb
+      this.minTimestamp
     );
   }
 }

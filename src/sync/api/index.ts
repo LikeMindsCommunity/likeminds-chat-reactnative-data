@@ -13,7 +13,6 @@ class SyncClient {
     dlClient: DLClient
   ): Promise<LMResponse<SyncChatroomResponse>> {
     const params = ModelConverter.requestBodyGenerator(request);
-    console.log("syncChatroom request params ----->", request, params);
     // request;
     return dlClient
       .makeAuthenticatedRequest(`${API.CHATROOM_SYNC}`, { params: params })
@@ -38,16 +37,19 @@ class SyncClient {
     dlClient: DLClient
   ): Promise<LMResponse<SyncConversationResponse>> {
     const params = ModelConverter.requestBodyGenerator(request);
-    console.log("syncConversation request params ----->", request, params);
     // request;
     return dlClient
-      .makeAuthenticatedRequest(`${API.CHATROOM_SYNC}`, { params: params })
+      .makeAuthenticatedRequest(`${API.CONVERSATION_SYNC}`, { params: params })
       .then((resData: any) => {
         // Handle the response and return the LMResponse object
         const responseData: SyncConversationResponse =
           ModelConverter.responseBodyParser(resData.data);
 
-        return new LMResponse<SyncConversationResponse>(responseData, null, true);
+        return new LMResponse<SyncConversationResponse>(
+          responseData,
+          null,
+          true
+        );
       })
       .catch((error) => {
         return new LMResponse<SyncConversationResponse>(
