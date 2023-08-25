@@ -5,5 +5,6 @@ export interface Community {
   membersCount?: number;
   updatedAt?: number;
   relationshipNeeded: boolean | true;
-  hideDmTab: boolean | false;
+  hideDmTab?: boolean | false;
+  downloadableContentTypes?: string[] | null;
 }

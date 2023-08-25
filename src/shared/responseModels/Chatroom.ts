@@ -4,7 +4,7 @@ import { Conversation } from "./Conversation";
 import { Cohort } from "./Cohort";
 
 export interface Chatroom {
-  member?: Member;
+  member: Member;
   id: string;
   title: string;
   createdAt?: number;
@@ -53,4 +53,6 @@ export interface Chatroom {
   unreadConversationCount?: number;
   chatroomImageUrl?: string;
   accessWithoutSubscription?: boolean;
+  totalAllResponseCount?: string;
+  isConversationStored?: boolean;
 }
