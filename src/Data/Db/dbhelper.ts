@@ -18,6 +18,7 @@ import {
 import Db from "./db";
 import Realm from "realm";
 
+// method to save the community data
 export function saveCommunityData(communityData: any) {
   return Realm.open(Db.getInstance()).then((realm) => {
     realm.write(() => {
@@ -28,10 +29,12 @@ export function saveCommunityData(communityData: any) {
   });
 }
 
+// method to check for poll
 function isPoll(state: number) {
   return state === 10;
 }
 
+// method to save chatroom data
 export function saveChatroomResponse(
   data: any,
   chatrooms: any[],
@@ -61,6 +64,7 @@ export function saveChatroomResponse(
           Realm.UpdateMode.All
         );
 
+        // save lastConversation details
         const lastConversationId = chatroom.lastConversationId;
         const lastConversation =
           data.conversationMeta[lastConversationId?.toString()];
@@ -75,6 +79,7 @@ export function saveChatroomResponse(
               )
             : null;
 
+        // save lastConversation polls
         const lastConversationPolls = isPoll(lastConversation.state)
           ? (data.pollsMeta[lastConversationId?.toString()] || [])
               .sort((a: any, b: any) => a.id - b.id)
@@ -84,6 +89,7 @@ export function saveChatroomResponse(
               })
           : [];
 
+        // save lastConversation attachments
         const lastConversationAttachment =
           lastConversation.attachmentUploaded === true &&
           (lastConversation.attachmentCount || 0) > 0
@@ -192,6 +198,7 @@ export function saveChatroomResponse(
           }
         }
 
+        // convert to ChatroomRO
         const chatroomRO = convertToChatroomRO(
           chatroom,
           chatroomCreatorRO,
@@ -199,6 +206,7 @@ export function saveChatroomResponse(
           lastConversationRO //its of type LastConversationRO
         );
 
+        // save to local DB
         if (chatroomRO) {
           chatroomRO.relationshipNeeded = true;
           realm.create(
@@ -213,6 +221,7 @@ export function saveChatroomResponse(
   });
 }
 
+// method to save conversation data
 export function saveConversationData(
   data: any,
   chatroomData: any[],
@@ -286,6 +295,7 @@ export function saveConversationData(
               ? data.convAttachmentsMeta[conversation?.id?.toString()]
               : [];
 
+          // convert to ConversationRO
           const conversationRO = convertToConversationRO(
             conversation,
             chatroomCreatorRO,
@@ -294,8 +304,8 @@ export function saveConversationData(
             conversationReaction
           );
 
+          // save to local DB
           if (conversationRO) {
-            
             realm.create(
               ConversationRO.schema.name,
               conversationRO,
