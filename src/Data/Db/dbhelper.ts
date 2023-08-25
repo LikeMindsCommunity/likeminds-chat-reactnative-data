@@ -25,6 +25,8 @@ export function saveCommunityData(communityData: any) {
       let community = convertCommunity(communityData);
       realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);
     });
+
+    //TODO
     // realm.close(); // Close the Realm instance after the write operation
   });
 }
@@ -186,7 +188,6 @@ export function saveChatroomResponse(
               lastSeenConversationRO,
               Realm.UpdateMode.All
             );
-            // realmWrite.insertOrUpdate(lastSeenConversationRO);
           }
           if (lastSeenConversationCreatorRO) {
             realm.create(
@@ -194,7 +195,6 @@ export function saveChatroomResponse(
               lastSeenConversationCreatorRO,
               Realm.UpdateMode.All
             );
-            // realmWrite.insertOrUpdate(lastSeenConversationCreatorRO);
           }
         }
 
@@ -214,10 +214,12 @@ export function saveChatroomResponse(
             chatroomRO,
             Realm.UpdateMode.All
           );
-          // realmWrite.insertOrUpdate(chatroomRO);
         }
       });
     });
+
+    //TODO
+    // realm.close(); // Close the Realm instance after the write operation
   });
 }
 
@@ -311,11 +313,12 @@ export function saveConversationData(
               conversationRO,
               Realm.UpdateMode.All
             );
-            // realmWrite.insertOrUpdate(chatroomRO);
           }
         }
       }
     });
+
+    //TODO
     // realm.close(); // Close the Realm instance after the write operation
   });
 }
@@ -329,6 +332,8 @@ export async function getChatroomData() {
       ...JSON.parse(stringifiedChatroom),
     };
   });
+
+  //TODO
   // realm.close();
   return chatroomObject;
 }
@@ -343,6 +348,7 @@ export async function getCommunityData() {
     };
   });
 
+  //TODO
   // realm.close(); // Close the Realm instance after reading data
 
   return communityObject;
@@ -358,6 +364,7 @@ export async function getConversationData() {
     };
   });
 
+  //TODO
   // realm.close(); // Close the Realm instance after reading data
 
   return coonversationObject;
