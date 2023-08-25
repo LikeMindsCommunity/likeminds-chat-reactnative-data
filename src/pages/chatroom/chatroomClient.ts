@@ -333,12 +333,12 @@ class ChatroomClient {
     }
   }
 
-  async pushReport(
-    pushReport: PushReport,
+  async postReport(
+    postReport: PushReport,
     dlClient: DLClient
   ): Promise<LMResponse<Nothing>> {
     try {
-      const resp = await dlClient.pushReport(pushReport);
+      const resp = await dlClient.pushReport(postReport);
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {

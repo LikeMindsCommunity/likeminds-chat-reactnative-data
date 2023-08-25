@@ -304,8 +304,8 @@ class LMChatClient {
     );
   }
 
-  async pushReport(pushReport: PushReport): Promise<LMResponse<Nothing>> {
-    return this.chatroomClient.pushReport(pushReport, LMChatClient.dlClient);
+  async postReport(postReport: PushReport): Promise<LMResponse<Nothing>> {
+    return this.chatroomClient.postReport(postReport, LMChatClient.dlClient);
   }
 
   async leaveSecretChatroom(
