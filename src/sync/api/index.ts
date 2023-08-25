@@ -19,7 +19,7 @@ class SyncClient {
       .then((resData: any) => {
         // Handle the response and return the LMResponse object
         const responseData: SyncChatroomResponse =
-          ModelConverter.responseBodyParser(resData.data);
+          ModelConverter.responseBodyParser(resData);
 
         return new LMResponse<SyncChatroomResponse>(responseData, null, true);
       })
@@ -43,7 +43,7 @@ class SyncClient {
       .then((resData: any) => {
         // Handle the response and return the LMResponse object
         const responseData: SyncConversationResponse =
-          ModelConverter.responseBodyParser(resData.data);
+          ModelConverter.responseBodyParser(resData);
 
         return new LMResponse<SyncConversationResponse>(
           responseData,
