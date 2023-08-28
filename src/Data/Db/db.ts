@@ -1,17 +1,17 @@
-import Realm from 'realm';
-import {ChatroomRO} from '../Models/ChatroomRO';
-import {CommunityRO} from '../Models/CommunityRO';
-import {AppConfigRO} from '../Models/AppConfigRO';
-import {ConversationRO} from '../Models/ConversationRO';
-import {LastConversationRO} from '../Models/LastConversationRO';
-import {LinkRO} from '../Models/LinkRO';
-import {MemberRO} from '../Models/MemberRO';
-import {PollRO} from '../Models/PollRO';
-import {SDKClientInfoRO} from '../Models/SDKClientInfoRO';
-import {UserRO} from '../Models/UserRO';
-import {AttachmentMetaRO} from '../Models/AttachmentMetaRO';
-import {AttachmentRO} from '../Models/AttachmentRO';
-import {ReactionRO} from '../Models/ReactionRO';
+import Realm from "realm";
+import { ChatroomRO } from "../Models/ChatroomRO";
+import { CommunityRO } from "../Models/CommunityRO";
+import { AppConfigRO } from "../Models/AppConfigRO";
+import { ConversationRO } from "../Models/ConversationRO";
+import { LastConversationRO } from "../Models/LastConversationRO";
+import { LinkRO } from "../Models/LinkRO";
+import { MemberRO } from "../Models/MemberRO";
+import { PollRO } from "../Models/PollRO";
+import { SDKClientInfoRO } from "../Models/SDKClientInfoRO";
+import { UserRO } from "../Models/UserRO";
+import { AttachmentMetaRO } from "../Models/AttachmentMetaRO";
+import { AttachmentRO } from "../Models/AttachmentRO";
+import { ReactionRO } from "../Models/ReactionRO";
 
 export default class Db {
   private static instance: Realm;
@@ -40,7 +40,7 @@ export default class Db {
     deleteRealmIfMigrationNeeded: false, // Set to true to delete the realm if schema needs migration
     inMemory: false, // Set to true to create an in-memory realm
     readOnly: false, // Set to true for read-only access
-    path: 'likeminds-chat-sdk.realm',
+    path: "likeminds-chat-sdk.realm",
   };
   static getInstance(): Realm {
     if (!Db.instance) {
@@ -56,7 +56,7 @@ export default class Db {
         callback(realm);
       });
     } catch (error) {
-      console.error('Error during Realm write:', error);
+      console.error("Error during Realm write:", error);
     }
   }
 

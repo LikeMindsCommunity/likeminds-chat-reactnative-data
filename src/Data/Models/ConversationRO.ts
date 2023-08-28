@@ -19,15 +19,15 @@ import {
   OPTIONAL_STRING,
   OPTONAL_CONVERSATION_RO,
   STRING,
-} from '../Constants';
-import {AttachmentRO} from './AttachmentRO';
-import {ChatroomRO} from './ChatroomRO';
-import {CommunityRO} from './CommunityRO';
-import {LinkRO} from './LinkRO';
-import {MemberRO} from './MemberRO';
-import {PollRO} from './PollRO';
-import {ReactionRO} from './ReactionRO';
-import Realm from 'realm';
+} from "../Constants";
+import { AttachmentRO } from "./AttachmentRO";
+import { ChatroomRO } from "./ChatroomRO";
+import { CommunityRO } from "./CommunityRO";
+import { LinkRO } from "./LinkRO";
+import { MemberRO } from "./MemberRO";
+import { PollRO } from "./PollRO";
+import { ReactionRO } from "./ReactionRO";
+import Realm from "realm";
 
 export class ConversationRO extends Realm.Object<ConversationRO> {
   id!: string;
@@ -51,7 +51,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   uploadWorkerUUID?: string | null;
   localSavedEpoch!: number;
   temporaryId?: string | null;
-  reactions?: Realm.List<ReactionRO> | null;
+  reactions?: Realm.List<ReactionRO>;
   isAnonymous?: boolean | null;
   allowAddOption?: boolean | null;
   pollType?: number | null;

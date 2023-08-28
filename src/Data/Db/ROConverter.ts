@@ -20,8 +20,19 @@ import { ReactionRO } from "../Models/ReactionRO";
 import { Attachment } from "src/shared/responseModels/Attachment";
 import { dummyKeys } from "../Constants/dummyKeys";
 
+const convertToDownloadableContentTypes = (
+  downloadableContentTypes: string[]
+): List<string> => {
+  let convertedAttachments: any = [];
+  for (let i = 0; i < downloadableContentTypes.length; i++) {
+    convertedAttachments.push(downloadableContentTypes[i]);
+  }
+  return convertedAttachments;
+};
+
 // convertCommunity method takes Community data and converts it to CommunityRO
 export const convertCommunity = (community: Community): CommunityRO => {
+  console.log("communityConvert", community);
   let communityRO: CommunityRO = {
     id: `${community?.id}`,
     name: `${community?.name}`,
@@ -29,9 +40,12 @@ export const convertCommunity = (community: Community): CommunityRO => {
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
     relationshipNeeded: true,
-    downloadableContentTypes: null,
+    // downloadableContentTypes: convertToDownloadableContentTypes(
+    //   community.downloadableContentTypes
+    // ),
     ...dummyKeys(CommunityRO),
   };
+  console.log("communityConvertRO", communityRO);
   return communityRO;
 };
 
@@ -182,15 +196,16 @@ const convertToAttachment = (
   communityId: string
 ): List<AttachmentRO> => {
   let convertedAttachments: any = [];
+  if (attachments == undefined) return convertedAttachments;
   for (let i = 0; i < attachments.length; i++) {
     const roAttachment = convertToAttachmentRO(
       attachments[i],
       chatroomId,
       communityId
     );
-    convertedAttachments.push(roAttachment);
+    convertedAttachments = [...convertedAttachments, roAttachment];
   }
-  return { ...convertedAttachments, ...dummyKeys(AttachmentRO) };
+  return convertedAttachments;
 };
 
 // convertToReaction method takes Reaction[] data and converts it to Realm.List<ReactionRO>
@@ -199,9 +214,12 @@ const convertToReaction = (
   communityId: string
 ): List<ReactionRO> => {
   let convertedReactions: any = [];
+  console.log("reactionsNEww", reactions);
+  if (reactions == undefined) return convertedReactions;
   for (let i = 0; i < reactions.length; i++) {
     const roAttachment = convertToReactionRO(reactions[i], communityId);
-    convertedReactions.push(roAttachment);
+    console.log("roAttachment", roAttachment);
+    convertedReactions = [...convertedReactions, roAttachment];
   }
   return convertedReactions;
 };
@@ -209,6 +227,7 @@ const convertToReaction = (
 // convertToPoll method takes Poll[] data and converts it to Realm.List<PollRO>
 const convertToPoll = (polls: Poll[], communityId: string): List<PollRO> => {
   let convertedPolls: any = [];
+  if (polls == undefined) return convertedPolls;
   for (let i = 0; i < polls.length; i++) {
     const roAttachment = convertToPollRO(polls[i], communityId);
     convertedPolls.push(roAttachment);
@@ -239,11 +258,12 @@ export const convertToConversationRO = (
   chatroomCreatorRO: MemberRO,
   attachment: Attachment[],
   polls: Poll[],
+  chatroomId: string,
   reactions?: Reaction[]
 ): ConversationRO => {
   const conversationRO: ConversationRO = {
     id: `${conversation.id}` || "",
-    chatroomId: "2889247", //TODO
+    chatroomId: `${chatroomId}`,
     communityId: `${conversation.communityId}` || "",
     member: chatroomCreatorRO,
     answer: conversation?.answer,
@@ -274,12 +294,10 @@ export const convertToConversationRO = (
     lastUpdatedAt: conversation?.lastUpdated || 0,
     attachments: convertToAttachment(
       attachment,
-      "2889247",
+      `${chatroomId}`,
       `${conversation.communityId}`
     ),
-    reactions: reactions
-      ? convertToReaction(reactions, `${conversation?.communityId}`)
-      : null, // Fetch reaction first from API resp
+    reactions: convertToReaction(reactions, `${conversation?.communityId}`), // Fetch reaction first from API resp
     polls: convertToPoll(polls, `${conversation?.communityId}`),
     // TODO
     // replyConversation: conversation?.replyConversation
@@ -345,19 +363,20 @@ export const convertToChatroomRO = (
     unseenCount: chatroom.unseenCount || 0,
     relationshipNeeded: false, // Assign as needed
     isSecret: chatroom.isSecret || null,
-    secretChatRoomParticipants: chatroom?.secretChatroomParticipants
-      ? convertToSecretChatroomParticipants(
-          chatroom?.secretChatroomParticipants
-        )
-      : new List(),
+    // secretChatRoomParticipants: chatroom?.secretChatroomParticipants
+    //   ? convertToSecretChatroomParticipants(
+    //       chatroom?.secretChatroomParticipants
+    //     )
+    //   : new List(),
     secretChatRoomLeft: chatroom.secretChatroomLeft || null,
     topicId: `${chatroom.topicId}` || null,
     autoFollowDone: chatroom.autoFollowDone || null,
     memberCanMessage: chatroom.memberCanMessage || null,
     isEdited: chatroom.isEdited || null,
-    reactions: chatroom?.reactions
-      ? convertToReaction(chatroom?.reactions, `${chatroom.communityId}`)
-      : null,
+    reactions: convertToReaction(
+      chatroom?.reactions,
+      `${chatroom.communityId}`
+    ),
     unreadConversationsCount: chatroom.unreadConversationCount || null,
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
     externalSeen: chatroom.externalSeen || null,

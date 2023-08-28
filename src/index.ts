@@ -557,7 +557,7 @@ class LMChatClient {
   saveCommunityData(communityData) {
     return saveCommunityData(communityData);
   }
-  saveChatroomResponse(data: any, chatrooms: any[], communityId: string) {
+  async saveChatroomResponse(data: any, chatrooms: any[], communityId: string) {
     return saveChatroomResponse(data, chatrooms, communityId);
   }
   getCommunityData() {

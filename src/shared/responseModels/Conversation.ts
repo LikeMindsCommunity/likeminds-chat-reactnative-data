@@ -1,8 +1,8 @@
-import {Attachment} from './Attachment';
-import {LinkOGTags} from './LinkOGTags';
-import {Member} from './Member';
-import {Poll} from './Poll';
-import {Reaction} from './Reaction';
+import { Attachment } from "./Attachment";
+import { LinkOGTags } from "./LinkOGTags";
+import { Member } from "./Member";
+import { Poll } from "./Poll";
+import { Reaction } from "./Reaction";
 
 export interface Conversation {
   id?: string;

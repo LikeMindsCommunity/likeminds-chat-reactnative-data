@@ -6,5 +6,5 @@ export interface Community {
   updatedAt?: number;
   relationshipNeeded: boolean | true;
   hideDmTab?: boolean | false;
-  downloadableContentTypes?: string[] | null;
+  // downloadableContentTypes?: string[] | null;
 }
