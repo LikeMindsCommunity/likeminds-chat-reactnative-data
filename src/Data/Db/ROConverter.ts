@@ -23,16 +23,15 @@ import { dummyKeys } from "../Constants/dummyKeys";
 const convertToDownloadableContentTypes = (
   downloadableContentTypes: string[]
 ): List<string> => {
-  let convertedAttachments: any = [];
+  let convertedDownloadable: any = [];
   for (let i = 0; i < downloadableContentTypes.length; i++) {
-    convertedAttachments.push(downloadableContentTypes[i]);
+    convertedDownloadable.push(downloadableContentTypes[i]);
   }
-  return convertedAttachments;
+  return convertedDownloadable;
 };
 
 // convertCommunity method takes Community data and converts it to CommunityRO
 export const convertCommunity = (community: Community): CommunityRO => {
-  console.log("communityConvert", community);
   let communityRO: CommunityRO = {
     id: `${community?.id}`,
     name: `${community?.name}`,
@@ -40,12 +39,12 @@ export const convertCommunity = (community: Community): CommunityRO => {
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
     relationshipNeeded: true,
+    // TODO
     // downloadableContentTypes: convertToDownloadableContentTypes(
     //   community.downloadableContentTypes
     // ),
     ...dummyKeys(CommunityRO),
   };
-  console.log("communityConvertRO", communityRO);
   return communityRO;
 };
 
@@ -214,11 +213,9 @@ const convertToReaction = (
   communityId: string
 ): List<ReactionRO> => {
   let convertedReactions: any = [];
-  console.log("reactionsNEww", reactions);
   if (reactions == undefined) return convertedReactions;
   for (let i = 0; i < reactions.length; i++) {
     const roAttachment = convertToReactionRO(reactions[i], communityId);
-    console.log("roAttachment", roAttachment);
     convertedReactions = [...convertedReactions, roAttachment];
   }
   return convertedReactions;
