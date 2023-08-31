@@ -40,12 +40,12 @@ export const convertCommunity = (community: Community): CommunityRO => {
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
     relationshipNeeded: true,
+    // TODO
     // downloadableContentTypes: convertToDownloadableContentTypes(
     //   community.downloadableContentTypes
     // ),
     ...dummyKeys(CommunityRO),
   };
-  console.log("communityConvertRO", communityRO);
   return communityRO;
 };
 
@@ -93,10 +93,7 @@ export const convertToPollRO = (poll: Poll, communityId: string) => {
     isSelected: poll.isSelected,
     percentage: poll.percentage,
     noVotes: poll.noVotes,
-    member:
-      poll.member != undefined
-        ? convertToMemberRO(poll?.member, communityId)
-        : null,
+    member: !!poll.member ? convertToMemberRO(poll?.member, communityId) : null,
     ...dummyKeys(PollRO),
   };
   return pollRO;
@@ -166,7 +163,9 @@ export const convertToMemberRO = (
   member: Member,
   communityId: any
 ): MemberRO => {
-  const convertedSdkClientInfo = convertToSDKClientInfoRO(member.sdkClientInfo);
+  const convertedSdkClientInfo = convertToSDKClientInfoRO(
+    member?.sdkClientInfo
+  );
 
   const memberRO: MemberRO = {
     uid: `${member.id}`,
@@ -227,7 +226,7 @@ const convertToReaction = (
 // convertToPoll method takes Poll[] data and converts it to Realm.List<PollRO>
 const convertToPoll = (polls: Poll[], communityId: string): List<PollRO> => {
   let convertedPolls: any = [];
-  if (polls == undefined) return convertedPolls;
+  if (!polls) return convertedPolls;
   for (let i = 0; i < polls.length; i++) {
     const roAttachment = convertToPollRO(polls[i], communityId);
     convertedPolls.push(roAttachment);
@@ -240,10 +239,9 @@ const convertToReactionRO = (
   reaction: Reaction,
   communityId: string
 ): ReactionRO => {
-  const convertedMember =
-    reaction.member != undefined
-      ? convertToMemberRO(reaction.member, communityId)
-      : null;
+  const convertedMember = !!reaction?.member
+    ? convertToMemberRO(reaction?.member, communityId)
+    : null;
   const reactionRO: ReactionRO = {
     member: convertedMember,
     reaction: reaction.reaction,
@@ -265,7 +263,7 @@ export const convertToConversationRO = (
     id: `${conversation.id}` || "",
     chatroomId: `${chatroomId}`,
     communityId: `${conversation.communityId}` || "",
-    member: chatroomCreatorRO,
+    member: !!chatroomCreatorRO ? chatroomCreatorRO : null,
     answer: conversation?.answer,
     state: conversation?.state,
     createdEpoch: conversation?.createdEpoch || 0,
@@ -334,7 +332,7 @@ export const convertToChatroomRO = (
     communityId: `${chatroom.communityId}` || "",
     title: chatroom.title,
     state: chatroom.state,
-    member: member,
+    member: !!member ? member : null,
     createdAt: chatroom.createdAt || null,
     type: chatroom.type || null,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
@@ -356,9 +354,10 @@ export const convertToChatroomRO = (
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
     updatedAt: chatroom.updatedAt || null,
-    lastConversation: lastConversation,
-    lastConversationRO: lastConversationRO,
-    lastSeenConversationId: chatroom.lastSeenConversationId || null,
+    lastConversation: !!lastConversation ? lastConversation : null,
+    lastConversationRO: !!lastConversationRO ? lastConversationRO : null,
+    lastSeenConversationId:
+      chatroom?.lastSeenConversationId?.toString() || null,
     dateEpoch: chatroom.dateEpoch || null,
     unseenCount: chatroom.unseenCount || 0,
     relationshipNeeded: false, // Assign as needed
@@ -373,10 +372,11 @@ export const convertToChatroomRO = (
     autoFollowDone: chatroom.autoFollowDone || null,
     memberCanMessage: chatroom.memberCanMessage || null,
     isEdited: chatroom.isEdited || null,
-    reactions: convertToReaction(
-      chatroom?.reactions,
-      `${chatroom.communityId}`
-    ),
+    //TODO
+    // reactions: convertToReaction(
+    //   chatroom?.reactions,
+    //   `${chatroom.communityId}`
+    // ),
     unreadConversationsCount: chatroom.unreadConversationCount || null,
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
     externalSeen: chatroom.externalSeen || null,

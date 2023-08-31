@@ -133,6 +133,7 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
+  getAllChatroomData,
   getChatroomData,
   getCommunityData,
   saveChatroomResponse,
@@ -563,8 +564,11 @@ class LMChatClient {
   getCommunityData() {
     return getCommunityData();
   }
-  getChatroomData() {
-    return getChatroomData();
+  getAllChatroomData() {
+    return getAllChatroomData();
+  }
+  getChatroomData(chatroomId: string) {
+    return getChatroomData(chatroomId);
   }
 }
 

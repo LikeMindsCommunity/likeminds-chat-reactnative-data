@@ -60,7 +60,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   expiryTime?: number | null;
   multipleSelectNum?: number | null;
   multipleSelectState?: number | null;
-  polls!: Realm.List<PollRO>;
+  polls?: Realm.List<PollRO>;
   pollAnswerText?: string | null;
   toShowResults?: boolean | null;
   replyChatRoomId?: string | null;

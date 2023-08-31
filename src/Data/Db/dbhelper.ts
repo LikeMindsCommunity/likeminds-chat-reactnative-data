@@ -73,13 +73,12 @@ export async function saveChatroomResponse(
 
       if (!lastConversation) return;
 
-      const lastConversationDeletedByMemberRO =
-        lastConversation.deletedBy != null
-          ? convertToMemberRO(
-              data.userMeta[lastConversation.deletedBy],
-              communityId
-            )
-          : null;
+      const lastConversationDeletedByMemberRO = !!lastConversation.deletedBy
+        ? convertToMemberRO(
+            data.userMeta[lastConversation.deletedBy],
+            communityId
+          )
+        : null;
 
       // save lastConversation polls
       const lastConversationPolls = isPoll(lastConversation.state)
@@ -89,7 +88,7 @@ export async function saveChatroomResponse(
               const user = data.userMeta[poll.userId];
               return poll.toBuilder().member(user).build();
             })
-        : [];
+        : null;
 
       // save lastConversation attachments
       const lastConversationAttachment =
@@ -146,13 +145,13 @@ export async function saveChatroomResponse(
           data.conversationMeta[lastSeenConversationId?.toString()];
         const lastSeenConversationCreator =
           data.userMeta[lastSeenConversation?.memberId?.toString()];
-        const lastSeenConversationCreatorRO = convertToMemberRO(
-          lastSeenConversationCreator,
-          communityId
-        );
+
+        const lastSeenConversationCreatorRO = !!lastSeenConversationCreator
+          ? convertToMemberRO(lastSeenConversationCreator, communityId)
+          : null;
 
         const lastSeenConversationDeletedByMemberRO =
-          lastSeenConversation?.deletedBy != null
+          !!lastSeenConversation?.deletedBy
             ? convertToMemberRO(
                 data.userMeta[lastSeenConversation.deletedBy],
                 communityId
@@ -168,7 +167,7 @@ export async function saveChatroomResponse(
                 const user_1 = data.userMeta[poll_1.userId];
                 return poll_1.toBuilder().member(user_1).build();
               })
-          : [];
+          : null;
 
         const lastSeenConversationAttachments =
           lastSeenConversation.attachmentCount > 0
@@ -182,6 +181,7 @@ export async function saveChatroomResponse(
           lastSeenConversationPolls,
           chatroom?.id
         );
+
         if (lastSeenConversationRO) {
           realm.create(
             LastConversationRO.schema.name,
@@ -199,7 +199,7 @@ export async function saveChatroomResponse(
       }
 
       // convert to ChatroomRO
-      const chatroomRO = convertToChatroomRO(
+      let chatroomRO = convertToChatroomRO(
         chatroom,
         chatroomCreatorRO,
         lastConvRO,
@@ -280,7 +280,7 @@ export function saveConversationData(
                   const user = data.userMeta[poll.userId];
                   return poll.toBuilder().member(user).build();
                 })
-            : [];
+            : null;
 
           // save attachments
           const conversationAttachment =
@@ -294,7 +294,7 @@ export function saveConversationData(
             chatroomCreatorRO,
             conversationAttachment,
             conversationPolls,
-            "2889247",
+            conversationData[entryId]?.cardId?.toString(),
             conversationReaction
           );
 
@@ -315,7 +315,25 @@ export function saveConversationData(
   });
 }
 
-export async function getChatroomData() {
+// this function fetches specific chatroom that are stored in local DB
+export async function getChatroomData(chatroomId: string) {
+  const realm = await Realm.open(Db.getInstance());
+  const items = realm.objects(ChatroomRO.schema.name);
+  const chatroom = items.filtered(`id = "${chatroomId}"`);
+  const chatroomObject = chatroom.map((chatroom) => {
+    const stringifiedChatroom = JSON.stringify(chatroom);
+    return {
+      ...JSON.parse(stringifiedChatroom),
+    };
+  });
+
+  //TODO
+  // realm.close();
+  return chatroomObject;
+}
+
+// this function fetches all chatrooms that are stored in local DB
+export async function getAllChatroomData() {
   const realm = await Realm.open(Db.getInstance());
   const chatrooms = realm.objects(ChatroomRO.schema.name);
   const chatroomObject = chatrooms.map((chatroom) => {
