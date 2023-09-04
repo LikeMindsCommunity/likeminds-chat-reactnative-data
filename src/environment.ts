@@ -3,5 +3,5 @@ export const environment = {
 };
 
 // export const environment = {
-//     apiUrl: 'https://betaauth.likeminds.community',
+//   apiUrl: "https://betaauth.likeminds.community",
 // };

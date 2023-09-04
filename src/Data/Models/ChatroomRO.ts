@@ -38,7 +38,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   cardCreationTime?: string | null;
   totalResponseCount!: number;
   totalAllResponseCount!: number;
-  muteStatus?: boolean | null;
+  muteStatus: boolean | null;
   followStatus?: boolean | null;
   hasBeenNamed?: boolean | null;
   date?: string | null;
@@ -63,7 +63,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   autoFollowDone?: boolean | null;
   memberCanMessage?: boolean | null;
   isEdited?: boolean | null;
-  reactions?: Realm.List<ReactionRO>;
+  reactions?: Realm.List<ReactionRO> | null;
   unreadConversationsCount?: number | null;
   accessWithoutSubscription!: boolean;
   externalSeen?: boolean | null;

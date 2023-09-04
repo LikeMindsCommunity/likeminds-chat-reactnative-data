@@ -133,11 +133,17 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
+  deleteOneChatroom,
   getChatroomData,
   getCommunityData,
+  getTimeStamp,
   saveChatroomResponse,
   saveCommunityData,
+  saveTimeStamp,
+  updateMuteStatus,
+  updateTimeStamp,
 } from "./Data/Db/dbhelper";
+import Db from "./Data/Db/db";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -565,6 +571,24 @@ class LMChatClient {
   }
   getChatroomData() {
     return getChatroomData();
+  }
+  updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return updateTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return saveTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  getTimeStamp() {
+    return getTimeStamp();
+  }
+  deleteOneChatroom(chatroomId: string) {
+    return deleteOneChatroom(chatroomId);
+  }
+  updateMuteStatus(chatroomId: string, muteStats: boolean) {
+    return updateMuteStatus(chatroomId, muteStats);
+  }
+  getInstance() {
+    return Db.getInstance();
   }
 }
 

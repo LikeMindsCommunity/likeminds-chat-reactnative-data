@@ -6,6 +6,7 @@ import { LastConversationRO } from "../Models/LastConversationRO";
 import { MemberRO } from "../Models/MemberRO";
 import { PollRO } from "../Models/PollRO";
 import { ReactionRO } from "../Models/ReactionRO";
+import { TimeStampRO } from "../Models/TimeStampRO";
 import {
   convertToChatroomRO,
   convertCommunity,
@@ -14,6 +15,7 @@ import {
   convertToConversationRO,
   convertToPollRO,
   convertToAttachmentRO,
+  convertToTimeStampRO,
 } from "./ROConverter";
 import Db from "./db";
 import Realm from "realm";
@@ -144,12 +146,12 @@ export async function saveChatroomResponse(
       if (lastSeenConversationId) {
         const lastSeenConversation =
           data.conversationMeta[lastSeenConversationId?.toString()];
-        const lastSeenConversationCreator =
-          data.userMeta[lastSeenConversation?.memberId?.toString()];
-        const lastSeenConversationCreatorRO = convertToMemberRO(
-          lastSeenConversationCreator,
-          communityId
-        );
+        // const lastSeenConversationCreator =
+        //   data.userMeta[lastSeenConversation?.memberId?.toString()];
+        // const lastSeenConversationCreatorRO = convertToMemberRO(
+        //   lastSeenConversationCreator,
+        //   communityId,
+        // );
 
         const lastSeenConversationDeletedByMemberRO =
           lastSeenConversation?.deletedBy != null
@@ -175,27 +177,27 @@ export async function saveChatroomResponse(
             ? data.convAttachmentsMeta[lastSeenConversationId?.toString()]
             : [];
 
-        const lastSeenConversationRO = convertToConversationRO(
-          lastSeenConversation,
-          lastSeenConversationCreatorRO,
-          lastSeenConversationAttachments,
-          lastSeenConversationPolls,
-          chatroom?.id
-        );
-        if (lastSeenConversationRO) {
-          realm.create(
-            LastConversationRO.schema.name,
-            lastSeenConversationRO,
-            Realm.UpdateMode.All
-          );
-        }
-        if (lastSeenConversationCreatorRO) {
-          realm.create(
-            MemberRO.schema.name,
-            lastSeenConversationCreatorRO,
-            Realm.UpdateMode.All
-          );
-        }
+        // const lastSeenConversationRO = convertToConversationRO(
+        //   lastSeenConversation,
+        //   lastSeenConversationCreatorRO,
+        //   lastSeenConversationAttachments,
+        //   lastSeenConversationPolls,
+        //   chatroom?.id,
+        // );
+        // if (lastSeenConversationRO) {
+        //   realm.create(
+        //     LastConversationRO.schema.name,
+        //     lastSeenConversationRO,
+        //     Realm.UpdateMode.All,
+        //   );
+        // }
+        // if (lastSeenConversationCreatorRO) {
+        //   realm.create(
+        //     MemberRO.schema.name,
+        //     lastSeenConversationCreatorRO,
+        //     Realm.UpdateMode.All,
+        //   );
+        // }
       }
 
       // convert to ChatroomRO
@@ -360,4 +362,64 @@ export async function getConversationData() {
   // realm.close(); // Close the Realm instance after reading data
 
   return coonversationObject;
+}
+
+export async function updateTimeStamp(
+  minTimeStamp: number,
+  maxTimeStamp: number
+) {
+  const realm = await Realm.open(Db.getInstance());
+  const timeStampStored: any = realm.objects(TimeStampRO.schema.name);
+  timeStampStored.minTimeStamp = minTimeStamp;
+  timeStampStored.maxTimeStamp = maxTimeStamp;
+}
+
+export async function getTimeStamp() {
+  const realm = await Realm.open(Db.getInstance());
+  const timeStampStored = realm.objects(TimeStampRO.schema.name);
+  return timeStampStored;
+}
+
+export async function saveTimeStamp(
+  minTimeStamp: number,
+  maxTimeStamp: number
+) {
+  const realm = await Realm.open(Db.getInstance());
+  let timeStampRO = convertToTimeStampRO(minTimeStamp, maxTimeStamp);
+  realm.write(() => {
+    realm.create(TimeStampRO.schema.name, timeStampRO, Realm.UpdateMode.All);
+  });
+}
+
+export async function getOneChatroomData(chatroomId: string) {
+  const realm = await Realm.open(Db.getInstance());
+  const items = realm.objects(ChatroomRO.schema.name);
+  const chatroom = items.filtered(`id = "${chatroomId}"`);
+  const chatroomObject = chatroom.map((chatroom) => {
+    const stringifiedChatroom = JSON.stringify(chatroom);
+    return {
+      ...JSON.parse(stringifiedChatroom),
+    };
+  });
+  //TODO
+  // realm.close();
+  return chatroomObject;
+}
+
+export async function updateMuteStatus(chatroomId: string, muteStats: boolean) {
+  const chatroom = await getOneChatroomData(chatroomId);
+  // console.log('mutedChatroom', chatroom);
+  const realm = await Realm.open(Db.getInstance());
+  realm.write(() => {
+    ChatroomRO.schema.name, (chatroom[0].muteStatus = !muteStats), "modified";
+  });
+}
+
+export async function deleteOneChatroom(chatroomId: string) {
+  const realm = await Realm.open(Db.getInstance());
+  const items = realm.objects(ChatroomRO.schema.name);
+  const chatroom = items.filtered(`id = "${chatroomId}"`);
+  realm.write(() => {
+    realm.delete(chatroom);
+  });
 }

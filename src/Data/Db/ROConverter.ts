@@ -19,6 +19,19 @@ import { Reaction } from "src/shared/responseModels/Reaction";
 import { ReactionRO } from "../Models/ReactionRO";
 import { Attachment } from "src/shared/responseModels/Attachment";
 import { dummyKeys } from "../Constants/dummyKeys";
+import { TimeStampRO } from "../Models/TimeStampRO";
+
+export const convertToTimeStampRO = (
+  minTimeStamp: number,
+  maxTimeStamp: number
+): TimeStampRO => {
+  const timeStampRO: TimeStampRO = {
+    minTimeStamp: minTimeStamp,
+    maxTimeStamp: maxTimeStamp,
+    ...dummyKeys(TimeStampRO),
+  };
+  return timeStampRO;
+};
 
 const convertToDownloadableContentTypes = (
   downloadableContentTypes: string[]
@@ -294,7 +307,9 @@ export const convertToConversationRO = (
       `${chatroomId}`,
       `${conversation.communityId}`
     ),
-    reactions: convertToReaction(reactions, `${conversation?.communityId}`), // Fetch reaction first from API resp
+    reactions: reactions
+      ? convertToReaction(reactions, `${conversation?.communityId}`)
+      : null, // Fetch reaction first from API resp
     polls: convertToPoll(polls, `${conversation?.communityId}`),
     // TODO
     // replyConversation: conversation?.replyConversation
@@ -345,7 +360,7 @@ export const convertToChatroomRO = (
       chatroom?.totalAllResponseCount == undefined
         ? 0
         : parseInt(chatroom.totalAllResponseCount),
-    muteStatus: chatroom.muteStatus || null,
+    muteStatus: chatroom.muteStatus || false,
     followStatus: chatroom.followStatus || null,
     hasBeenNamed: chatroom.hasBeenNamed || null,
     date: chatroom.date || null,
@@ -355,7 +370,7 @@ export const convertToChatroomRO = (
     updatedAt: chatroom.updatedAt || null,
     lastConversation: lastConversation,
     lastConversationRO: lastConversationRO,
-    lastSeenConversationId: chatroom.lastSeenConversationId || null,
+    lastSeenConversationId: `${chatroom.lastSeenConversationId}` || null,
     dateEpoch: chatroom.dateEpoch || null,
     unseenCount: chatroom.unseenCount || 0,
     relationshipNeeded: false, // Assign as needed
@@ -370,10 +385,9 @@ export const convertToChatroomRO = (
     autoFollowDone: chatroom.autoFollowDone || null,
     memberCanMessage: chatroom.memberCanMessage || null,
     isEdited: chatroom.isEdited || null,
-    reactions: convertToReaction(
-      chatroom?.reactions,
-      `${chatroom.communityId}`
-    ),
+    reactions: chatroom?.reactions
+      ? convertToReaction(chatroom?.reactions, `${chatroom.communityId}`)
+      : null,
     unreadConversationsCount: chatroom.unreadConversationCount || null,
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
     externalSeen: chatroom.externalSeen || null,

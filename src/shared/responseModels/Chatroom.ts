@@ -22,7 +22,7 @@ export interface Chatroom {
   cardCreationTime?: string;
   participantsCount?: string;
   totalResponseCount?: string;
-  muteStatus?: boolean;
+  muteStatus: boolean;
   followStatus?: boolean;
   hasBeenNamed?: boolean;
   hasReactions?: boolean;
