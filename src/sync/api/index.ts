@@ -13,9 +13,28 @@ class SyncClient {
     dlClient: DLClient
   ): Promise<LMResponse<SyncChatroomResponse>> {
     const params = ModelConverter.requestBodyGenerator(request);
-    // request;
+    const customParamsSerializer = (params) => {
+      const serializedParams = [];
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          const paramValue = params[key];
+          if (Array.isArray(paramValue)) {
+            // Serialize arrays as "key=[paramValue]"
+            serializedParams.push(`${key}=[${paramValue}]`);
+          } else {
+            // Serialize other values as "key=value"
+            serializedParams.push(`${key}=${paramValue}`);
+          }
+        }
+      }
+      return serializedParams.join("&");
+    };
+
     return dlClient
-      .makeAuthenticatedRequest(`${API.CHATROOM_SYNC}`, { params: params })
+      .makeAuthenticatedRequest(`${API.CHATROOM_SYNC}`, {
+        params: params,
+        paramsSerializer: customParamsSerializer,
+      })
       .then((resData: any) => {
         // Handle the response and return the LMResponse object
         const responseData: SyncChatroomResponse =

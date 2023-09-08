@@ -55,6 +55,8 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   relationshipNeeded!: boolean;
   draftConversation?: string | null;
   isSecret?: boolean | null;
+  chatroomWithUserId?: number | null;
+  chatroomWithUserName?: string | null;
   // secretChatRoomParticipants!: Realm.List<number>;
   secretChatRoomLeft?: boolean | null;
   conversations?: Realm.List<ConversationRO>;
@@ -101,8 +103,10 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       lastSeenConversation: OPTONAL_CONVERSATION_RO,
       dateEpoch: OPTIONAL_INT,
       unseenCount: INT,
+      chatroomWithUserId: OPTIONAL_INT,
       relationshipNeeded: BOOLEAN,
       draftConversation: OPTIONAL_STRING,
+      chatroomWithUserName: OPTIONAL_STRING,
       isSecret: OPTIONAL_BOOLEAN,
       // secretChatRoomParticipants: LIST_INT,
       secretChatRoomLeft: OPTIONAL_BOOLEAN,

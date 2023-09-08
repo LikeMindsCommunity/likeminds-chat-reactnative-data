@@ -266,9 +266,9 @@ const convertToReactionRO = (
 export const convertToConversationRO = (
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
-  attachment: Attachment[],
-  polls: Poll[],
   chatroomId: string,
+  attachment?: Attachment[],
+  polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
   const conversationRO: ConversationRO = {
@@ -368,6 +368,10 @@ export const convertToChatroomRO = (
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
     updatedAt: chatroom.updatedAt || null,
+    chatroomWithUserId:
+      chatroom.chatroomWithUserId !== undefined
+        ? chatroom.chatroomWithUserId
+        : null,
     lastConversation: lastConversation,
     lastConversationRO: lastConversationRO,
     lastSeenConversationId: `${chatroom.lastSeenConversationId}` || null,
@@ -375,6 +379,11 @@ export const convertToChatroomRO = (
     unseenCount: chatroom.unseenCount || 0,
     relationshipNeeded: false, // Assign as needed
     isSecret: chatroom.isSecret || null,
+    chatroomWithUserName:
+      chatroom.chatroomWithUserName !== undefined
+        ? chatroom.chatroomWithUserName
+        : null,
+    // TODO
     // secretChatRoomParticipants: chatroom?.secretChatroomParticipants
     //   ? convertToSecretChatroomParticipants(
     //       chatroom?.secretChatroomParticipants

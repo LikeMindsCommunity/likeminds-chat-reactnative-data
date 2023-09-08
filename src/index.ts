@@ -142,6 +142,7 @@ import {
   saveTimeStamp,
   updateMuteStatus,
   updateTimeStamp,
+  updateUnseenCount,
 } from "./Data/Db/dbhelper";
 import Db from "./Data/Db/db";
 
@@ -586,6 +587,9 @@ class LMChatClient {
   }
   updateMuteStatus(chatroomId: string, muteStats: boolean) {
     return updateMuteStatus(chatroomId, muteStats);
+  }
+  updateUnseenCount(chatroomId: string) {
+    return updateUnseenCount(chatroomId);
   }
   getInstance() {
     return Db.getInstance();

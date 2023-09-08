@@ -1,3 +1,4 @@
+import { Conversation } from "src/shared/responseModels/Conversation";
 import { AttachmentRO } from "../Models/AttachmentRO";
 import { ChatroomRO } from "../Models/ChatroomRO";
 import { CommunityRO } from "../Models/CommunityRO";
@@ -20,7 +21,7 @@ import {
 import Db from "./db";
 import Realm from "realm";
 
-// method to save the community data
+// method to save the community data in realm
 export function saveCommunityData(communityData: any) {
   return Realm.open(Db.getInstance()).then((realm) => {
     realm.write(() => {
@@ -38,7 +39,7 @@ function isPoll(state: number) {
   return state === 10;
 }
 
-// method to save chatroom data
+// method to save chatroom data in realm
 export async function saveChatroomResponse(
   data: any,
   chatrooms: any[],
@@ -112,9 +113,9 @@ export async function saveChatroomResponse(
       const lastConvRO = convertToConversationRO(
         lastConversation,
         lastConversationCreatorRO,
+        chatroom?.id,
         lastConversationAttachment,
-        lastConversationPolls,
-        chatroom?.id
+        lastConversationPolls
       );
 
       if (!lastConversationCreatorRO) return;
@@ -146,12 +147,6 @@ export async function saveChatroomResponse(
       if (lastSeenConversationId) {
         const lastSeenConversation =
           data.conversationMeta[lastSeenConversationId?.toString()];
-        // const lastSeenConversationCreator =
-        //   data.userMeta[lastSeenConversation?.memberId?.toString()];
-        // const lastSeenConversationCreatorRO = convertToMemberRO(
-        //   lastSeenConversationCreator,
-        //   communityId,
-        // );
 
         const lastSeenConversationDeletedByMemberRO =
           lastSeenConversation?.deletedBy != null
@@ -171,33 +166,6 @@ export async function saveChatroomResponse(
                 return poll_1.toBuilder().member(user_1).build();
               })
           : [];
-
-        const lastSeenConversationAttachments =
-          lastSeenConversation.attachmentCount > 0
-            ? data.convAttachmentsMeta[lastSeenConversationId?.toString()]
-            : [];
-
-        // const lastSeenConversationRO = convertToConversationRO(
-        //   lastSeenConversation,
-        //   lastSeenConversationCreatorRO,
-        //   lastSeenConversationAttachments,
-        //   lastSeenConversationPolls,
-        //   chatroom?.id,
-        // );
-        // if (lastSeenConversationRO) {
-        //   realm.create(
-        //     LastConversationRO.schema.name,
-        //     lastSeenConversationRO,
-        //     Realm.UpdateMode.All,
-        //   );
-        // }
-        // if (lastSeenConversationCreatorRO) {
-        //   realm.create(
-        //     MemberRO.schema.name,
-        //     lastSeenConversationCreatorRO,
-        //     Realm.UpdateMode.All,
-        //   );
-        // }
       }
 
       // convert to ChatroomRO
@@ -217,106 +185,7 @@ export async function saveChatroomResponse(
   });
 }
 
-// method to save conversation data
-export function saveConversationData(
-  data: any,
-  chatroomData: any[],
-  conversationData: any[],
-  communityId: any
-) {
-  return Realm.open(Db.getInstance()).then((realm) => {
-    realm.write(() => {
-      // save community
-      const community = data.communityMeta[communityId];
-      if (!community) return;
-
-      const communityRO = convertCommunity(community);
-      if (!communityRO) return;
-
-      realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
-
-      // save chatroom
-      chatroomData.forEach((chatroom) => {
-        const creatorId = chatroom.userId;
-        const creator = data.userMeta[creatorId?.toString()];
-        if (!creator) return;
-        const chatroomCreatorRO = convertToMemberRO(creator, communityId);
-        if (!chatroomCreatorRO) return;
-        // realmWrite.insertOrUpdate(chatroomCreatorRO);
-        realm.create(
-          MemberRO.schema.name,
-          chatroomCreatorRO,
-          Realm.UpdateMode.All
-        );
-      });
-
-      // save conversations
-      for (const entryId in conversationData) {
-        if (conversationData.hasOwnProperty(entryId)) {
-          const conversation = conversationData[entryId];
-
-          // save conversation creator
-          const creatorId = conversation?.userId;
-          const creator = data.userMeta[creatorId?.toString()];
-          if (!creator) return;
-          const chatroomCreatorRO = convertToMemberRO(creator, communityId);
-          if (!chatroomCreatorRO) return;
-          realm.create(
-            MemberRO.schema.name,
-            chatroomCreatorRO,
-            Realm.UpdateMode.All
-          );
-
-          // save reactions on conversations
-          const conversationReaction =
-            conversation.hasReactions === true
-              ? data.convReactionsMeta[conversation?.id?.toString()]
-              : [];
-
-          // save polls
-          const conversationState = conversation?.state;
-          const conversationPolls = isPoll(conversationState?.state || 0)
-            ? (data.convPollsMeta[conversation?.id?.toString()] || [])
-                .sort((a: any, b: any) => a.id - b.id)
-                .map((poll: any) => {
-                  const user = data.userMeta[poll.userId];
-                  return poll.toBuilder().member(user).build();
-                })
-            : [];
-
-          // save attachments
-          const conversationAttachment =
-            conversation.attachmentCount > 0
-              ? data.convAttachmentsMeta[conversation?.id?.toString()]
-              : [];
-
-          // convert to ConversationRO
-          const conversationRO = convertToConversationRO(
-            conversation,
-            chatroomCreatorRO,
-            conversationAttachment,
-            conversationPolls,
-            "2889247",
-            conversationReaction
-          );
-
-          // save to local DB
-          if (conversationRO) {
-            realm.create(
-              ConversationRO.schema.name,
-              conversationRO,
-              Realm.UpdateMode.All
-            );
-          }
-        }
-      }
-    });
-
-    //TODO
-    // realm.close(); // Close the Realm instance after the write operation
-  });
-}
-
+// To get chatroom data from Realm
 export async function getChatroomData() {
   const realm = await Realm.open(Db.getInstance());
   const chatrooms = realm.objects(ChatroomRO.schema.name);
@@ -332,6 +201,7 @@ export async function getChatroomData() {
   return chatroomObject;
 }
 
+// To get community data from Realm
 export async function getCommunityData() {
   const realm = await Realm.open(Db.getInstance());
   const communities = realm.objects(CommunityRO.schema.name);
@@ -348,38 +218,27 @@ export async function getCommunityData() {
   return communityObject;
 }
 
-export async function getConversationData() {
-  const realm = await Realm.open(Db.getInstance());
-  const conversations = realm.objects(ConversationRO.schema.name);
-  const coonversationObject = conversations.map((conversation) => {
-    const stringifiedConversation = JSON.stringify(conversation);
-    return {
-      ...JSON.parse(stringifiedConversation),
-    };
-  });
-
-  //TODO
-  // realm.close(); // Close the Realm instance after reading data
-
-  return coonversationObject;
-}
-
+// To updated the timestamp in realm
 export async function updateTimeStamp(
   minTimeStamp: number,
   maxTimeStamp: number
 ) {
   const realm = await Realm.open(Db.getInstance());
-  const timeStampStored: any = realm.objects(TimeStampRO.schema.name);
-  timeStampStored.minTimeStamp = minTimeStamp;
-  timeStampStored.maxTimeStamp = maxTimeStamp;
+  realm.write(() => {
+    const timeStampStored: any = realm.objects(TimeStampRO.schema.name)[0];
+    timeStampStored.minTimeStamp = minTimeStamp;
+    timeStampStored.maxTimeStamp = maxTimeStamp;
+  });
 }
 
+// To get stored timestamp from Realm
 export async function getTimeStamp() {
   const realm = await Realm.open(Db.getInstance());
   const timeStampStored = realm.objects(TimeStampRO.schema.name);
   return timeStampStored;
 }
 
+// To save timestamp in Realm
 export async function saveTimeStamp(
   minTimeStamp: number,
   maxTimeStamp: number
@@ -391,6 +250,7 @@ export async function saveTimeStamp(
   });
 }
 
+// To fetch one chatroom details from Realm
 export async function getOneChatroomData(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);
@@ -403,18 +263,28 @@ export async function getOneChatroomData(chatroomId: string) {
   });
   //TODO
   // realm.close();
-  return chatroomObject;
+  return chatroom;
 }
 
+// Updation of mute status in Realm
 export async function updateMuteStatus(chatroomId: string, muteStats: boolean) {
-  const chatroom = await getOneChatroomData(chatroomId);
-  // console.log('mutedChatroom', chatroom);
+  const chatroom: any = await getOneChatroomData(chatroomId);
   const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
-    ChatroomRO.schema.name, (chatroom[0].muteStatus = !muteStats), "modified";
+    chatroom[0].muteStatus = !muteStats;
   });
 }
 
+// Updation of unseen count in Realm
+export async function updateUnseenCount(chatroomId: string) {
+  const chatroom: any = await getOneChatroomData(chatroomId);
+  const realm = await Realm.open(Db.getInstance());
+  realm.write(() => {
+    chatroom[0].unseenCount = 0;
+  });
+}
+
+// For deletion of one chatroom from Realm
 export async function deleteOneChatroom(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);

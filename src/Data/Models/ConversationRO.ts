@@ -75,7 +75,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       id: STRING,
       chatroomId: STRING,
       communityId: STRING,
-      // member: OPTIONAL_MEMBER_RO,
+      member: OPTIONAL_MEMBER_RO,
       answer: STRING,
       state: INT,
       createdEpoch: INT,

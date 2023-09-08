@@ -48,6 +48,8 @@ export interface Chatroom {
   isEdited?: boolean;
   access?: number;
   memberCanMessage?: boolean;
+  chatroomWithUserId?: number;
+  chatroomWithUserName?: string;
   cohorts?: Cohort[];
   externalSeen?: boolean;
   unreadConversationCount?: number;
