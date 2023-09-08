@@ -38,7 +38,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   cardCreationTime?: string | null;
   totalResponseCount!: number;
   totalAllResponseCount!: number;
-  muteStatus?: boolean | null;
+  muteStatus: boolean | null;
   followStatus?: boolean | null;
   hasBeenNamed?: boolean | null;
   date?: string | null;
@@ -55,6 +55,8 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   relationshipNeeded!: boolean;
   draftConversation?: string | null;
   isSecret?: boolean | null;
+  chatroomWithUserId?: number | null;
+  chatroomWithUserName?: string | null;
   // secretChatRoomParticipants!: Realm.List<number>;
   secretChatRoomLeft?: boolean | null;
   conversations?: Realm.List<ConversationRO>;
@@ -63,7 +65,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   autoFollowDone?: boolean | null;
   memberCanMessage?: boolean | null;
   isEdited?: boolean | null;
-  reactions?: Realm.List<ReactionRO>;
+  reactions?: Realm.List<ReactionRO> | null;
   unreadConversationsCount?: number | null;
   accessWithoutSubscription!: boolean;
   externalSeen?: boolean | null;
@@ -101,8 +103,10 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       lastSeenConversation: OPTONAL_CONVERSATION_RO,
       dateEpoch: OPTIONAL_INT,
       unseenCount: INT,
+      chatroomWithUserId: OPTIONAL_INT,
       relationshipNeeded: BOOLEAN,
       draftConversation: OPTIONAL_STRING,
+      chatroomWithUserName: OPTIONAL_STRING,
       isSecret: OPTIONAL_BOOLEAN,
       // secretChatRoomParticipants: LIST_INT,
       secretChatRoomLeft: OPTIONAL_BOOLEAN,

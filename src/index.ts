@@ -134,11 +134,18 @@ import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
   getAllChatroomData,
+  deleteOneChatroom,
   getChatroomData,
   getCommunityData,
+  getTimeStamp,
   saveChatroomResponse,
   saveCommunityData,
+  saveTimeStamp,
+  updateMuteStatus,
+  updateTimeStamp,
+  updateUnseenCount,
 } from "./Data/Db/dbhelper";
+import Db from "./Data/Db/db";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -317,8 +324,8 @@ class LMChatClient {
     );
   }
 
-  async pushReport(pushReport: PushReport): Promise<LMResponse<Nothing>> {
-    return this.chatroomClient.pushReport(pushReport, LMChatClient.dlClient);
+  async postReport(postReport: PushReport): Promise<LMResponse<Nothing>> {
+    return this.chatroomClient.postReport(postReport, LMChatClient.dlClient);
   }
 
   async leaveSecretChatroom(
@@ -569,6 +576,27 @@ class LMChatClient {
   }
   getChatroomData(chatroomId: string) {
     return getChatroomData(chatroomId);
+  }
+  updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return updateTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return saveTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  getTimeStamp() {
+    return getTimeStamp();
+  }
+  deleteOneChatroom(chatroomId: string) {
+    return deleteOneChatroom(chatroomId);
+  }
+  updateMuteStatus(chatroomId: string, muteStats: boolean) {
+    return updateMuteStatus(chatroomId, muteStats);
+  }
+  updateUnseenCount(chatroomId: string) {
+    return updateUnseenCount(chatroomId);
+  }
+  getInstance() {
+    return Db.getInstance();
   }
 }
 

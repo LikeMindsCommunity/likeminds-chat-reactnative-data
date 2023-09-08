@@ -51,7 +51,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   uploadWorkerUUID?: string | null;
   localSavedEpoch!: number;
   temporaryId?: string | null;
-  reactions?: Realm.List<ReactionRO>;
+  reactions?: Realm.List<ReactionRO> | null;
   isAnonymous?: boolean | null;
   allowAddOption?: boolean | null;
   pollType?: number | null;
@@ -75,7 +75,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       id: STRING,
       chatroomId: STRING,
       communityId: STRING,
-      // member: OPTIONAL_MEMBER_RO,
+      member: OPTIONAL_MEMBER_RO,
       answer: STRING,
       state: INT,
       createdEpoch: INT,

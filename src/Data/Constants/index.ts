@@ -1,5 +1,6 @@
 //schema names
 export const APP_CONFIG_RO = "AppConfigRO";
+export const TIME_STAMP_RO = "TimeStampRO";
 export const ATTACHMENT_META_RO = "AttachmentMetaRO";
 export const ATTACHMENT_RO = "AttachmentRO";
 export const CHATROOM_RO = "ChatroomRO";

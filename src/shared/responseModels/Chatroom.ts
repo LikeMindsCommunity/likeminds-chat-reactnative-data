@@ -22,7 +22,7 @@ export interface Chatroom {
   cardCreationTime?: string;
   participantsCount?: string;
   totalResponseCount?: string;
-  muteStatus?: boolean;
+  muteStatus: boolean;
   followStatus?: boolean;
   hasBeenNamed?: boolean;
   hasReactions?: boolean;
@@ -48,6 +48,8 @@ export interface Chatroom {
   isEdited?: boolean;
   access?: number;
   memberCanMessage?: boolean;
+  chatroomWithUserId?: number;
+  chatroomWithUserName?: string;
   cohorts?: Cohort[];
   externalSeen?: boolean;
   unreadConversationCount?: number;
