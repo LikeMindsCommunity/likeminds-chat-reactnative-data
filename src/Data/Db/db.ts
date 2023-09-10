@@ -13,6 +13,7 @@ import { AttachmentMetaRO } from "../Models/AttachmentMetaRO";
 import { AttachmentRO } from "../Models/AttachmentRO";
 import { ReactionRO } from "../Models/ReactionRO";
 import { TimeStampRO } from "../Models/TimeStampRO";
+import { AttachmentUploadConversationsRO } from "../Models/AttachmentUploadConversationRO";
 
 export default class Db {
   private static instance: Realm;
@@ -34,6 +35,7 @@ export default class Db {
       SDKClientInfoRO,
       UserRO,
       TimeStampRO,
+      AttachmentUploadConversationsRO,
     ], // Update with your actual models
     schemaVersion: 1, // Increment when you change the schema
     onMigration: (oldRealm: Realm, newRealm: Realm) => {

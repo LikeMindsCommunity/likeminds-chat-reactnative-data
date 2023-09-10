@@ -133,17 +133,39 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
+  updateDeletedBy,
+  updateMuteStatus,
+  updateUnseenCount,
+} from "./Data/Db/queries/functionalities";
+import {
+  getAllAttachmentUploadConversations,
+  removeAttactmentUploadConversationByKey,
+  saveAttachmentUploadConversation,
+} from "./Data/Db/queries/attachments";
+import {
+  getTimeStamp,
+  saveTimeStamp,
+  updateTimeStamp,
+} from "./Data/Db/queries/timeStamp";
+import {
+  deleteSingleConversation,
+  updateSingleConversation,
+  saveNewConversationToRealm,
+  saveConversationData,
+  replaceSavedConversation,
+  getAllConversationData,
+  getConversationData,
+  getSingleConversationData,
+} from "./Data/Db/queries/conversation";
+import {
   deleteOneChatroom,
   getChatroomData,
-  getCommunityData,
-  getTimeStamp,
   saveChatroomResponse,
+} from "./Data/Db/queries/chatroom";
+import {
   saveCommunityData,
-  saveTimeStamp,
-  updateMuteStatus,
-  updateTimeStamp,
-  updateUnseenCount,
-} from "./Data/Db/dbhelper";
+  getCommunityData,
+} from "./Data/Db/queries/community";
 import Db from "./Data/Db/db";
 
 class LMChatClient {
@@ -593,6 +615,52 @@ class LMChatClient {
   }
   getInstance() {
     return Db.getInstance();
+  }
+  saveConversationData(
+    data: any,
+    chatroomData: any[],
+    conversationData: any[],
+    communityId: any
+  ) {
+    return saveConversationData(
+      data,
+      chatroomData,
+      conversationData,
+      communityId
+    );
+  }
+  getAllConversationData() {
+    return getAllConversationData();
+  }
+  getConversationData(chatroomId: string) {
+    return getConversationData(chatroomId);
+  }
+  updateSingleConversation(conversationId: string, data: any) {
+    return updateSingleConversation(conversationId, data);
+  }
+  saveNewConversationToRealm(chatroomId: string, data: any) {
+    return saveNewConversationToRealm(chatroomId, data);
+  }
+  deleteSingleConversation(conversationId: string) {
+    return deleteSingleConversation(conversationId);
+  }
+  getSingleConversationData(conversationId: string) {
+    return getSingleConversationData(conversationId);
+  }
+  updateDeletedBy(conversationId: string, data: any) {
+    return updateDeletedBy(conversationId, data);
+  }
+  replaceSavedConversation(data: any) {
+    return replaceSavedConversation(data);
+  }
+  saveAttachmentUploadConversation(key: string, value: string) {
+    return saveAttachmentUploadConversation(key, value);
+  }
+  getAllAttachmentUploadConversations() {
+    return getAllAttachmentUploadConversations();
+  }
+  removeAttactmentUploadConversationByKey(key: string) {
+    return removeAttactmentUploadConversationByKey(key);
   }
 }
 

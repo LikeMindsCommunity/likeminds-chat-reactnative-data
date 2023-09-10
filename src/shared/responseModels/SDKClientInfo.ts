@@ -3,4 +3,5 @@ export interface SDKClientInfo {
   user: string;
   userUniqueId: string;
   uuid: string;
+  community: number;
 }
