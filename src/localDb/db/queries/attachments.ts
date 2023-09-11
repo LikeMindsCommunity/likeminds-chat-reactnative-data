@@ -24,7 +24,6 @@ export async function saveAttachmentUploadConversation(
 export async function getAllAttachmentUploadConversations() {
   const realm = await Realm.open(Db.getInstance());
   const conversations = realm.objects(ATTACHMENT_UPLOAD_CONVERSATIONS);
-
   return conversations;
 }
 
@@ -37,7 +36,6 @@ export async function getAllAttachmentUploadConversationIDs() {
   const conversationIDs = conversations.map(
     (conversation) => conversation?.key
   );
-
   return conversationIDs;
 }
 

@@ -8,6 +8,11 @@ import Db from "../db/db";
 class ChatDBUtil {
   private static ONGOING_WRITE_TRANSACTION = 0;
 
+  // method to check for poll
+  isPoll(state: number) {
+    return state == 10;
+  }
+
   static writeAsync(
     block: (realm: Realm) => void,
     cb: ((isSuccess: boolean) => void) | null = null

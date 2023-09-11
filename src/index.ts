@@ -150,24 +150,20 @@ import {
   updateTimeStamp,
 } from "./localDb/db/queries/timeStamp";
 import {
-  deleteSingleConversation,
-  updateSingleConversation,
-  saveNewConversationToRealm,
+  deleteConversation,
+  updateConversation,
+  saveNewConversation,
   saveConversationData,
   replaceSavedConversation,
-  getAllConversationData,
   getConversationData,
-  getSingleConversationData,
+  getConversation,
 } from "./localDb/db/queries/conversation";
 import {
-  deleteOneChatroom,
-  getChatroomData,
+  deleteChatroom,
+  getChatrooms,
   saveChatroomResponse,
 } from "./localDb/db/queries/chatroom";
-import {
-  saveCommunityData,
-  getCommunityData,
-} from "./localDb/db/queries/community";
+import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
 
 class LMChatClient {
@@ -585,8 +581,8 @@ class LMChatClient {
     return this.syncClient.syncConversation(request, LMChatClient.dlClient);
   }
 
-  async saveCommunityData(communityData) {
-    return saveCommunityData(communityData);
+  async saveCommunity(communityData) {
+    return saveCommunity(communityData);
   }
   async saveChatroomResponse(
     data: SyncChatroomResponse,
@@ -595,11 +591,11 @@ class LMChatClient {
   ) {
     return saveChatroomResponse(data, chatrooms, communityId);
   }
-  async getCommunityData() {
-    return getCommunityData();
+  async getCommunity() {
+    return getCommunity();
   }
-  async getChatroomData() {
-    return getChatroomData();
+  async listOfChatroomObject() {
+    return getChatrooms();
   }
   async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return updateTimeStamp(minTimeStamp, maxTimeStamp);
@@ -610,8 +606,8 @@ class LMChatClient {
   async getTimeStamp() {
     return getTimeStamp();
   }
-  async deleteOneChatroom(chatroomId: string) {
-    return deleteOneChatroom(chatroomId);
+  async deleteChatroom(chatroomId: string) {
+    return deleteChatroom(chatroomId);
   }
   async updateMuteStatus(chatroomId: string, muteStats: boolean) {
     return updateMuteStatus(chatroomId, muteStats);
@@ -635,29 +631,20 @@ class LMChatClient {
       communityId
     );
   }
-  async getAllConversationData() {
-    return getAllConversationData();
-  }
   async getConversationData(chatroomId: string) {
     return getConversationData(chatroomId);
   }
-  async updateSingleConversation(
-    conversationId: string,
-    data: ConversationModel
-  ) {
-    return updateSingleConversation(conversationId, data);
+  async updateConversation(conversationId: string, data: ConversationModel) {
+    return updateConversation(conversationId, data);
   }
-  async saveNewConversationToRealm(
-    chatroomId: string,
-    data: ConversationModel
-  ) {
-    return saveNewConversationToRealm(chatroomId, data);
+  async saveNewConversation(chatroomId: string, data: ConversationModel) {
+    return saveNewConversation(chatroomId, data);
   }
-  async deleteSingleConversation(conversationId: string) {
-    return deleteSingleConversation(conversationId);
+  async deleteConversation(conversationId: string) {
+    return deleteConversation(conversationId);
   }
-  async getSingleConversationData(conversationId: string) {
-    return getSingleConversationData(conversationId);
+  async getConversation(conversationId: string) {
+    return getConversation(conversationId);
   }
   async updateDeletedBy(conversationId: string, data: ConversationModel) {
     return updateDeletedBy(conversationId, data);

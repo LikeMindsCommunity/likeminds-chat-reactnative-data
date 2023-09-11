@@ -13,11 +13,7 @@ import {
 import Db from "../db";
 import Realm from "realm";
 import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
-
-// method to check for poll
-function isPoll(state: number) {
-  return state == 10;
-}
+import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -27,6 +23,7 @@ export async function saveChatroomResponse(
 ) {
   const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
+    const chatDBUtil = new ChatDBUtil();
     const community = data.communityMeta[communityId];
     if (!community) return;
 
@@ -65,7 +62,7 @@ export async function saveChatroomResponse(
           : null;
 
       // save lastConversation polls
-      const lastConversationPolls = isPoll(lastConversation.state)
+      const lastConversationPolls = chatDBUtil.isPoll(lastConversation.state)
         ? data.convPollsMeta[lastConversationId?.toString()]
         : [];
 
@@ -85,6 +82,8 @@ export async function saveChatroomResponse(
         communityId
       );
 
+      if (!lastConversationCreatorRO) return;
+
       const conversationRO = convertToConversationRO(
         lastConversation,
         lastConversationCreatorRO,
@@ -92,8 +91,6 @@ export async function saveChatroomResponse(
         lastConversationAttachment,
         lastConversationPolls
       );
-
-      if (!lastConversationCreatorRO) return;
 
       const lastConversationRO = convertToLastConversationRO(
         lastConversation,
@@ -135,34 +132,28 @@ export async function saveChatroomResponse(
 }
 
 // To get chatroom data from Realm
-export async function getChatroomData() {
+export async function getChatrooms() {
   const realm = await Realm.open(Db.getInstance());
   const chatrooms = realm.objects(ChatroomRO.schema.name);
-  const chatroomObject = chatrooms.map((chatroom) => {
+  const listOfChatroomObject = chatrooms.map((chatroom) => {
     const stringifiedChatroom = JSON.stringify(chatroom);
     return {
       ...JSON.parse(stringifiedChatroom),
     };
   });
-  return chatroomObject;
+  return listOfChatroomObject;
 }
 
 // To fetch one chatroom details from Realm
-export async function getOneChatroomData(chatroomId: string) {
+export async function getChatroom(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
-  const chatroomObject = chatroom.map((chatroom) => {
-    const stringifiedChatroom = JSON.stringify(chatroom);
-    return {
-      ...JSON.parse(stringifiedChatroom),
-    };
-  });
   return chatroom;
 }
 
 // For deletion of one chatroom from Realm
-export async function deleteOneChatroom(chatroomId: string) {
+export async function deleteChatroom(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);

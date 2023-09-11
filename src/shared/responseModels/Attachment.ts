@@ -1,4 +1,4 @@
-import {AttachmentMeta} from './AttachmentMeta';
+import { AttachmentMeta } from "./AttachmentMeta";
 
 export interface Attachment {
   id: string;

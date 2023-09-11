@@ -4,7 +4,7 @@ import Db from "../db";
 import Realm from "realm";
 
 // method to save the community data in realm
-export function saveCommunityData(communityData: any) {
+export function saveCommunity(communityData: any) {
   return Realm.open(Db.getInstance()).then((realm) => {
     realm.write(() => {
       let community = convertToCommunity(communityData);
@@ -14,7 +14,7 @@ export function saveCommunityData(communityData: any) {
 }
 
 // To get community data from Realm
-export async function getCommunityData() {
+export async function getCommunity() {
   const realm = await Realm.open(Db.getInstance());
   const communities = realm.objects(CommunityRO.schema.name);
   const communityObject = communities.map((community) => {

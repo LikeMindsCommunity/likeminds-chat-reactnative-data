@@ -37,8 +37,8 @@ export const convertToTimeStampRO = (
 // convertToCommunity method takes Community data and converts it to CommunityRO
 export const convertToCommunity = (community: Community): CommunityRO => {
   let communityRO: CommunityRO = {
-    id: `${community?.id}`,
-    name: `${community?.name}`,
+    id: community?.id?.toString(),
+    name: community?.name?.toString(),
     imageUrl: community?.imageUrl,
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
@@ -85,7 +85,7 @@ export const convertToLastConversationRO = (
 // convertToPollRO method takes Poll data and converts it to PollRO
 export const convertToPollRO = (poll: Poll, communityId: string) => {
   const pollRO: PollRO = {
-    id: `${poll?.id}`,
+    id: poll?.id?.toString(),
     text: poll?.text,
     subText: poll.subText,
     isSelected: poll.isSelected,
@@ -119,7 +119,7 @@ export const convertToAttachmentRO = (
   communityId: string
 ) => {
   const attachmentRO: AttachmentRO = {
-    id: index.toString(),
+    id: attachment?.id?.toString() || index.toString(),
     url:
       attachment.url == undefined
         ? attachment?.fileUrl?.toString()
@@ -262,9 +262,9 @@ export const convertToReplyConversationObject = (
     conversation?.communityId
   );
   const replyConversationObjectRO: ConversationRO = {
-    id: `${conversation.id}` || "",
+    id: conversation.id?.toString(),
     chatroomId: chatroomId,
-    communityId: `${conversation.communityId}` || "",
+    communityId: conversation.communityId?.toString(),
     member: memberRoConverted,
     answer: conversation?.answer,
     state: conversation?.state,
@@ -278,10 +278,10 @@ export const convertToReplyConversationObject = (
       conversation.deletedByMember !== null
         ? convertToMemberRO(
             conversation.deletedByMember,
-            `${conversation.communityId}`
+            conversation.communityId?.toString()
           )
         : null,
-    replyId: `${conversation?.replyId}` || null,
+    replyId: conversation?.replyId?.toString() || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
     uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
@@ -301,17 +301,20 @@ export const convertToReplyConversationObject = (
     toShowResults: conversation?.toShowResults || null,
     replyChatRoomId: conversation?.replyChatroomId || null,
     lastUpdatedAt: conversation?.lastUpdated || 0,
-    deletedByUserId: `${conversation.deletedByUserId}` || null,
+    deletedByUserId: conversation.deletedByUserId?.toString() || null,
     attachments: convertToAttachment(
       conversation.attachments,
-      `${chatroomId}`,
-      `${conversation.communityId}`
+      chatroomId?.toString(),
+      conversation.communityId?.toString()
     ),
     reactions: convertToReaction(
       conversation.reactions,
-      `${conversation?.communityId}`
+      conversation?.communityId?.toString()
     ),
-    polls: convertToPoll(conversation.polls, `${conversation?.communityId}`),
+    polls: convertToPoll(
+      conversation.polls,
+      conversation?.communityId?.toString()
+    ),
     ...dummyKeys(ConversationRO),
   };
   return replyConversationObjectRO;
@@ -327,9 +330,9 @@ export const convertToConversationRO = (
   reactions?: Reaction[]
 ): ConversationRO => {
   const conversationRO: ConversationRO = {
-    id: `${conversation.id}` || "",
-    chatroomId: `${chatroomId}`,
-    communityId: `${conversation.communityId}` || "",
+    id: conversation.id?.toString(),
+    chatroomId: chatroomId?.toString(),
+    communityId: conversation.communityId?.toString(),
     member: chatroomCreatorRO,
     answer: conversation?.answer,
     state: conversation?.state,
@@ -344,11 +347,11 @@ export const convertToConversationRO = (
       conversation.deletedByMember !== undefined
         ? convertToMemberRO(
             conversation.deletedByMember,
-            `${conversation.communityId}`
+            conversation.communityId?.toString()
           )
         : null,
     replyConversation: conversation.replyConversation,
-    replyId: `${conversation?.replyId}` || null,
+    replyId: conversation?.replyId?.toString() || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
     uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
@@ -368,21 +371,24 @@ export const convertToConversationRO = (
     toShowResults: conversation?.toShowResults || null,
     replyChatRoomId: conversation?.replyChatroomId || null,
     lastUpdatedAt: conversation?.lastUpdated || 0,
-    deletedByUserId: `${conversation.deletedByUserId}` || null,
+    deletedByUserId: conversation.deletedByUserId?.toString() || null,
     replyConversationObject:
       conversation?.replyConversationObject != undefined
         ? convertToReplyConversationObject(
             conversation?.replyConversationObject,
-            `${chatroomId}`
+            chatroomId?.toString()
           )
         : null,
     attachments: convertToAttachment(
       attachment,
-      `${chatroomId}`,
-      `${conversation.communityId}`
+      chatroomId?.toString(),
+      conversation.communityId?.toString()
     ),
-    reactions: convertToReaction(reactions, `${conversation?.communityId}`),
-    polls: convertToPoll(polls, `${conversation?.communityId}`),
+    reactions: convertToReaction(
+      reactions,
+      conversation?.communityId?.toString()
+    ),
+    polls: convertToPoll(polls, conversation?.communityId?.toString()),
     ...dummyKeys(ConversationRO),
   };
   return conversationRO;
@@ -397,7 +403,7 @@ export const convertToChatroomRO = (
 ): ChatroomRO => {
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
-    communityId: `${chatroom.communityId}` || "",
+    communityId: chatroom.communityId?.toString(),
     title: chatroom.title,
     state: chatroom.state,
     member: member,
@@ -428,7 +434,7 @@ export const convertToChatroomRO = (
         : null,
     lastConversation: lastConversation,
     lastConversationRO: lastConversationRO,
-    lastSeenConversationId: `${chatroom.lastSeenConversationId}` || null,
+    lastSeenConversationId: chatroom.lastSeenConversationId?.toString() || null,
     dateEpoch: chatroom.dateEpoch || null,
     unseenCount: chatroom.unseenCount || 0,
     relationshipNeeded: false,
@@ -438,7 +444,7 @@ export const convertToChatroomRO = (
         ? chatroom.chatroomWithUserName
         : null,
     secretChatRoomLeft: chatroom.secretChatroomLeft || null,
-    topicId: `${chatroom.topicId}` || null,
+    topicId: chatroom.topicId?.toString() || null,
     autoFollowDone: chatroom.autoFollowDone || null,
     memberCanMessage: chatroom.memberCanMessage || null,
     isEdited: chatroom.isEdited || null,
@@ -446,7 +452,7 @@ export const convertToChatroomRO = (
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
     externalSeen: chatroom.externalSeen || null,
     isConversationStored: chatroom?.isConversationStored || false,
-    lastConversationId: `${chatroom.lastConversationId}` || null,
+    lastConversationId: chatroom.lastConversationId?.toString() || null,
     ...dummyKeys(ChatroomRO),
   };
 
