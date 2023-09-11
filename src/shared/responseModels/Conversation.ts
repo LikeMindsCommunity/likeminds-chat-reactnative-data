@@ -46,7 +46,7 @@ export interface Conversation {
   hasFiles?: boolean;
   hasReactions?: boolean;
   lastUpdated?: number;
-  deletedByMember: Member;
+  deletedByMember?: Member;
   deletedByUserId?: string;
   userId?: string;
   cardId?: string;

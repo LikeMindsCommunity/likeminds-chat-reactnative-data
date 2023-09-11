@@ -619,7 +619,7 @@ class LMChatClient {
   async updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(chatroomId);
   }
-  async getInstance() {
+  getInstance() {
     return Db.getInstance();
   }
   async saveConversationData(
