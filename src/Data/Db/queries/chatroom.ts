@@ -14,7 +14,7 @@ import Realm from "realm";
 
 // method to check for poll
 function isPoll(state: number) {
-  return state === 10;
+  return state == 10;
 }
 
 // method to save chatroom data in realm
@@ -64,13 +64,13 @@ export async function saveChatroomResponse(
 
       // save lastConversation polls
       const lastConversationPolls = isPoll(lastConversation.state)
-        ? (data.convPollsMeta[lastConversationId?.toString()] || [])
-            .sort((a: any, b: any) => a.id - b.id)
-            .map((poll: any) => {
-              const user = data.userMeta[poll.userId];
-              return poll.toBuilder().member(user).build();
-            })
-        : [];
+        ? data.convPollsMeta[lastConversationId?.toString()]
+        : // .sort((a: any, b: any) => a.id - b.id)
+          // .map((poll: any) => {
+          //   const user = data.userMeta[poll.userId];
+          //   return poll.toBuilder().member(user).build();
+          // })
+          [];
 
       // save lastConversation attachments
       const lastConversationAttachment =
@@ -121,31 +121,6 @@ export async function saveChatroomResponse(
         Realm.UpdateMode.All
       );
 
-      const lastSeenConversationId = chatroom.lastSeenConversationId;
-      if (lastSeenConversationId) {
-        const lastSeenConversation =
-          data.conversationMeta[lastSeenConversationId?.toString()];
-
-        const lastSeenConversationDeletedByMemberRO =
-          lastSeenConversation?.deletedBy != null
-            ? convertToMemberRO(
-                data.userMeta[lastSeenConversation.deletedBy],
-                communityId
-              )
-            : null;
-
-        const lastSeenConversationPolls = isPoll(
-          lastSeenConversation?.state || 0
-        )
-          ? (data.convPollsMeta[lastSeenConversationId?.toString()] || [])
-              .sort((a_1: any, b_1: any) => a_1.id - b_1.id)
-              .map((poll_1: any) => {
-                const user_1 = data.userMeta[poll_1.userId];
-                return poll_1.toBuilder().member(user_1).build();
-              })
-          : [];
-      }
-
       // convert to ChatroomRO
       const chatroomRO = convertToChatroomRO(
         chatroom,
@@ -173,9 +148,6 @@ export async function getChatroomData() {
       ...JSON.parse(stringifiedChatroom),
     };
   });
-
-  //TODO
-  // realm.close();
   return chatroomObject;
 }
 
@@ -190,8 +162,6 @@ export async function getOneChatroomData(chatroomId: string) {
       ...JSON.parse(stringifiedChatroom),
     };
   });
-  //TODO
-  // realm.close();
   return chatroom;
 }
 

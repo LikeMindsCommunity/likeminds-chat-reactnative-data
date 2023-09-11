@@ -10,9 +10,6 @@ export function saveCommunityData(communityData: any) {
       let community = convertToCommunity(communityData);
       realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);
     });
-
-    //TODO
-    // realm.close(); // Close the Realm instance after the write operation
   });
 }
 
@@ -26,9 +23,5 @@ export async function getCommunityData() {
       ...JSON.parse(stringifiedCommunity),
     };
   });
-
-  //TODO
-  // realm.close(); // Close the Realm instance after reading data
-
   return communityObject;
 }

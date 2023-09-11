@@ -11,7 +11,7 @@ import Realm from "realm";
 
 // method to check for poll
 function isPoll(state: number) {
-  return state === 10;
+  return state == 10;
 }
 
 export function saveLastConversationData(
@@ -64,14 +64,16 @@ export function saveLastConversationData(
               : [];
           // save polls
           const conversationState = conversation?.state;
-          const conversationPolls = isPoll(conversationState?.state || 0)
-            ? (data.convPollsMeta[conversation?.id?.toString()] || [])
-                .sort((a: any, b: any) => a.id - b.id)
-                .map((poll: any) => {
-                  const user = data.userMeta[poll.userId];
-                  return poll.toBuilder().member(user).build();
-                })
-            : null;
+
+          const conversationPolls = isPoll(conversationState)
+            ? data.convPollsMeta[conversation?.id?.toString()]
+            : // .sort((a: any, b: any) => a.id - b.id)
+              // .map((poll: any) => {
+              //   const user = data.userMeta[poll.userId];
+              //   return poll.toBuilder().member(user).build();
+              // })
+              null;
+
           // save attachments
           const conversationAttachment =
             conversation.attachmentCount > 0
@@ -97,8 +99,6 @@ export function saveLastConversationData(
         }
       }
     });
-    //TODO
-    // realm.close(); // Close the Realm instance after the write operation
   });
 }
 export async function saveConversationData(
@@ -151,15 +151,16 @@ export async function saveConversationData(
           ? data.convReactionsMeta[conversation?.id?.toString()]
           : [];
       // save polls
+
       const conversationState = conversation?.state;
-      const conversationPolls = isPoll(conversationState?.state || 0)
-        ? (data.convPollsMeta[conversation?.id?.toString()] || [])
-            .sort((a: any, b: any) => a.id - b.id)
-            .map((poll: any) => {
-              const user = data.userMeta[poll.userId];
-              return poll.toBuilder().member(user).build();
-            })
-        : null;
+      const conversationPolls = isPoll(conversationState)
+        ? data.convPollsMeta[conversation?.id?.toString()]
+        : // .sort((a: any, b: any) => a.id - b.id)
+          // .map((poll: any) => {
+          //   const user = data.userMeta[poll.userId];
+          //   return poll.toBuilder().member(user).build();
+          // })
+          null;
 
       // save attachments
       const conversationAttachment =
@@ -187,8 +188,6 @@ export async function saveConversationData(
       }
     });
   });
-  //TODO
-  // realm.close(); // Close the Realm instance after the write operation
 }
 
 // To get conversation data from Realm
@@ -201,9 +200,6 @@ export async function getAllConversationData() {
       ...JSON.parse(stringifiedConversation),
     };
   });
-
-  //TODO
-  // realm.close(); // Close the Realm instance after reading data
 
   return coonversationObject;
 }
@@ -218,8 +214,6 @@ export async function getConversationData(chatroomId: string) {
       ...JSON.parse(stringifiedConversation),
     };
   });
-  //TODO
-  // realm.close(); // Close the Realm instance after reading data
   return conversationObject;
 }
 
@@ -233,8 +227,6 @@ export async function getSingleConversationData(conversationId: string) {
       ...JSON.parse(stringifiedConversation),
     };
   });
-  //TODO
-  // realm.close(); // Close the Realm instance after reading data
   return conversationObject;
 }
 
@@ -244,12 +236,14 @@ export async function updateSingleConversation(
 ) {
   const realm = await Realm.open(Db.getInstance());
   const conversations = realm.objects(ConversationRO.schema.name);
-  const conversationObj = conversations.filtered(`id = "${conversationId}"`);
+  const filteredConversation = conversations.filtered(
+    `id = "${conversationId}"`
+  );
   const conversation = data?.data?.conversation;
-  const temp1 = JSON.stringify(conversation);
-  let parsedConversation = JSON.parse(temp1);
+  const stringifiedConversation = JSON.stringify(conversation);
+  let parsedConversation = JSON.parse(stringifiedConversation);
   const keys = Object.keys(parsedConversation);
-  const temp: any = conversationObj[0];
+  const conversationObject: any = filteredConversation[0];
   const sdkClientInfo = conversation?.member?.sdkClientInfo;
   const community = sdkClientInfo?.community.toString();
   const user = sdkClientInfo?.user.toString();
@@ -267,13 +261,13 @@ export async function updateSingleConversation(
   };
   realm.write(() => {
     for (let i = 0; i < keys.length; i++) {
-      if (temp[keys[i]] != undefined) {
-        if (typeof temp[keys[i]] == "string") {
-          temp[keys[i]] = parsedConversation[keys[i]].toString();
+      if (conversationObject[keys[i]] != undefined) {
+        if (typeof conversationObject[keys[i]] == "string") {
+          conversationObject[keys[i]] = parsedConversation[keys[i]].toString();
         } else if (keys[i] == "member") {
-          temp[keys[i]] = editedMember;
+          conversationObject[keys[i]] = editedMember;
         } else {
-          temp[keys[i]] = parsedConversation[keys[i]];
+          conversationObject[keys[i]] = parsedConversation[keys[i]];
         }
       }
     }
@@ -293,8 +287,8 @@ export async function replaceSavedConversation(data: any) {
   const realm = await Realm.open(Db.getInstance());
   const replyConv = data?.conversation?.replyConversation;
   if (replyConv !== null && replyConv !== "null") {
-    const getConv = await getSingleConversationData(replyConv);
-    data.conversation.replyConversationObject = getConv[0];
+    const conversation = await getSingleConversationData(replyConv);
+    data.conversation.replyConversationObject = conversation[0];
   }
 
   realm.write(() => {
@@ -303,23 +297,30 @@ export async function replaceSavedConversation(data: any) {
       `chatroomId = "${data?.conversation?.chatroomId}"`
     );
 
-    let newCOnv: any = allConversations.filtered(
+    let filteredConversation: any = allConversations.filtered(
       `id = "${data?.conversation?.temporaryId}"`
     );
 
-    const temp = convertToMemberRO(
+    const memberRo = convertToMemberRO(
       data?.conversation?.member,
       data?.conversation?.communityId
     );
-    const convvvv = convertToConversationRO(
+
+    const convertedConversation = convertToConversationRO(
       data?.conversation,
-      temp,
+      memberRo,
       data?.conversation?.chatroomId,
-      newCOnv[0]?.attachments,
-      newCOnv[0]?.polls
+      filteredConversation[0]?.attachments,
+      filteredConversation[0]?.polls,
+      filteredConversation[0]?.reactions
     );
-    realm.create(ConversationRO.schema.name, convvvv, Realm.UpdateMode.All);
-    realm.delete(newCOnv);
+
+    realm.create(
+      ConversationRO.schema.name,
+      convertedConversation,
+      Realm.UpdateMode.All
+    );
+    realm.delete(filteredConversation);
   });
 }
 
@@ -330,10 +331,11 @@ export async function saveNewConversationToRealm(
   const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
     const conversations = realm.objects(ConversationRO.schema.name);
-    let allConversations: any = conversations.filtered(
-      `chatroomId = "${chatroomId}"`
-    );
+    // let allConversations: any = conversations.filtered(
+    //   `chatroomId = "${chatroomId}"`
+    // );
     const memberRo = convertToMemberRO(data?.member, data?.communityId);
+
     const newConvRO = convertToConversationRO(
       data,
       memberRo,
@@ -342,7 +344,7 @@ export async function saveNewConversationToRealm(
       data?.polls,
       data?.reactions
     );
-    allConversations = [newConvRO, ...allConversations];
+    // allConversations = [newConvRO, ...allConversations];
     realm.create(ConversationRO.schema.name, newConvRO, Realm.UpdateMode.All);
   });
 }

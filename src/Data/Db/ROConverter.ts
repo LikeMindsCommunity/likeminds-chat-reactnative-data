@@ -98,7 +98,7 @@ export const convertToLastConversationRO = (
 // convertToPollRO method takes Poll data and converts it to PollRO
 export const convertToPollRO = (poll: Poll, communityId: string) => {
   const pollRO: PollRO = {
-    id: poll?.id,
+    id: `${poll?.id}`,
     text: poll?.text,
     subText: poll.subText,
     isSelected: poll.isSelected,
