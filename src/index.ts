@@ -144,8 +144,14 @@ import {
   updateMuteStatus,
   updateTimeStamp,
   updateUnseenCount,
+  saveConversationData,
+  saveLastConversationData,
+  paginateUp,
+  chatroomViewed,
 } from "./Data/Db/dbhelper";
 import Db from "./Data/Db/db";
+import { getConversationData } from "./Data/Db/dbhelper";
+import { getAllConversationData } from "./Data/Db/dbhelper";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -568,35 +574,89 @@ class LMChatClient {
   async saveChatroomResponse(data: any, chatrooms: any[], communityId: string) {
     return saveChatroomResponse(data, chatrooms, communityId);
   }
+
+  saveLastConversationData(
+    data: any,
+    chatroomData: any[],
+    conversationData: any[],
+    communityId: any
+  ) {
+    return saveLastConversationData(
+      data,
+      chatroomData,
+      conversationData,
+      communityId
+    );
+  }
+
+  saveConversationData(
+    data: any,
+    chatroomData: any[],
+    conversationData: any[],
+    communityId: any
+  ) {
+    return saveConversationData(
+      data,
+      chatroomData,
+      conversationData,
+      communityId
+    );
+  }
+
+  paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
+    return paginateUp(chatroomId, createdEpoch, pageSize);
+  }
+
+  getConversationData(chatroomId: string, pageSize: number) {
+    return getConversationData(chatroomId, pageSize);
+  }
+
+  getAllConversationData(chatroomId: string) {
+    return getAllConversationData(chatroomId);
+  }
+
+  getInstance() {
+    return Db.getInstance();
+  }
+
   getCommunityData() {
     return getCommunityData();
   }
+
   getAllChatroomData() {
     return getAllChatroomData();
   }
+
   getChatroomData(chatroomId: string) {
     return getChatroomData(chatroomId);
   }
+
   updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return updateTimeStamp(minTimeStamp, maxTimeStamp);
   }
+
   saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return saveTimeStamp(minTimeStamp, maxTimeStamp);
   }
+
   getTimeStamp() {
     return getTimeStamp();
   }
+
   deleteOneChatroom(chatroomId: string) {
     return deleteOneChatroom(chatroomId);
   }
+
   updateMuteStatus(chatroomId: string, muteStats: boolean) {
     return updateMuteStatus(chatroomId, muteStats);
   }
+
   updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(chatroomId);
   }
-  getInstance() {
-    return Db.getInstance();
+
+  chatroomViewed(chatroomId: string) {
+    return chatroomViewed(chatroomId);
   }
 }
 
