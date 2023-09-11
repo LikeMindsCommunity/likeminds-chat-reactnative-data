@@ -52,3 +52,4 @@ export const COMMUNITY = "community";
 export const COMMUNITIES = "communities";
 export const CONVERSATIONS = "conversations";
 export const CHATROOMS = "chatrooms";
+export const CONVERSATION_TIMESTAMP = "ConversationTimestampRO";
