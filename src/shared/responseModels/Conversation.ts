@@ -1,13 +1,13 @@
-import { Attachment } from "./Attachment";
-import { LinkOGTags } from "./LinkOGTags";
-import { Member } from "./Member";
-import { Poll } from "./Poll";
-import { Reaction } from "./Reaction";
+import {Attachment} from './Attachment';
+import {LinkOGTags} from './LinkOGTags';
+import {Member} from './Member';
+import {Poll} from './Poll';
+import {Reaction} from './Reaction';
 
 export interface Conversation {
   id?: string;
   chatroomId?: string;
-  communityId?: string;
+  communityId: string;
   member?: Member;
   answer: string;
   createdAt?: string;
@@ -21,7 +21,7 @@ export interface Conversation {
   replyConversationId?: string;
   replyConversation?: Conversation;
   deletedBy?: string;
-  createdEpoch?: number;
+  createdEpoch: number;
   attachmentCount?: number;
   attachmentUploaded?: boolean;
   uploadWorkerUUID?: string;
@@ -44,5 +44,6 @@ export interface Conversation {
   hasFiles?: boolean;
   hasReactions?: boolean;
   lastUpdated?: number;
+  lastUpdatedAt?: number;
   deletedByMember?: Member;
 }

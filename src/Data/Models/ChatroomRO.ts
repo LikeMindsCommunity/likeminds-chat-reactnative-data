@@ -12,18 +12,19 @@ import {
   OPTIONAL_BOOLEAN,
   OPTIONAL_INT,
   OPTIONAL_LIST_COMMUNITY_RO,
+  OPTIONAL_LIST_REACTION_RO,
   OPTIONAL_MEMBER_RO,
   OPTIONAL_STRING,
   OPTONAL_CONVERSATION_RO,
   OPTONAL_LAST_CONVERSATION_RO,
   STRING,
-} from "../Constants";
-import { CommunityRO } from "./CommunityRO";
-import { ConversationRO } from "./ConversationRO";
-import { LastConversationRO } from "./LastConversationRO";
-import { MemberRO } from "./MemberRO";
-import { ReactionRO } from "./ReactionRO";
-import Realm from "realm";
+} from '../Constants';
+import {CommunityRO} from './CommunityRO';
+import {ConversationRO} from './ConversationRO';
+import {LastConversationRO} from './LastConversationRO';
+import {MemberRO} from './MemberRO';
+import {ReactionRO} from './ReactionRO';
+import Realm from 'realm';
 
 export class ChatroomRO extends Realm.Object<ChatroomRO> {
   id!: string;
@@ -38,7 +39,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   cardCreationTime?: string | null;
   totalResponseCount!: number;
   totalAllResponseCount!: number;
-  muteStatus: boolean | null;
+  muteStatus?: boolean | null;
   followStatus?: boolean | null;
   hasBeenNamed?: boolean | null;
   date?: string | null;
@@ -49,7 +50,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   lastConversation?: ConversationRO | null;
   lastConversationRO?: LastConversationRO | null;
   lastSeenConversationId?: string | null;
-  lastSeenConversation?: ConversationRO | null;
+  lastSeenConversation?: LastConversationRO | null;
   dateEpoch?: number | null;
   unseenCount!: number;
   relationshipNeeded!: boolean;
@@ -73,6 +74,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   isDraft?: boolean | null;
   lastConversationId?: string | null;
   communities?: Realm.Results<CommunityRO> | null;
+  isChatroomVisited!: boolean;
 
   static schema: Realm.ObjectSchema = {
     name: CHATROOM_RO,
@@ -108,6 +110,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       draftConversation: OPTIONAL_STRING,
       chatroomWithUserName: OPTIONAL_STRING,
       isSecret: OPTIONAL_BOOLEAN,
+      //TODO
       // secretChatRoomParticipants: LIST_INT,
       secretChatRoomLeft: OPTIONAL_BOOLEAN,
       conversations: LIST_CONVERSATION_RO,
@@ -116,7 +119,8 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       autoFollowDone: OPTIONAL_BOOLEAN,
       memberCanMessage: OPTIONAL_BOOLEAN,
       isEdited: OPTIONAL_BOOLEAN,
-      reactions: LIST_REACTION_RO,
+      //TODO
+      // reactions: OPTIONAL_LIST_REACTION_RO,
       unreadConversationsCount: OPTIONAL_INT,
       accessWithoutSubscription: BOOLEAN,
       externalSeen: OPTIONAL_BOOLEAN,
@@ -128,6 +132,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
         objectType: COMMUNITY_RO,
         property: CHATROOMS,
       },
+      isChatroomVisited: BOOLEAN,
     },
     primaryKey: ID,
   };

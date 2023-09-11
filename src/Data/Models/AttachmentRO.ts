@@ -10,7 +10,7 @@ import Realm from 'realm';
 
 export class AttachmentRO extends Realm.Object<AttachmentRO> {
   id!: string;
-  url!: string;
+  url!: string | null;
   chatroomId!: string;
   communityId!: string;
   name?: string | null;
