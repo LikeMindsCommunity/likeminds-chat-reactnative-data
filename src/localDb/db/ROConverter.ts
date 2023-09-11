@@ -42,7 +42,7 @@ export const convertToCommunity = (community: Community): CommunityRO => {
     imageUrl: community?.imageUrl,
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
-    relationshipNeeded: true,,
+    relationshipNeeded: true,
     ...dummyKeys(CommunityRO),
   };
   return communityRO;
@@ -347,7 +347,7 @@ export const convertToConversationRO = (
             `${conversation.communityId}`
           )
         : null,
-    replyConversation:conversation.replyConversation,
+    replyConversation: conversation.replyConversation,
     replyId: `${conversation?.replyId}` || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
