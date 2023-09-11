@@ -9,7 +9,7 @@ import {
   OPTIONAL_LIST_STRING,
   OPTIONAL_STRING,
   STRING,
-} from "../Constants";
+} from "../constants";
 import { ChatroomRO } from "./ChatroomRO";
 import { ConversationRO } from "./ConversationRO";
 import Realm from "realm";

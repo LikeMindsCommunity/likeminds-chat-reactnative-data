@@ -1,5 +1,5 @@
 import Realm from "realm";
-import { APP_CONFIG_RO, BOOLEAN, INT, LIST_STRING, ID } from "../Constants";
+import { APP_CONFIG_RO, BOOLEAN, INT, LIST_STRING, ID } from "../constants";
 
 export class AppConfigRO extends Realm.Object<AppConfigRO> {
   id!: number;

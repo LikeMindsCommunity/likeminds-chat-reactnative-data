@@ -12,7 +12,7 @@ export interface SyncConversationResponse {
   chatroomMeta: { [key: string]: Chatroom };
   conversationsData: { [key: string]: Conversation[] };
   chatroomReactionsMeta: { [key: string]: ReactionMeta[] };
-  conversationReactionsMeta: { [key: string]: ReactionMeta[] };
-  conversationAttachmentsMeta: { [key: string]: Attachment[] };
-  conversationPollMeta: { [key: string]: Poll[] };
+  convReactionsMeta: { [key: string]: ReactionMeta[] };
+  convAttachmentsMeta: { [key: string]: Attachment[] };
+  convPollsMeta: { [key: string]: Poll[] };
 }

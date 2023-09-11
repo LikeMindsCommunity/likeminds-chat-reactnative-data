@@ -1,20 +1,19 @@
-import Realm from 'realm';
-import {AppConfigRO} from '../Models/AppConfigRO';
-import {CommunityRO} from '../Models/CommunityRO';
-import {ChatroomRO} from '../Models/ChatroomRO';
-import {ConversationRO} from '../Models/ConversationRO';
-import {MemberRO} from '../Models/MemberRO';
-import Db from '../Db/db';
+import Realm from "realm";
+import { AppConfigRO } from "../models/AppConfigRO";
+import { CommunityRO } from "../models/CommunityRO";
+import { ChatroomRO } from "../models/ChatroomRO";
+import { ConversationRO } from "../models/ConversationRO";
+import Db from "../db/db";
 
 class ChatDBUtil {
   private static ONGOING_WRITE_TRANSACTION = 0;
 
   static writeAsync(
     block: (realm: Realm) => void,
-    cb: ((isSuccess: boolean) => void) | null = null,
+    cb: ((isSuccess: boolean) => void) | null = null
   ): Promise<void> {
-    return new Promise<void>(resolve => {
-      Realm.open(Db.getInstance()).then(realm => {
+    return new Promise<void>((resolve) => {
+      Realm.open(Db.getInstance()).then((realm) => {
         ChatDBUtil.write(realm, block);
         if (cb) {
           cb(true);
@@ -60,21 +59,21 @@ class ChatDBUtil {
 
   static getCommunity(
     realm: Realm,
-    communityId: string | null,
+    communityId: string | null
   ): CommunityRO | null {
     if (!communityId) {
       return null;
     }
     const query = realm.objectForPrimaryKey<CommunityRO>(
       CommunityRO,
-      communityId,
+      communityId
     );
     return query || null;
   }
 
   static getChatroom(
     realm: Realm,
-    chatroomId: string | null,
+    chatroomId: string | null
   ): ChatroomRO | null {
     if (!chatroomId) {
       return null;
@@ -85,21 +84,21 @@ class ChatDBUtil {
 
   static getConversation(
     realm: Realm,
-    conversationId: string | null,
+    conversationId: string | null
   ): ConversationRO | null {
     if (!conversationId) {
       return null;
     }
     const query = realm.objectForPrimaryKey<ConversationRO>(
       ConversationRO,
-      conversationId,
+      conversationId
     );
     return query || null;
   }
 
   static getCommunityConversations(
     realm: Realm,
-    communityId: string,
+    communityId: string
   ): Realm.Results<ConversationRO> {
     return realm
       .objects<ConversationRO>(ConversationRO)
@@ -108,44 +107,16 @@ class ChatDBUtil {
 
   static getChatroomConversations(
     realm: Realm,
-    chatroomId: string,
+    chatroomId: string
   ): Realm.Results<ConversationRO> {
     return realm
       .objects<ConversationRO>(ConversationRO)
       .filtered(`chatroomId = "${chatroomId}"`);
   }
 
-  static updateRelationshipsOfChatroom(
-    realm: Realm,
-    chatroomRO: ChatroomRO,
-    conversations: Realm.Results<ConversationRO>,
-    loggedInUUID: string,
-  ): void {
-    realm.write(() => {
-      // TODO
-    });
-  }
-
-  static getConversationMember(
-    realm: Realm,
-    conversation: ConversationRO,
-  ): MemberRO | null {
-    // TODO
-    return null;
-  }
-
-  static getMember(
-    realm: Realm,
-    communityId: string | null,
-    uuid: string | null,
-  ): MemberRO | null {
-    // TODO
-    return null;
-  }
-
   static updateIsConversationStoreForChatroom(
     chatroomId: string,
-    isConversationStored: boolean,
+    isConversationStored: boolean
   ): void {
     const realm = Db.getInstance();
     realm.write(() => {

@@ -1,4 +1,4 @@
-import { LINK_RO, OPTIONAL_STRING, STRING } from "../Constants";
+import { LINK_RO, OPTIONAL_STRING, STRING } from "../constants";
 import Realm from "realm";
 
 export class LinkRO extends Realm.Object<LinkRO> {

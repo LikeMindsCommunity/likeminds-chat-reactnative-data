@@ -1,48 +1,48 @@
 import { List } from "realm";
-import { AttachmentMetaRO } from "../Models/AttachmentMetaRO";
-import { AttachmentRO } from "../Models/AttachmentRO";
-import { ChatroomRO } from "../Models/ChatroomRO";
-import { CommunityRO } from "../Models/CommunityRO";
-import { LastConversationRO } from "../Models/LastConversationRO";
-import { MemberRO } from "../Models/MemberRO";
-import { SDKClientInfoRO } from "../Models/SDKClientInfoRO";
-import { Chatroom } from "src/shared/responseModels/Chatroom";
-import { Community } from "src/shared/responseModels/Community";
-import { Conversation } from "src/shared/responseModels/Conversation";
-import { Member } from "src/shared/responseModels/Member";
-import { SDKClientInfo } from "src/shared/responseModels/SDKClientInfo";
-import { ConversationRO } from "../Models/ConversationRO";
-import { AttachmentMeta } from "src/shared/responseModels/AttachmentMeta";
-import { Poll } from "src/shared/responseModels/Poll";
-import { PollRO } from "../Models/PollRO";
-import { Reaction } from "src/shared/responseModels/Reaction";
-import { ReactionRO } from "../Models/ReactionRO";
-import { Attachment } from "src/shared/responseModels/Attachment";
-import { dummyKeys } from "../Constants/dummyKeys";
+import { AttachmentMetaRO } from "../models/AttachmentMetaRO";
+import { AttachmentRO } from "../models/AttachmentRO";
+import { ChatroomRO } from "../models/ChatroomRO";
+import { CommunityRO } from "../models/CommunityRO";
+import { LastConversationRO } from "../models/LastConversationRO";
+import { MemberRO } from "../models/MemberRO";
+import { SDKClientInfoRO } from "../models/SDKClientInfoRO";
+import { Chatroom } from "../../shared/responseModels/Chatroom";
+import { Community } from "../../shared/responseModels/Community";
+import { Conversation } from "../../shared/responseModels/Conversation";
+import { Member } from "../../shared/responseModels/Member";
+import { SDKClientInfo } from "../../shared/responseModels/SDKClientInfo";
+import { ConversationRO } from "../models/ConversationRO";
+import { AttachmentMeta } from "../../shared/responseModels/AttachmentMeta";
+import { Poll } from "../../shared/responseModels/Poll";
+import { PollRO } from "../models/PollRO";
+import { Reaction } from "../../shared/responseModels/Reaction";
+import { ReactionRO } from "../models/ReactionRO";
+import { Attachment } from "../../shared/responseModels/Attachment";
+import { dummyKeys } from "../constants/dummyKeys";
+import { TimeStampRO } from "../models/TimeStampRO";
 
-const convertToDownloadableContentTypes = (
-  downloadableContentTypes: string[]
-): List<string> => {
-  let convertedDownloadable: any = [];
-  for (let i = 0; i < downloadableContentTypes.length; i++) {
-    convertedDownloadable.push(downloadableContentTypes[i]);
-  }
-  return convertedDownloadable;
+// convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO
+export const convertToTimeStampRO = (
+  minTimeStamp: number,
+  maxTimeStamp: number
+): TimeStampRO => {
+  const timeStampRO: TimeStampRO = {
+    minTimeStamp: minTimeStamp,
+    maxTimeStamp: maxTimeStamp,
+    ...dummyKeys(TimeStampRO),
+  };
+  return timeStampRO;
 };
 
-// convertCommunity method takes Community data and converts it to CommunityRO
-export const convertCommunity = (community: Community): CommunityRO => {
+// convertToCommunity method takes Community data and converts it to CommunityRO
+export const convertToCommunity = (community: Community): CommunityRO => {
   let communityRO: CommunityRO = {
     id: `${community?.id}`,
     name: `${community?.name}`,
     imageUrl: community?.imageUrl,
     membersCount: community?.membersCount,
     updatedAt: community?.updatedAt,
-    relationshipNeeded: true,
-    // TODO
-    // downloadableContentTypes: convertToDownloadableContentTypes(
-    //   community.downloadableContentTypes
-    // ),
+    relationshipNeeded: true,,
     ...dummyKeys(CommunityRO),
   };
   return communityRO;
@@ -52,7 +52,7 @@ export const convertCommunity = (community: Community): CommunityRO => {
 export const convertToLastConversationRO = (
   lastConversation: Conversation,
   chatroomCreatorRO: MemberRO,
-  chatroomId: number,
+  chatroomId: string,
   attachment: Attachment[],
   deletedByMember: MemberRO | null
 ): LastConversationRO => {
@@ -68,14 +68,13 @@ export const convertToLastConversationRO = (
       lastConversation.communityId?.toString()
     ),
     date: lastConversation.date || null,
-    deletedBy: lastConversation.deletedBy,
+    deletedBy: lastConversation.deletedBy || null,
     uploadWorkerUUID: lastConversation.uploadWorkerUUID,
     createdEpoch: lastConversation.createdEpoch,
     chatroomId: chatroomId?.toString(),
     communityId: lastConversation.communityId?.toString(),
     attachmentCount: lastConversation.attachmentCount,
     attachmentsUploaded: lastConversation.attachmentUploaded,
-    // link:
     deletedByMember: deletedByMember,
     ...dummyKeys(LastConversationRO),
   };
@@ -86,7 +85,7 @@ export const convertToLastConversationRO = (
 // convertToPollRO method takes Poll data and converts it to PollRO
 export const convertToPollRO = (poll: Poll, communityId: string) => {
   const pollRO: PollRO = {
-    id: poll?.id,
+    id: `${poll?.id}`,
     text: poll?.text,
     subText: poll.subText,
     isSelected: poll.isSelected,
@@ -114,12 +113,13 @@ const convertToAttachmentMetaRO = (attachmentMeta: AttachmentMeta) => {
 
 // convertToAttachmentRO method takes Attachment data and converts it to AttachmentRO
 export const convertToAttachmentRO = (
+  index: number,
   attachment: Attachment,
   chatroomId: string,
   communityId: string
 ) => {
   const attachmentRO: AttachmentRO = {
-    id: attachment?.id?.toString(),
+    id: index.toString(),
     url:
       attachment.url == undefined
         ? attachment?.fileUrl?.toString()
@@ -150,13 +150,15 @@ const convertToSDKClientInfoRO = (
   sdkClientInfo: SDKClientInfo
 ): SDKClientInfoRO => {
   const sdkClientInfoRO: SDKClientInfoRO = {
-    community: sdkClientInfo?.communityId?.toString(),
-    user: `${sdkClientInfo.user}`,
+    community:
+      sdkClientInfo.community != undefined
+        ? sdkClientInfo.community.toString()
+        : sdkClientInfo.communityId.toString(),
+    user: sdkClientInfo.user.toString(),
     userUniqueId: sdkClientInfo.userUniqueId,
     uuid: sdkClientInfo.uuid,
     ...dummyKeys(SDKClientInfoRO),
   };
-
   return sdkClientInfoRO;
 };
 
@@ -165,26 +167,26 @@ export const convertToMemberRO = (
   member: Member,
   communityId: any
 ): MemberRO => {
-  const convertedSdkClientInfo = convertToSDKClientInfoRO(member.sdkClientInfo);
-
+  const convertedSdkClientInfo = convertToSDKClientInfoRO(
+    member?.sdkClientInfo
+  );
   const memberRO: MemberRO = {
-    uid: `${member.id}`,
-    id: `${member.id}`,
+    uid: member.id.toString(),
+    id: member.id.toString(),
     name: member.name,
     imageUrl: member.imageUrl || "",
     state: member.state || 0,
     customIntroText: member.customIntroText || null,
     customClickText: member.customClickText || null,
     customTitle: member.customTitle || null,
-    communityId: `${communityId}`,
+    communityId: communityId.toString(),
     isOwner: member.isOwner,
     isGuest: member.isGuest,
     userUniqueId: member.userUniqueId,
     uuid: member.uuid,
-    sdkClientInfoRO: convertedSdkClientInfo,
+    sdkClientInfo: convertedSdkClientInfo,
     ...dummyKeys(MemberRO),
   };
-
   return memberRO;
 };
 
@@ -198,6 +200,7 @@ const convertToAttachment = (
   if (attachments == undefined) return convertedAttachments;
   for (let i = 0; i < attachments.length; i++) {
     const roAttachment = convertToAttachmentRO(
+      i,
       attachments[i],
       chatroomId,
       communityId
@@ -249,13 +252,78 @@ const convertToReactionRO = (
   return reactionRO;
 };
 
+// convertToReplyConversationObject method takes Conversation data and converts it to ConversationRO
+export const convertToReplyConversationObject = (
+  conversation: Conversation,
+  chatroomId: string
+): ConversationRO => {
+  const memberRoConverted = convertToMemberRO(
+    conversation?.member,
+    conversation?.communityId
+  );
+  const replyConversationObjectRO: ConversationRO = {
+    id: `${conversation.id}` || "",
+    chatroomId: chatroomId,
+    communityId: `${conversation.communityId}` || "",
+    member: memberRoConverted,
+    answer: conversation?.answer,
+    state: conversation?.state,
+    createdEpoch: conversation?.createdEpoch || 0,
+    createdAt: conversation?.createdAt || null,
+    date: conversation?.date || null,
+    isEdited: conversation?.isEdited || null,
+    lastSeen: conversation?.lastSeen || false,
+    deletedBy: conversation?.deletedBy || null,
+    deletedByMember:
+      conversation.deletedByMember !== null
+        ? convertToMemberRO(
+            conversation.deletedByMember,
+            `${conversation.communityId}`
+          )
+        : null,
+    replyId: `${conversation?.replyId}` || null,
+    attachmentCount: conversation?.attachmentCount || null,
+    attachmentsUploaded: conversation?.attachmentUploaded || null,
+    uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
+    localSavedEpoch: conversation?.localCreatedEpoch || 0,
+    temporaryId: conversation?.temporaryId || null,
+    isAnonymous: conversation?.isAnonymous || null,
+    hasFiles: conversation?.hasFiles || false,
+    allowAddOption: conversation?.allowAddOption || null,
+    pollType: conversation?.pollType || null,
+    isInProgress: conversation?.isInProgress || null,
+    pollTypeText: conversation?.pollTypeText || null,
+    submitTypeText: conversation?.submitTypeText || null,
+    expiryTime: conversation?.expiryTime || null,
+    multipleSelectNum: conversation?.multipleSelectNo || null,
+    multipleSelectState: conversation?.multipleSelectState || null,
+    pollAnswerText: conversation?.pollAnswerText || null,
+    toShowResults: conversation?.toShowResults || null,
+    replyChatRoomId: conversation?.replyChatroomId || null,
+    lastUpdatedAt: conversation?.lastUpdated || 0,
+    deletedByUserId: `${conversation.deletedByUserId}` || null,
+    attachments: convertToAttachment(
+      conversation.attachments,
+      `${chatroomId}`,
+      `${conversation.communityId}`
+    ),
+    reactions: convertToReaction(
+      conversation.reactions,
+      `${conversation?.communityId}`
+    ),
+    polls: convertToPoll(conversation.polls, `${conversation?.communityId}`),
+    ...dummyKeys(ConversationRO),
+  };
+  return replyConversationObjectRO;
+};
+
 // convertToConversationRO method takes Conversation data and converts it to ConversationRO
 export const convertToConversationRO = (
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
-  attachment: Attachment[],
-  polls: Poll[],
   chatroomId: string,
+  attachment?: Attachment[],
+  polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
   const conversationRO: ConversationRO = {
@@ -272,14 +340,25 @@ export const convertToConversationRO = (
     lastSeen: conversation?.lastSeen || false,
     replyConversationId: conversation?.replyConversationId || null,
     deletedBy: conversation?.deletedBy || null,
+    deletedByMember:
+      conversation.deletedByMember !== undefined
+        ? convertToMemberRO(
+            conversation.deletedByMember,
+            `${conversation.communityId}`
+          )
+        : null,
+    replyConversation:conversation.replyConversation,
+    replyId: `${conversation?.replyId}` || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
     uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
     localSavedEpoch: conversation?.localCreatedEpoch || 0,
     temporaryId: conversation?.temporaryId || null,
     isAnonymous: conversation?.isAnonymous || null,
+    hasFiles: conversation?.hasFiles || false,
     allowAddOption: conversation?.allowAddOption || null,
     pollType: conversation?.pollType || null,
+    isInProgress: conversation?.isInProgress || null,
     pollTypeText: conversation?.pollTypeText || null,
     submitTypeText: conversation?.submitTypeText || null,
     expiryTime: conversation?.expiryTime || null,
@@ -289,34 +368,24 @@ export const convertToConversationRO = (
     toShowResults: conversation?.toShowResults || null,
     replyChatRoomId: conversation?.replyChatroomId || null,
     lastUpdatedAt: conversation?.lastUpdated || 0,
+    deletedByUserId: `${conversation.deletedByUserId}` || null,
+    replyConversationObject:
+      conversation?.replyConversationObject != undefined
+        ? convertToReplyConversationObject(
+            conversation?.replyConversationObject,
+            `${chatroomId}`
+          )
+        : null,
     attachments: convertToAttachment(
       attachment,
       `${chatroomId}`,
       `${conversation.communityId}`
     ),
-    reactions: convertToReaction(reactions, `${conversation?.communityId}`), // Fetch reaction first from API resp
+    reactions: convertToReaction(reactions, `${conversation?.communityId}`),
     polls: convertToPoll(polls, `${conversation?.communityId}`),
-    // TODO
-    // replyConversation: conversation?.replyConversation
-    //   ? new Realm?.List<ConversationRO>(
-    //       conversation?.replyConversation?.map((replyConv) => convertConversationToRO(replyConv))
-    //     )
-    //   : null,
     ...dummyKeys(ConversationRO),
   };
-
   return conversationRO;
-};
-
-// convertToSecretChatroomParticipants method takes secretChatroomParticipants data and converts it to Realm.List<number>
-const convertToSecretChatroomParticipants = (
-  secretChatroomParticipants: number[]
-): List<number> => {
-  let convertedAttachments: any = [];
-  for (let i = 0; i < secretChatroomParticipants.length; i++) {
-    convertedAttachments.push(secretChatroomParticipants[i]);
-  }
-  return convertedAttachments;
 };
 
 // convertToChatroomRO method takes Chatroom data and converts it to ChatroomRO
@@ -345,7 +414,7 @@ export const convertToChatroomRO = (
       chatroom?.totalAllResponseCount == undefined
         ? 0
         : parseInt(chatroom.totalAllResponseCount),
-    muteStatus: chatroom.muteStatus || null,
+    muteStatus: chatroom.muteStatus || false,
     followStatus: chatroom.followStatus || null,
     hasBeenNamed: chatroom.hasBeenNamed || null,
     date: chatroom.date || null,
@@ -353,27 +422,26 @@ export const convertToChatroomRO = (
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
     updatedAt: chatroom.updatedAt || null,
+    chatroomWithUserId:
+      chatroom.chatroomWithUserId !== undefined
+        ? chatroom.chatroomWithUserId
+        : null,
     lastConversation: lastConversation,
     lastConversationRO: lastConversationRO,
-    lastSeenConversationId: chatroom.lastSeenConversationId || null,
+    lastSeenConversationId: `${chatroom.lastSeenConversationId}` || null,
     dateEpoch: chatroom.dateEpoch || null,
     unseenCount: chatroom.unseenCount || 0,
-    relationshipNeeded: false, // Assign as needed
+    relationshipNeeded: false,
     isSecret: chatroom.isSecret || null,
-    // secretChatRoomParticipants: chatroom?.secretChatroomParticipants
-    //   ? convertToSecretChatroomParticipants(
-    //       chatroom?.secretChatroomParticipants
-    //     )
-    //   : new List(),
+    chatroomWithUserName:
+      chatroom.chatroomWithUserName !== undefined
+        ? chatroom.chatroomWithUserName
+        : null,
     secretChatRoomLeft: chatroom.secretChatroomLeft || null,
     topicId: `${chatroom.topicId}` || null,
     autoFollowDone: chatroom.autoFollowDone || null,
     memberCanMessage: chatroom.memberCanMessage || null,
     isEdited: chatroom.isEdited || null,
-    reactions: convertToReaction(
-      chatroom?.reactions,
-      `${chatroom.communityId}`
-    ),
     unreadConversationsCount: chatroom.unreadConversationCount || null,
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
     externalSeen: chatroom.externalSeen || null,

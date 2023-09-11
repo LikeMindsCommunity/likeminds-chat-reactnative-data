@@ -1,4 +1,4 @@
-import { ATTACHMENT_META_RO, OPTIONAL_INT } from "../Constants";
+import { ATTACHMENT_META_RO, OPTIONAL_INT } from "../constants";
 import Realm from "realm";
 
 export class AttachmentMetaRO extends Realm.Object<AttachmentMetaRO> {
