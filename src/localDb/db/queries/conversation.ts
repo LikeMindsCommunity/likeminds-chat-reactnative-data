@@ -30,8 +30,8 @@ export async function saveConversationData(
     realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
     // save chatroom
-    const chatroomID = Object.keys(chatroomData);
-    const chatroom = chatroomData[chatroomID[0]];
+    const chatroomId = Object.keys(chatroomData);
+    const chatroom = chatroomData[chatroomId[0]];
     const creatorId = chatroom.userId;
 
     const creator = data.userMeta[creatorId?.toString()];
