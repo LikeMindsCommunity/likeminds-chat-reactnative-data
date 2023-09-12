@@ -30,8 +30,10 @@ export async function saveConversationData(
     realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
     // save chatroom
-    const chatroom = chatroomData[0];
+    const chatroomID = Object.keys(chatroomData);
+    const chatroom = chatroomData[chatroomID[0]];
     const creatorId = chatroom.userId;
+
     const creator = data.userMeta[creatorId?.toString()];
     if (!creator) return;
     const conversationCreatorRO = convertToMemberRO(creator, communityId);
@@ -43,13 +45,14 @@ export async function saveConversationData(
     );
 
     // save conversations
-    conversationData.map((item, index) => {
+    conversationData.map((item) => {
       const conversation = item;
       // save conversation creator
       const creatorId = conversation?.userId;
       const creator = data.userMeta[creatorId?.toString()];
       if (!creator) return;
       const conversationCreatorRO = convertToMemberRO(creator, communityId);
+
       if (!conversationCreatorRO) return;
       realm.create(
         MemberRO.schema.name,
@@ -98,7 +101,7 @@ export async function saveConversationData(
 }
 
 // To get a all conversations data of a single chatroom from realm
-export async function getConversationData(chatroomId: string) {
+export async function getConversations(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const conversations = realm.objects(ConversationRO.schema.name);
   const chatroom = conversations.filtered(`chatroomId = "${chatroomId}"`);
@@ -141,7 +144,7 @@ export async function updateConversation(
   const keys = Object.keys(parsedConversation);
   const conversationObject: any = filteredConversation[0];
   const sdkClientInfo = data?.member?.sdkClientInfo;
-  const community = sdkClientInfo?.community.toString();
+  const community = sdkClientInfo?.communityId.toString();
   const user = sdkClientInfo?.user.toString();
   const editedSDkClinetInfo = {
     ...sdkClientInfo,
@@ -183,6 +186,7 @@ export async function deleteConversation(conversationId: string) {
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
 export async function replaceSavedConversation(data: Conversation) {
   const realm = await Realm.open(Db.getInstance());
+
   const replyConv = data?.replyConversation;
   if (replyConv !== null && replyConv !== "null") {
     const conversation = await getConversation(replyConv);
@@ -226,16 +230,17 @@ export async function saveNewConversation(
 ) {
   const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
-    const memberRo = convertToMemberRO(data?.member, data?.communityId);
+    const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
     const conversationRO = convertToConversationRO(
       data,
-      memberRo,
+      memberRO,
       chatroomId,
       data?.attachments,
       data?.polls,
       data?.reactions
     );
+
     realm.create(
       ConversationRO.schema.name,
       conversationRO,

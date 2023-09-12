@@ -1,4 +1,5 @@
 import { List } from "realm";
+import Realm from "realm";
 import { AttachmentMetaRO } from "../models/AttachmentMetaRO";
 import { AttachmentRO } from "../models/AttachmentRO";
 import { ChatroomRO } from "../models/ChatroomRO";
@@ -113,13 +114,12 @@ const convertToAttachmentMetaRO = (attachmentMeta: AttachmentMeta) => {
 
 // convertToAttachmentRO method takes Attachment data and converts it to AttachmentRO
 export const convertToAttachmentRO = (
-  index: number,
   attachment: Attachment,
   chatroomId: string,
   communityId: string
-) => {
+): AttachmentRO => {
   const attachmentRO: AttachmentRO = {
-    id: attachment?.id?.toString() || index.toString(),
+    id: attachment?.id?.toString(),
     url:
       attachment.url == undefined
         ? attachment?.fileUrl?.toString()
@@ -159,6 +159,7 @@ const convertToSDKClientInfoRO = (
     uuid: sdkClientInfo.uuid,
     ...dummyKeys(SDKClientInfoRO),
   };
+
   return sdkClientInfoRO;
 };
 
@@ -166,7 +167,9 @@ const convertToSDKClientInfoRO = (
 export const convertToMemberRO = (
   member: Member,
   communityId: any
-): MemberRO => {
+): MemberRO | undefined => {
+  if (!member?.sdkClientInfo) return undefined;
+
   const convertedSdkClientInfo = convertToSDKClientInfoRO(
     member?.sdkClientInfo
   );
@@ -200,13 +203,13 @@ const convertToAttachment = (
   if (attachments == undefined) return convertedAttachments;
   for (let i = 0; i < attachments.length; i++) {
     const roAttachment = convertToAttachmentRO(
-      i,
       attachments[i],
       chatroomId,
       communityId
     );
     convertedAttachments = [...convertedAttachments, roAttachment];
   }
+
   return convertedAttachments;
 };
 
@@ -396,11 +399,18 @@ export const convertToConversationRO = (
 
 // convertToChatroomRO method takes Chatroom data and converts it to ChatroomRO
 export const convertToChatroomRO = (
+  realm: Realm,
   chatroom: Chatroom,
   member: MemberRO,
-  lastConversation: ConversationRO,
   lastConversationRO?: LastConversationRO
 ): ChatroomRO => {
+  const conversations = realm.objects(ConversationRO.schema.name);
+  const conversation = conversations.filtered(
+    `id = "${chatroom?.lastConversationId}"`
+  );
+  const stringifiedConversation = JSON.stringify(conversation);
+  const lastConversation = JSON.parse(stringifiedConversation);
+
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
     communityId: chatroom.communityId?.toString(),
@@ -432,7 +442,7 @@ export const convertToChatroomRO = (
       chatroom.chatroomWithUserId !== undefined
         ? chatroom.chatroomWithUserId
         : null,
-    lastConversation: lastConversation,
+    lastConversation: lastConversation[0],
     lastConversationRO: lastConversationRO,
     lastSeenConversationId: chatroom.lastSeenConversationId?.toString() || null,
     dateEpoch: chatroom.dateEpoch || null,

@@ -155,7 +155,7 @@ import {
   saveNewConversation,
   saveConversationData,
   replaceSavedConversation,
-  getConversationData,
+  getConversations,
   getConversation,
 } from "./localDb/db/queries/conversation";
 import {
@@ -266,15 +266,6 @@ class LMChatClient {
   ): Promise<LMResponse<GetTaggingListResponse>> {
     return this.chatroomClient.getTaggingList(
       taggingList,
-      LMChatClient.dlClient
-    );
-  }
-
-  async getConversations(
-    conversation: Conversation
-  ): Promise<LMResponse<GetConversationsResponse>> {
-    return this.chatroomClient.getConversations(
-      conversation,
       LMChatClient.dlClient
     );
   }
@@ -594,7 +585,7 @@ class LMChatClient {
   async getCommunity() {
     return getCommunity();
   }
-  async listOfChatroomObject() {
+  async getChatrooms() {
     return getChatrooms();
   }
   async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
@@ -631,8 +622,8 @@ class LMChatClient {
       communityId
     );
   }
-  async getConversationData(chatroomId: string) {
-    return getConversationData(chatroomId);
+  async getConversations(chatroomId: string) {
+    return getConversations(chatroomId);
   }
   async updateConversation(conversationId: string, data: ConversationModel) {
     return updateConversation(conversationId, data);

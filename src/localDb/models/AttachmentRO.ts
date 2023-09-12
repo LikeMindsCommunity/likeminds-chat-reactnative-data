@@ -9,7 +9,7 @@ import { AttachmentMetaRO } from "./AttachmentMetaRO";
 import Realm from "realm";
 
 export class AttachmentRO extends Realm.Object<AttachmentRO> {
-  id!: string;
+  id?: string;
   url!: string;
   chatroomId!: string;
   communityId!: string;
@@ -31,7 +31,7 @@ export class AttachmentRO extends Realm.Object<AttachmentRO> {
     name: ATTACHMENT_RO,
     embedded: true,
     properties: {
-      id: STRING,
+      id: OPTIONAL_STRING,
       url: STRING,
       chatroomId: STRING,
       communityId: STRING,

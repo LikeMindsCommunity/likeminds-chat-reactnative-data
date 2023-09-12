@@ -14,6 +14,7 @@ import Db from "../db";
 import Realm from "realm";
 import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
+import { ConversationRO } from "src/localDb/models/ConversationRO";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -30,11 +31,13 @@ export async function saveChatroomResponse(
     const communityRO = convertToCommunity(community);
 
     if (!communityRO) return;
+
     realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
     chatrooms.forEach((chatroom) => {
       const creatorId = chatroom.userId;
       const creator = data.userMeta[creatorId?.toString()];
+
       if (!creator) return;
       const chatroomCreatorRO = convertToMemberRO(creator, communityId);
       if (!chatroomCreatorRO) return;
@@ -92,6 +95,12 @@ export async function saveChatroomResponse(
         lastConversationPolls
       );
 
+      realm.create(
+        ConversationRO.schema.name,
+        conversationRO,
+        Realm.UpdateMode.All
+      );
+
       const lastConversationRO = convertToLastConversationRO(
         lastConversation,
         lastConversationCreatorRO,
@@ -116,9 +125,9 @@ export async function saveChatroomResponse(
 
       // convert to ChatroomRO
       const chatroomRO = convertToChatroomRO(
+        realm,
         chatroom,
         chatroomCreatorRO,
-        conversationRO,
         lastConversationRO //its of type LastConversationRO
       );
 
