@@ -20,12 +20,12 @@ export class MemberRO extends Realm.Object<MemberRO> {
   customIntroText?: string | null;
   customClickText?: string | null;
   customTitle?: string | null;
-  communityId?: number | null;
+  communityId?: string | null;
   isOwner!: boolean;
   isGuest!: boolean;
   userUniqueId!: string;
   uuid!: string;
-  sdkClientInfoRO?: SDKClientInfoRO | null;
+  sdkClientInfo?: SDKClientInfoRO | null;
 
   static schema: Realm.ObjectSchema = {
     name: MEMBER_RO,
@@ -38,12 +38,12 @@ export class MemberRO extends Realm.Object<MemberRO> {
       customIntroText: OPTIONAL_STRING,
       customClickText: OPTIONAL_STRING,
       customTitle: OPTIONAL_STRING,
-      communityId: OPTIONAL_INT,
+      communityId: OPTIONAL_STRING,
       isOwner: BOOLEAN,
       isGuest: BOOLEAN,
       userUniqueId: STRING,
       uuid: STRING,
-      sdkClientInfoRO: OPTINAL_SDK_CLIENT_INFO_RO,
+      sdkClientInfo: OPTINAL_SDK_CLIENT_INFO_RO,
     },
     primaryKey: ID,
   };

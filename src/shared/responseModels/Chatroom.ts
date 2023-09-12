@@ -4,7 +4,7 @@ import { Conversation } from "./Conversation";
 import { Cohort } from "./Cohort";
 
 export interface Chatroom {
-  member?: Member;
+  member: Member;
   id: string;
   title: string;
   createdAt?: number;
@@ -22,7 +22,7 @@ export interface Chatroom {
   cardCreationTime?: string;
   participantsCount?: string;
   totalResponseCount?: string;
-  muteStatus?: boolean;
+  muteStatus: boolean;
   followStatus?: boolean;
   hasBeenNamed?: boolean;
   hasReactions?: boolean;
@@ -34,6 +34,7 @@ export interface Chatroom {
   userId?: string;
   deletedBy?: string;
   deletedByMember?: Member;
+  deletedByUserId?: string;
   updatedAt?: number;
   lastSeenConversationId?: string;
   lastConversationId?: string;
@@ -41,16 +42,19 @@ export interface Chatroom {
   isSecret?: boolean;
   secretChatroomParticipants?: number[];
   secretChatroomLeft?: boolean;
-  reactions?: Reaction[];
   topicId?: string;
   topic?: Conversation;
   autoFollowDone?: boolean;
   isEdited?: boolean;
   access?: number;
   memberCanMessage?: boolean;
+  chatroomWithUserId?: number;
+  chatroomWithUserName?: string;
   cohorts?: Cohort[];
   externalSeen?: boolean;
   unreadConversationCount?: number;
   chatroomImageUrl?: string;
   accessWithoutSubscription?: boolean;
+  totalAllResponseCount?: string;
+  isConversationStored?: boolean;
 }

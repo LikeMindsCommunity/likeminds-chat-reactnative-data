@@ -1,7 +1,7 @@
 import { AttachmentMeta } from "./AttachmentMeta";
 
 export interface Attachment {
-  id: string;
+  id?: string;
   name: string;
   url: string;
   type: string;
@@ -16,4 +16,5 @@ export interface Attachment {
   meta: AttachmentMeta;
   createdAt: number;
   updatedAt: number;
+  fileUrl: string;
 }

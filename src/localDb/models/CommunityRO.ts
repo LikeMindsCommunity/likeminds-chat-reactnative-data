@@ -2,6 +2,7 @@ import {
   BOOLEAN,
   COMMUNITY_RO,
   ID,
+  INT,
   LIST_CHATROOM_RO,
   LIST_CONVERSATION_RO,
   OPTIONAL_INT,
@@ -20,9 +21,8 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
   membersCount?: number | null;
   updatedAt?: number | null;
   relationshipNeeded!: boolean;
-  downloadableContentTypes?: Realm.List<string> | null;
-  conversations!: Realm.List<ConversationRO>;
-  chatrooms!: Realm.List<ChatroomRO>;
+  conversations?: Realm.List<ConversationRO>;
+  chatrooms?: Realm.List<ChatroomRO>;
 
   static schema: Realm.ObjectSchema = {
     name: COMMUNITY_RO,
@@ -33,7 +33,6 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
       membersCount: OPTIONAL_INT,
       updatedAt: OPTIONAL_INT,
       relationshipNeeded: BOOLEAN,
-      downloadableContentTypes: OPTIONAL_LIST_STRING,
       conversations: LIST_CONVERSATION_RO,
       chatrooms: LIST_CHATROOM_RO,
     },

@@ -7,8 +7,8 @@ import { Reaction } from "./Reaction";
 export interface Conversation {
   id?: string;
   chatroomId?: string;
-  communityId?: string;
-  member?: Member;
+  communityId: string;
+  member: Member;
   answer: string;
   createdAt?: string;
   state: number;
@@ -18,10 +18,11 @@ export interface Conversation {
   date?: string;
   isEdited?: boolean;
   memberId?: string;
+  replyConversation?: string;
   replyConversationId?: string;
-  replyConversation?: Conversation;
+  replyConversationObject?: Conversation;
   deletedBy?: string;
-  createdEpoch?: number;
+  createdEpoch: number;
   attachmentCount?: number;
   attachmentUploaded?: boolean;
   uploadWorkerUUID?: string;
@@ -34,15 +35,20 @@ export interface Conversation {
   pollTypeText?: string;
   submitTypeText?: string;
   expiryTime?: number;
-  multipleSelectNum?: number;
+  multipleSelectNo?: number;
   multipleSelectState?: number;
   polls?: Poll[];
   toShowResults?: boolean;
   pollAnswerText?: string;
   replyChatroomId?: string;
+  replyId?: string;
   deviceId?: string;
   hasFiles?: boolean;
   hasReactions?: boolean;
   lastUpdated?: number;
   deletedByMember?: Member;
+  deletedByUserId?: string;
+  userId?: string;
+  cardId?: string;
+  isInProgress?: string;
 }
