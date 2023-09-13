@@ -1,5 +1,5 @@
 import Realm from "realm";
-import { TIME_STAMP_RO, INT } from "../Constants";
+import { TIME_STAMP_RO, INT } from "../constants";
 
 export class TimeStampRO extends Realm.Object<TimeStampRO> {
   minTimeStamp!: number;

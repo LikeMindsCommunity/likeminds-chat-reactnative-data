@@ -34,6 +34,7 @@ export interface Chatroom {
   userId?: string;
   deletedBy?: string;
   deletedByMember?: Member;
+  deletedByUserId?: string;
   updatedAt?: number;
   lastSeenConversationId?: string;
   lastConversationId?: string;
@@ -41,7 +42,6 @@ export interface Chatroom {
   isSecret?: boolean;
   secretChatroomParticipants?: number[];
   secretChatroomLeft?: boolean;
-  reactions?: Reaction[];
   topicId?: string;
   topic?: Conversation;
   autoFollowDone?: boolean;

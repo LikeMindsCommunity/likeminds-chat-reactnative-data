@@ -19,6 +19,8 @@ export const REACTION_RO = "ReactionRO";
 export const SDK_CLIENT_INFO_RO = "SDKClientInfoRO";
 export const OPTINAL_SDK_CLIENT_INFO_RO = "SDKClientInfoRO?";
 export const USER_RO = "UserRO";
+export const ATTACHMENT_UPLOAD_CONVERSATIONS =
+  "AttachmentUploadConversationsRO";
 
 // schema types
 export const STRING = "string";
@@ -37,10 +39,11 @@ export const LIST_INT = "int[]";
 export const LIST_CONVERSATION_RO = "ConversationRO[]";
 export const LIST_CHATROOM_RO = "ChatroomRO[]";
 export const OPTIONAL_LIST_CHATROOM_RO = "ChatroomRO[]?";
-export const LIST_REACTION_RO = "ReactionRO[]?";
+export const LIST_REACTION_RO = "ReactionRO[]";
 export const OPTIONAL_LIST_COMMUNITY_RO = "CommunityRO[]?";
 export const LIST_POLL_RO = "PollRO[]";
 export const LIST_ATTACHMENT_RO = "AttachmentRO[]";
+export const OPTIONAL_REPLY_CONVERSATION_RO = "ConversationRO?";
 
 // others
 export const ID = "id";

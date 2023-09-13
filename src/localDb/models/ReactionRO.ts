@@ -1,4 +1,4 @@
-import { OPTIONAL_MEMBER_RO, REACTION_RO, STRING } from "../Constants";
+import { OPTIONAL_MEMBER_RO, REACTION_RO, STRING } from "../constants";
 import { MemberRO } from "./MemberRO";
 import Realm from "realm";
 

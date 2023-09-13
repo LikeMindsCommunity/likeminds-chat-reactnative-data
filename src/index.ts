@@ -1,7 +1,9 @@
 import DLClient from "@likeminds.community/chat-js";
 
-//Chatroom
+//Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
+import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
+import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
   FollowChatroom,
   MuteChatroom,
@@ -133,18 +135,36 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
-  deleteOneChatroom,
-  getChatroomData,
-  getCommunityData,
-  getTimeStamp,
-  saveChatroomResponse,
-  saveCommunityData,
-  saveTimeStamp,
+  updateDeletedBy,
   updateMuteStatus,
-  updateTimeStamp,
   updateUnseenCount,
-} from "./Data/Db/dbhelper";
-import Db from "./Data/Db/db";
+} from "./localDb/db/queries/functionalities";
+import {
+  getAllAttachmentUploadConversations,
+  removeAttactmentUploadConversationByKey,
+  saveAttachmentUploadConversation,
+} from "./localDb/db/queries/attachments";
+import {
+  getTimeStamp,
+  saveTimeStamp,
+  updateTimeStamp,
+} from "./localDb/db/queries/timeStamp";
+import {
+  deleteConversation,
+  updateConversation,
+  saveNewConversation,
+  saveConversationData,
+  replaceSavedConversation,
+  getConversations,
+  getConversation,
+} from "./localDb/db/queries/conversation";
+import {
+  deleteChatroom,
+  getChatrooms,
+  saveChatroomResponse,
+} from "./localDb/db/queries/chatroom";
+import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
+import Db from "./localDb/db/db";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -246,15 +266,6 @@ class LMChatClient {
   ): Promise<LMResponse<GetTaggingListResponse>> {
     return this.chatroomClient.getTaggingList(
       taggingList,
-      LMChatClient.dlClient
-    );
-  }
-
-  async getConversations(
-    conversation: Conversation
-  ): Promise<LMResponse<GetConversationsResponse>> {
-    return this.chatroomClient.getConversations(
-      conversation,
       LMChatClient.dlClient
     );
   }
@@ -561,17 +572,67 @@ class LMChatClient {
     return this.syncClient.syncConversation(request, LMChatClient.dlClient);
   }
 
-  saveCommunityData(communityData) {
-    return saveCommunityData(communityData);
+  async saveCommunity(communityData) {
+    return saveCommunity(communityData);
   }
-  async saveChatroomResponse(data: any, chatrooms: any[], communityId: string) {
+  async saveChatroomResponse(
+    data: SyncChatroomResponse,
+    chatrooms: ChatroomModel[],
+    communityId: string
+  ) {
     return saveChatroomResponse(data, chatrooms, communityId);
   }
-  getCommunityData() {
-    return getCommunityData();
+  async getCommunity() {
+    return getCommunity();
   }
-  getChatroomData() {
-    return getChatroomData();
+  async getChatrooms() {
+    return getChatrooms();
+  }
+  async deleteChatroom(chatroomId: string) {
+    return deleteChatroom(chatroomId);
+  }
+  async saveConversationData(
+    data: SyncConversationResponse,
+    chatroomData: ChatroomModel[],
+    conversationData: ConversationModel[],
+    communityId: string
+  ) {
+    return saveConversationData(
+      data,
+      chatroomData,
+      conversationData,
+      communityId
+    );
+  }
+  async getConversations(chatroomId: string) {
+    return getConversations(chatroomId);
+  }
+  async updateConversation(conversationId: string, data: ConversationModel) {
+    return updateConversation(conversationId, data);
+  }
+  async saveNewConversation(chatroomId: string, data: ConversationModel) {
+    return saveNewConversation(chatroomId, data);
+  }
+  async deleteConversation(conversationId: string) {
+    return deleteConversation(conversationId);
+  }
+  async getConversation(conversationId: string) {
+    return getConversation(conversationId);
+  }
+  async updateDeletedBy(conversationId: string, data: ConversationModel) {
+    return updateDeletedBy(conversationId, data);
+  }
+  async replaceSavedConversation(data: ConversationModel) {
+    return replaceSavedConversation(data);
+  }
+  async saveAttachmentUploadConversation(key: string, value: string) {
+    return saveAttachmentUploadConversation(key, value);
+  }
+  async getAllAttachmentUploadConversations() {
+    return getAllAttachmentUploadConversations();
+  }
+  async removeAttactmentUploadConversationByKey(key: string) {
+    return removeAttactmentUploadConversationByKey(key);
   }
   updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return updateTimeStamp(minTimeStamp, maxTimeStamp);
@@ -581,9 +642,6 @@ class LMChatClient {
   }
   getTimeStamp() {
     return getTimeStamp();
-  }
-  deleteOneChatroom(chatroomId: string) {
-    return deleteOneChatroom(chatroomId);
   }
   updateMuteStatus(chatroomId: string, muteStats: boolean) {
     return updateMuteStatus(chatroomId, muteStats);
