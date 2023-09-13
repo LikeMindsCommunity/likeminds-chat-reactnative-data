@@ -588,8 +588,26 @@ class LMChatClient {
   async getChatrooms() {
     return getChatrooms();
   }
+  async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return updateTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  async saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
+    return saveTimeStamp(minTimeStamp, maxTimeStamp);
+  }
+  async getTimeStamp() {
+    return getTimeStamp();
+  }
   async deleteChatroom(chatroomId: string) {
     return deleteChatroom(chatroomId);
+  }
+  async updateMuteStatus(chatroomId: string, muteStats: boolean) {
+    return updateMuteStatus(chatroomId, muteStats);
+  }
+  async updateUnseenCount(chatroomId: string) {
+    return updateUnseenCount(chatroomId);
+  }
+  getInstance() {
+    return Db.getInstance();
   }
   async saveConversationData(
     data: SyncConversationResponse,
@@ -633,24 +651,6 @@ class LMChatClient {
   }
   async removeAttactmentUploadConversationByKey(key: string) {
     return removeAttactmentUploadConversationByKey(key);
-  }
-  updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return updateTimeStamp(minTimeStamp, maxTimeStamp);
-  }
-  saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return saveTimeStamp(minTimeStamp, maxTimeStamp);
-  }
-  getTimeStamp() {
-    return getTimeStamp();
-  }
-  updateMuteStatus(chatroomId: string, muteStats: boolean) {
-    return updateMuteStatus(chatroomId, muteStats);
-  }
-  updateUnseenCount(chatroomId: string) {
-    return updateUnseenCount(chatroomId);
-  }
-  getInstance() {
-    return Db.getInstance();
   }
 }
 

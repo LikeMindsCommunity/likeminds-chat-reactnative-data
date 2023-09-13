@@ -114,12 +114,13 @@ const convertToAttachmentMetaRO = (attachmentMeta: AttachmentMeta) => {
 
 // convertToAttachmentRO method takes Attachment data and converts it to AttachmentRO
 export const convertToAttachmentRO = (
+  index: number,
   attachment: Attachment,
   chatroomId: string,
   communityId: string
 ): AttachmentRO => {
   const attachmentRO: AttachmentRO = {
-    id: attachment?.id?.toString(),
+    id: index.toString(),
     url:
       attachment.url == undefined
         ? attachment?.fileUrl?.toString()
@@ -159,7 +160,6 @@ const convertToSDKClientInfoRO = (
     uuid: sdkClientInfo.uuid,
     ...dummyKeys(SDKClientInfoRO),
   };
-
   return sdkClientInfoRO;
 };
 
@@ -203,6 +203,7 @@ const convertToAttachment = (
   if (attachments == undefined) return convertedAttachments;
   for (let i = 0; i < attachments.length; i++) {
     const roAttachment = convertToAttachmentRO(
+      i,
       attachments[i],
       chatroomId,
       communityId
@@ -418,7 +419,7 @@ export const convertToChatroomRO = (
     state: chatroom.state,
     member: member,
     createdAt: chatroom.createdAt || null,
-    type: chatroom.type || null,
+    type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
     cardCreationTime: chatroom.cardCreationTime || null,
