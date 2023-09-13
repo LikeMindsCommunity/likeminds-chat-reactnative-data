@@ -419,7 +419,7 @@ export const convertToChatroomRO = (
     state: chatroom.state,
     member: member,
     createdAt: chatroom.createdAt || null,
-    type: chatroom.type || null,
+    type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
     cardCreationTime: chatroom.cardCreationTime || null,
