@@ -18,6 +18,7 @@ export interface Conversation {
   date?: string;
   isEdited?: boolean;
   memberId?: string;
+  replyConversation?: string;
   replyConversationId?: string;
   replyConversationObject?: Conversation;
   deletedBy?: string;
@@ -45,7 +46,9 @@ export interface Conversation {
   hasFiles?: boolean;
   hasReactions?: boolean;
   lastUpdated?: number;
-  deletedByMember: Member;
+  deletedByMember?: Member;
   deletedByUserId?: string;
+  userId?: string;
+  cardId?: string;
   isInProgress?: string;
 }

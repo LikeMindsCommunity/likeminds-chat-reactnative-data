@@ -20,11 +20,10 @@ import {
   OPTIONAL_STRING,
   OPTONAL_CONVERSATION_RO,
   STRING,
-} from "../Constants";
+} from "../constants";
 import { AttachmentRO } from "./AttachmentRO";
 import { ChatroomRO } from "./ChatroomRO";
 import { CommunityRO } from "./CommunityRO";
-import { LinkRO } from "./LinkRO";
 import { MemberRO } from "./MemberRO";
 import { PollRO } from "./PollRO";
 import { ReactionRO } from "./ReactionRO";
@@ -34,21 +33,22 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   id!: string;
   chatroomId!: string;
   communityId!: string;
+  cardId?: string;
   member?: MemberRO | null;
   answer!: string;
   state!: number;
   createdEpoch!: number;
   createdAt?: string | null;
   attachments!: Realm.List<AttachmentRO>;
-  // link?: LinkRO | null;
   date?: string | null;
   isEdited?: boolean | null;
   lastSeen!: boolean;
+  replyConversation?: string;
   replyConversationId?: string | null;
   replyConversationObject?: ConversationRO | null;
-  // replyConversation?: Realm.List<ConversationRO> | null;
   deletedBy?: string | null;
   attachmentCount?: number | null;
+  userId?: string;
   attachmentsUploaded?: boolean | null;
   uploadWorkerUUID?: string | null;
   localSavedEpoch!: number;
@@ -87,14 +87,15 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       state: INT,
       createdEpoch: INT,
       createdAt: OPTIONAL_STRING,
+      cardId: OPTIONAL_STRING,
       attachments: LIST_ATTACHMENT_RO,
+      replyConversation: OPTIONAL_STRING,
       replyConversationObject: OPTIONAL_REPLY_CONVERSATION_RO,
-      // link: OPTIONAL_LINK_RO,
       date: OPTIONAL_STRING,
       isEdited: OPTIONAL_BOOLEAN,
       lastSeen: BOOLEAN,
       replyConversationId: OPTIONAL_STRING,
-      replyConversation: OPTONAL_CONVERSATION_RO,
+      userId: OPTIONAL_STRING,
       deletedBy: OPTIONAL_STRING,
       attachmentCount: OPTIONAL_INT,
       attachmentsUploaded: OPTIONAL_BOOLEAN,

@@ -1,4 +1,4 @@
-import {ATTACHMENT_UPLOAD_CONVERSATIONS, STRING} from '../Constants';
+import { ATTACHMENT_UPLOAD_CONVERSATIONS, STRING } from "../constants";
 
 export class AttachmentUploadConversationsRO extends Realm.Object<AttachmentUploadConversationsRO> {
   key!: string;
@@ -10,6 +10,6 @@ export class AttachmentUploadConversationsRO extends Realm.Object<AttachmentUplo
       key: STRING, // Unique identifier for the conversation (the conversation ID)
       value: STRING, // Serialized conversation data (e.g., as JSON)
     },
-    primaryKey: 'key',
+    primaryKey: "key",
   };
 }

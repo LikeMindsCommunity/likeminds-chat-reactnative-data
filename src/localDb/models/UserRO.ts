@@ -7,7 +7,7 @@ import {
   OPTIONAL_STRING,
   STRING,
   USER_RO,
-} from "../Constants";
+} from "../constants";
 import { SDKClientInfoRO } from "./SDKClientInfoRO";
 import Realm from "realm";
 

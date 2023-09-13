@@ -7,9 +7,9 @@ import {
   OPTIONAL_INT,
   OPTIONAL_STRING,
   STRING,
-} from '../Constants';
-import {SDKClientInfoRO} from './SDKClientInfoRO';
-import Realm from 'realm';
+} from "../constants";
+import { SDKClientInfoRO } from "./SDKClientInfoRO";
+import Realm from "realm";
 
 export class MemberRO extends Realm.Object<MemberRO> {
   uid!: string;

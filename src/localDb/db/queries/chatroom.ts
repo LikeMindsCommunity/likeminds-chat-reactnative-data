@@ -1,7 +1,8 @@
-import { ChatroomRO } from "../../Models/ChatroomRO";
-import { CommunityRO } from "../../Models/CommunityRO";
-import { LastConversationRO } from "../../Models/LastConversationRO";
-import { MemberRO } from "../../Models/MemberRO";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
+import { ChatroomRO } from "../../models/ChatroomRO";
+import { CommunityRO } from "../../models/CommunityRO";
+import { LastConversationRO } from "../../models/LastConversationRO";
+import { MemberRO } from "../../models/MemberRO";
 import {
   convertToChatroomRO,
   convertToCommunity,
@@ -11,31 +12,32 @@ import {
 } from "../ROConverter";
 import Db from "../db";
 import Realm from "realm";
-
-// method to check for poll
-function isPoll(state: number) {
-  return state == 10;
-}
+import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
+import ChatDBUtil from "src/localDb/utils/chatDbUtils";
+import { ConversationRO } from "src/localDb/models/ConversationRO";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
-  data: any,
-  chatrooms: any[],
+  data: SyncChatroomResponse,
+  chatrooms: Chatroom[],
   communityId: string
 ) {
   const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
+    const chatDBUtil = new ChatDBUtil();
     const community = data.communityMeta[communityId];
     if (!community) return;
 
     const communityRO = convertToCommunity(community);
 
     if (!communityRO) return;
+
     realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
     chatrooms.forEach((chatroom) => {
       const creatorId = chatroom.userId;
       const creator = data.userMeta[creatorId?.toString()];
+
       if (!creator) return;
       const chatroomCreatorRO = convertToMemberRO(creator, communityId);
       if (!chatroomCreatorRO) return;
@@ -63,14 +65,9 @@ export async function saveChatroomResponse(
           : null;
 
       // save lastConversation polls
-      const lastConversationPolls = isPoll(lastConversation.state)
+      const lastConversationPolls = chatDBUtil.isPoll(lastConversation.state)
         ? data.convPollsMeta[lastConversationId?.toString()]
-        : // .sort((a: any, b: any) => a.id - b.id)
-          // .map((poll: any) => {
-          //   const user = data.userMeta[poll.userId];
-          //   return poll.toBuilder().member(user).build();
-          // })
-          [];
+        : [];
 
       // save lastConversation attachments
       const lastConversationAttachment =
@@ -88,7 +85,9 @@ export async function saveChatroomResponse(
         communityId
       );
 
-      const lastConvRO = convertToConversationRO(
+      if (!lastConversationCreatorRO) return;
+
+      const conversationRO = convertToConversationRO(
         lastConversation,
         lastConversationCreatorRO,
         chatroom?.id,
@@ -96,7 +95,11 @@ export async function saveChatroomResponse(
         lastConversationPolls
       );
 
-      if (!lastConversationCreatorRO) return;
+      realm.create(
+        ConversationRO.schema.name,
+        conversationRO,
+        Realm.UpdateMode.All
+      );
 
       const lastConversationRO = convertToLastConversationRO(
         lastConversation,
@@ -108,13 +111,12 @@ export async function saveChatroomResponse(
 
       if (!lastConversationRO) return;
 
-      // realmWrite.insertOrUpdate(lastConversationRO);
       realm.create(
         LastConversationRO.schema.name,
         lastConversationRO,
         Realm.UpdateMode.All
       );
-      // realmWrite.insertOrUpdate(lastConversationCreatorRO);
+
       realm.create(
         MemberRO.schema.name,
         lastConversationCreatorRO,
@@ -123,9 +125,9 @@ export async function saveChatroomResponse(
 
       // convert to ChatroomRO
       const chatroomRO = convertToChatroomRO(
+        realm,
         chatroom,
         chatroomCreatorRO,
-        lastConvRO,
         lastConversationRO //its of type LastConversationRO
       );
 
@@ -139,34 +141,28 @@ export async function saveChatroomResponse(
 }
 
 // To get chatroom data from Realm
-export async function getChatroomData() {
+export async function getChatrooms() {
   const realm = await Realm.open(Db.getInstance());
   const chatrooms = realm.objects(ChatroomRO.schema.name);
-  const chatroomObject = chatrooms.map((chatroom) => {
+  const listOfChatroomObject = chatrooms.map((chatroom) => {
     const stringifiedChatroom = JSON.stringify(chatroom);
     return {
       ...JSON.parse(stringifiedChatroom),
     };
   });
-  return chatroomObject;
+  return listOfChatroomObject;
 }
 
 // To fetch one chatroom details from Realm
-export async function getOneChatroomData(chatroomId: string) {
+export async function getChatroom(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
-  const chatroomObject = chatroom.map((chatroom) => {
-    const stringifiedChatroom = JSON.stringify(chatroom);
-    return {
-      ...JSON.parse(stringifiedChatroom),
-    };
-  });
   return chatroom;
 }
 
 // For deletion of one chatroom from Realm
-export async function deleteOneChatroom(chatroomId: string) {
+export async function deleteChatroom(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);

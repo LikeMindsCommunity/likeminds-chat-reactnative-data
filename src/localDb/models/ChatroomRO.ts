@@ -17,12 +17,11 @@ import {
   OPTONAL_CONVERSATION_RO,
   OPTONAL_LAST_CONVERSATION_RO,
   STRING,
-} from "../Constants";
+} from "../constants";
 import { CommunityRO } from "./CommunityRO";
 import { ConversationRO } from "./ConversationRO";
 import { LastConversationRO } from "./LastConversationRO";
 import { MemberRO } from "./MemberRO";
-import { ReactionRO } from "./ReactionRO";
 import Realm from "realm";
 
 export class ChatroomRO extends Realm.Object<ChatroomRO> {
@@ -57,7 +56,6 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   isSecret?: boolean | null;
   chatroomWithUserId?: number | null;
   chatroomWithUserName?: string | null;
-  // secretChatRoomParticipants!: Realm.List<number>;
   secretChatRoomLeft?: boolean | null;
   conversations?: Realm.List<ConversationRO>;
   topicId?: string | null;
@@ -107,7 +105,6 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       draftConversation: OPTIONAL_STRING,
       chatroomWithUserName: OPTIONAL_STRING,
       isSecret: OPTIONAL_BOOLEAN,
-      // secretChatRoomParticipants: LIST_INT,
       secretChatRoomLeft: OPTIONAL_BOOLEAN,
       conversations: LIST_CONVERSATION_RO,
       topicId: OPTIONAL_STRING,

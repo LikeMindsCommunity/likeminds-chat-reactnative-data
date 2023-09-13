@@ -9,7 +9,7 @@ import {
   OPTIONAL_MEMBER_RO,
   OPTIONAL_STRING,
   STRING,
-} from "../Constants";
+} from "../constants";
 import { AttachmentRO } from "./AttachmentRO";
 import { LinkRO } from "./LinkRO";
 import { MemberRO } from "./MemberRO";

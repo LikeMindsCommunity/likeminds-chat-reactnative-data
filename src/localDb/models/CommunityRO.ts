@@ -9,7 +9,7 @@ import {
   OPTIONAL_LIST_STRING,
   OPTIONAL_STRING,
   STRING,
-} from "../Constants";
+} from "../constants";
 import { ChatroomRO } from "./ChatroomRO";
 import { ConversationRO } from "./ConversationRO";
 import Realm from "realm";
@@ -21,7 +21,6 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
   membersCount?: number | null;
   updatedAt?: number | null;
   relationshipNeeded!: boolean;
-  // downloadableContentTypes?: Realm.List<string> | null;
   conversations?: Realm.List<ConversationRO>;
   chatrooms?: Realm.List<ChatroomRO>;
 
@@ -34,7 +33,6 @@ export class CommunityRO extends Realm.Object<CommunityRO> {
       membersCount: OPTIONAL_INT,
       updatedAt: OPTIONAL_INT,
       relationshipNeeded: BOOLEAN,
-      // downloadableContentTypes: OPTIONAL_LIST_STRING,
       conversations: LIST_CONVERSATION_RO,
       chatrooms: LIST_CHATROOM_RO,
     },

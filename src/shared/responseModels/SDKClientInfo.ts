@@ -1,7 +1,7 @@
 export interface SDKClientInfo {
-  communityId: number;
   user: string;
   userUniqueId: string;
   uuid: string;
-  community: number;
+  communityId?: number;
+  community?: number;
 }
