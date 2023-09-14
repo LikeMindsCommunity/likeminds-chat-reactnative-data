@@ -114,12 +114,13 @@ const convertToAttachmentMetaRO = (attachmentMeta: AttachmentMeta) => {
 
 // convertToAttachmentRO method takes Attachment data and converts it to AttachmentRO
 export const convertToAttachmentRO = (
+  index: number,
   attachment: Attachment,
   chatroomId: string,
   communityId: string
 ): AttachmentRO => {
   const attachmentRO: AttachmentRO = {
-    id: attachment?.id?.toString(),
+    id: index.toString(),
     url:
       attachment.url == undefined
         ? attachment?.fileUrl?.toString()
@@ -159,7 +160,6 @@ const convertToSDKClientInfoRO = (
     uuid: sdkClientInfo.uuid,
     ...dummyKeys(SDKClientInfoRO),
   };
-
   return sdkClientInfoRO;
 };
 
@@ -203,6 +203,7 @@ const convertToAttachment = (
   if (attachments == undefined) return convertedAttachments;
   for (let i = 0; i < attachments.length; i++) {
     const roAttachment = convertToAttachmentRO(
+      i,
       attachments[i],
       chatroomId,
       communityId
@@ -255,74 +256,6 @@ const convertToReactionRO = (
   return reactionRO;
 };
 
-// convertToReplyConversationObject method takes Conversation data and converts it to ConversationRO
-export const convertToReplyConversationObject = (
-  conversation: Conversation,
-  chatroomId: string
-): ConversationRO => {
-  const memberRoConverted = convertToMemberRO(
-    conversation?.member,
-    conversation?.communityId
-  );
-  const replyConversationObjectRO: ConversationRO = {
-    id: conversation.id?.toString(),
-    chatroomId: chatroomId,
-    communityId: conversation.communityId?.toString(),
-    member: memberRoConverted,
-    answer: conversation?.answer,
-    state: conversation?.state,
-    createdEpoch: conversation?.createdEpoch || 0,
-    createdAt: conversation?.createdAt || null,
-    date: conversation?.date || null,
-    isEdited: conversation?.isEdited || null,
-    lastSeen: conversation?.lastSeen || false,
-    deletedBy: conversation?.deletedBy || null,
-    deletedByMember:
-      conversation.deletedByMember !== null
-        ? convertToMemberRO(
-            conversation.deletedByMember,
-            conversation.communityId?.toString()
-          )
-        : null,
-    replyId: conversation?.replyId?.toString() || null,
-    attachmentCount: conversation?.attachmentCount || null,
-    attachmentsUploaded: conversation?.attachmentUploaded || null,
-    uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
-    localSavedEpoch: conversation?.localCreatedEpoch || 0,
-    temporaryId: conversation?.temporaryId || null,
-    isAnonymous: conversation?.isAnonymous || null,
-    hasFiles: conversation?.hasFiles || false,
-    allowAddOption: conversation?.allowAddOption || null,
-    pollType: conversation?.pollType || null,
-    isInProgress: conversation?.isInProgress || null,
-    pollTypeText: conversation?.pollTypeText || null,
-    submitTypeText: conversation?.submitTypeText || null,
-    expiryTime: conversation?.expiryTime || null,
-    multipleSelectNum: conversation?.multipleSelectNo || null,
-    multipleSelectState: conversation?.multipleSelectState || null,
-    pollAnswerText: conversation?.pollAnswerText || null,
-    toShowResults: conversation?.toShowResults || null,
-    replyChatRoomId: conversation?.replyChatroomId || null,
-    lastUpdatedAt: conversation?.lastUpdated || 0,
-    deletedByUserId: conversation.deletedByUserId?.toString() || null,
-    attachments: convertToAttachment(
-      conversation.attachments,
-      chatroomId?.toString(),
-      conversation.communityId?.toString()
-    ),
-    reactions: convertToReaction(
-      conversation.reactions,
-      conversation?.communityId?.toString()
-    ),
-    polls: convertToPoll(
-      conversation.polls,
-      conversation?.communityId?.toString()
-    ),
-    ...dummyKeys(ConversationRO),
-  };
-  return replyConversationObjectRO;
-};
-
 // convertToConversationRO method takes Conversation data and converts it to ConversationRO
 export const convertToConversationRO = (
   conversation: Conversation,
@@ -353,7 +286,7 @@ export const convertToConversationRO = (
             conversation.communityId?.toString()
           )
         : null,
-    replyConversation: conversation.replyConversation,
+    replyConversation: conversation.replyConversation?.toString(),
     replyId: conversation?.replyId?.toString() || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
@@ -377,9 +310,16 @@ export const convertToConversationRO = (
     deletedByUserId: conversation.deletedByUserId?.toString() || null,
     replyConversationObject:
       conversation?.replyConversationObject != undefined
-        ? convertToReplyConversationObject(
+        ? convertToConversationRO(
             conversation?.replyConversationObject,
-            chatroomId?.toString()
+            convertToMemberRO(
+              conversation?.replyConversationObject?.member,
+              conversation?.replyConversationObject?.communityId
+            ),
+            chatroomId?.toString(),
+            conversation?.replyConversationObject?.attachments,
+            conversation?.replyConversationObject?.polls,
+            conversation?.replyConversationObject?.reactions
           )
         : null,
     attachments: convertToAttachment(
@@ -418,7 +358,7 @@ export const convertToChatroomRO = (
     state: chatroom.state,
     member: member,
     createdAt: chatroom.createdAt || null,
-    type: chatroom.type || null,
+    type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
     cardCreationTime: chatroom.cardCreationTime || null,
