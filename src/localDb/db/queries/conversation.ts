@@ -125,11 +125,10 @@ export async function saveConversationData(
 export async function getConversations(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const conversations = realm.objects(ConversationRO.schema.name);
-  const filteredConversation = conversations.filtered(
-    `chatroomId = "${chatroomId}"`
-  );
-  const sortedConversation = filteredConversation.sorted("createdEpoch", true);
-  const conversationObject = sortedConversation.map((chatroom) => {
+  const filteredAndSortedConversation = conversations
+    .filtered(`chatroomId = "${chatroomId}"`)
+    .sorted("createdEpoch", true);
+  const conversationObject = filteredAndSortedConversation.map((chatroom) => {
     const stringifiedConversation = JSON.stringify(chatroom);
     return {
       ...JSON.parse(stringifiedConversation),

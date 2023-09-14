@@ -27,18 +27,6 @@ export async function getAllAttachmentUploadConversations() {
   return conversations;
 }
 
-// Get a all attachment upload conversationIDs
-export async function getAllAttachmentUploadConversationIDs() {
-  const realm = await Realm.open(Db.getInstance());
-  const conversations: any = realm.objects(ATTACHMENT_UPLOAD_CONVERSATIONS);
-
-  // Extract the keys (conversation IDs) from the objects
-  const conversationIDs = conversations.map(
-    (conversation) => conversation?.key
-  );
-  return conversationIDs;
-}
-
 // Remove a conversation by its key (conversation ID)
 export async function removeAttactmentUploadConversationByKey(key: string) {
   const realm = await Realm.open(Db.getInstance());

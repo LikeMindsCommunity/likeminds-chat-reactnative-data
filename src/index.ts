@@ -219,6 +219,7 @@ class LMChatClient {
   userClient = new UserClient();
   syncClient = new SyncClient();
 
+  // Method to mute a chatroom
   async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.muteChatroom(
       muteChatroom,
@@ -226,6 +227,7 @@ class LMChatClient {
     );
   }
 
+  // Method to follow a chatroom
   async followChatroom(
     followChatroom: FollowChatroomWithUuid
   ): Promise<LMResponse<Nothing>> {
@@ -235,10 +237,12 @@ class LMChatClient {
     );
   }
 
+  // Method to get a chatroom
   async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
+  // Method to mark a chatroom as read
   async markReadChatroom(markRead: MarkRead): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.markReadChatroom(
       markRead,
@@ -246,6 +250,7 @@ class LMChatClient {
     );
   }
 
+  // Method to share chatroom url
   async shareChatroomUrl(
     shareChatroom: ShareChatroom
   ): Promise<LMResponse<ShareChatroomUrlResponse>> {
@@ -255,6 +260,7 @@ class LMChatClient {
     );
   }
 
+  // Method to set chatroom topic
   async setChatroomTopic(
     setChatroom: SetChatroom
   ): Promise<LMResponse<Nothing>> {
@@ -264,6 +270,7 @@ class LMChatClient {
     );
   }
 
+  // Method to get tagging list
   async getTaggingList(
     taggingList: TaggingList
   ): Promise<LMResponse<GetTaggingListResponse>> {
@@ -273,6 +280,7 @@ class LMChatClient {
     );
   }
 
+  // Method to post a conversation
   async postConversation(
     postConversation: PostConversation
   ): Promise<LMResponse<PostConversationsResponse>> {
@@ -282,6 +290,7 @@ class LMChatClient {
     );
   }
 
+  // Method to edit a conversation
   async editConversation(
     conversationId: EditConversation
   ): Promise<LMResponse<EditConversationResponse>> {
@@ -291,6 +300,7 @@ class LMChatClient {
     );
   }
 
+  // Method to delete a conversation
   async deleteConversations(
     deleteConversation: DeleteConversation
   ): Promise<LMResponse<DeleteConversationsResponse>> {
@@ -300,10 +310,12 @@ class LMChatClient {
     );
   }
 
+  // Method to put a reaction to a conversation
   async putReaction(putReaction: PutReaction): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.putReaction(putReaction, LMChatClient.dlClient);
   }
 
+  // Method to delete a reaction
   async deleteReaction(
     deleteReaction: DeleteReaction
   ): Promise<LMResponse<Nothing>> {
@@ -313,6 +325,7 @@ class LMChatClient {
     );
   }
 
+  // Method to upload multimedia
   async putMultimedia(
     putMultimedia: PutMultimedia
   ): Promise<LMResponse<PutMultimediaResponse>> {
@@ -322,12 +335,14 @@ class LMChatClient {
     );
   }
 
+  // Method to decode an url
   async decodeUrl(
     decodeUrl: DecodeUrl
   ): Promise<LMResponse<DecodeUrlResponse>> {
     return this.chatroomClient.decodeUrl(decodeUrl, LMChatClient.dlClient);
   }
 
+  // Method to get report tags
   async getReportTags(
     getReportTags: GetReportTags
   ): Promise<LMResponse<GetReportTagsResponse>> {
@@ -337,10 +352,12 @@ class LMChatClient {
     );
   }
 
+  // Method to post a report
   async postReport(postReport: PushReport): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.postReport(postReport, LMChatClient.dlClient);
   }
 
+  // Method to leave secret chatroom
   async leaveSecretChatroom(
     leaveSecretChatroom: LeaveSecretChatroom
   ): Promise<LMResponse<Nothing>> {
@@ -350,6 +367,7 @@ class LMChatClient {
     );
   }
 
+  // Method to get participants
   async getParticipants(
     participantsType: ParticipantsType
   ): Promise<LMResponse<Nothing>> {
@@ -359,6 +377,7 @@ class LMChatClient {
     );
   }
 
+  // Method to get conversation meta
   async getConversationMeta(
     cmetaType: CmetaType
   ): Promise<LMResponse<FetchConversationResponse>> {
@@ -368,6 +387,7 @@ class LMChatClient {
     );
   }
 
+  // Method for chatroomSeen
   async chatroomSeen(
     chatroomSeen: ChatroomSeenWithUuid
   ): Promise<LMResponse<Nothing>> {
@@ -377,7 +397,7 @@ class LMChatClient {
     );
   }
 
-  //DM
+  // Method to fetch DM feed
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed
   ): Promise<LMResponse<FetchDMResponse>> {
@@ -387,6 +407,7 @@ class LMChatClient {
     );
   }
 
+  // Method to check DM status
   async checkDMStatus(
     checkDMStatus: CheckDMStatus
   ): Promise<LMResponse<DMStatusResponse>> {
@@ -396,6 +417,7 @@ class LMChatClient {
     );
   }
 
+  // Method to check DM limit
   async checkDMLimit(
     checkDMLimit: CheckDMLimitWithUuid
   ): Promise<LMResponse<DMLimitResponse>> {
@@ -405,6 +427,7 @@ class LMChatClient {
     );
   }
 
+  // Method to create a DM Chatroom
   async createDMChatroom(
     createDMChatroom: CreateDMChatroomWithUuid
   ): Promise<LMResponse<CreateDMChatroomResponse>> {
@@ -414,6 +437,7 @@ class LMChatClient {
     );
   }
 
+  // Method to send a DM Request
   async sendDMRequest(
     sendDMRequest: SendDMRequest
   ): Promise<LMResponse<SendDMRequestResponse>> {
@@ -423,6 +447,7 @@ class LMChatClient {
     );
   }
 
+  // Method to block a member
   async blockMember(
     blockMember: BlockMember
   ): Promise<LMResponse<BlockDMRequestResponse>> {
@@ -432,17 +457,19 @@ class LMChatClient {
     );
   }
 
+  // Method to check dm tab
   async checkDMTab(): Promise<LMResponse<CheckDMTabResponse>> {
     return this.directMessageClient.checkDMTab(LMChatClient.dlClient);
   }
 
+  // Method for canDmFeed
   async canDmFeed(
     dmCan: CANDMWithUuid
   ): Promise<LMResponse<CanDMFeedResponse>> {
     return this.directMessageClient.canDmFeed(dmCan, LMChatClient.dlClient);
   }
 
-  //ExploreFeed
+  // Method to get explore feed
   async getExploreFeed(
     exploreFeedData: ExploreFeedData
   ): Promise<LMResponse<ExploreFeedResponse>> {
@@ -452,31 +479,37 @@ class LMChatClient {
     );
   }
 
-  //HomeFeed
+  // Method to get homefeed
   async getHomeFeed(homeFeed: HomeFeed): Promise<LMResponse<HomeFeedResponse>> {
     return this.homeFeedClient.getHomeFeed(homeFeed, LMChatClient.dlClient);
   }
 
+  // Method to get invites
   async getInvites(invite: INVITE): Promise<LMResponse<GetInvitesResponse>> {
     return this.homeFeedClient.getInvites(invite, LMChatClient.dlClient);
   }
 
+  // Method to send invites
   async sendInvites(participant: Participant): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.sendInvites(participant, LMChatClient.dlClient);
   }
 
+  // Method to register a device
   async registerDevice(device: Device): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.registerDevice(device, LMChatClient.dlClient);
   }
 
+  // Method for inviteAction
   async inviteAction(iaType: IaType): Promise<LMResponse<Nothing>> {
     return this.homeFeedClient.inviteAction(iaType, LMChatClient.dlClient);
   }
 
+  // Method to initiate a firebase instance
   firebaseInstance() {
     return this.homeFeedClient.firebaseInstance(LMChatClient.dlClient);
   }
 
+  // Method for homeFeedListener
   homeFeedListener(callback: any, route: any) {
     return this.homeFeedClient.homeFeedListener(
       callback,
@@ -485,7 +518,7 @@ class LMChatClient {
     );
   }
 
-  //Poll
+  // Method to post a poll conversation
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest
   ): Promise<LMResponse<PostPollConversationResponse>> {
@@ -495,6 +528,7 @@ class LMChatClient {
     );
   }
 
+  // Method to get poll users
   async getPollUsers(
     getPollUsersRequest: GetPollUsersRequest
   ): Promise<LMResponse<GetPollUsersResponse>> {
@@ -504,6 +538,7 @@ class LMChatClient {
     );
   }
 
+  // Method to add poll option
   async addPollOption(
     addPollOptionRequest: AddPollOptionRequest
   ): Promise<LMResponse<AddPollResponse>> {
@@ -513,19 +548,21 @@ class LMChatClient {
     );
   }
 
+  // Method to submit a poll
   async submitPoll(
     submitPollRequest: SubmitPollRequest
   ): Promise<LMResponse<Nothing>> {
     return this.pollClient.submitPoll(submitPollRequest, LMChatClient.dlClient);
   }
 
-  //Search
+  // Method to search a chatroom
   async searchChatroom(
     searchType: SearchType
   ): Promise<LMResponse<SearchChatroomResponse>> {
     return this.searchClient.searchChatroom(searchType, LMChatClient.dlClient);
   }
 
+  // Method to search a conversation
   async searchConversation(
     searchConversation: SearchConversation
   ): Promise<LMResponse<SearchConversationResponse>> {
@@ -535,53 +572,62 @@ class LMChatClient {
     );
   }
 
-  //User
+  // Method to initiate an user
   initiateUser(
     initUser: InitUserWithUuid
   ): Promise<LMResponse<InitiateUserResponse>> {
     return this.userClient.initiateUser(initUser, LMChatClient.dlClient);
   }
 
+  // Method to logout an user
   async logout(logout: Logout): Promise<LMResponse<Nothing>> {
     return this.userClient.logout(logout, LMChatClient.dlClient);
   }
 
+  // Method to get member state of an user
   async getMemberState(): Promise<LMResponse<GetMemberStateResponse>> {
     return this.userClient.getMemberState(LMChatClient.dlClient);
   }
 
+  // Method to search members
   async searchMembers(
     search: Search
   ): Promise<LMResponse<SearchMembersResponse>> {
     return this.userClient.searchMembers(search, LMChatClient.dlClient);
   }
 
+  // Method to get all members
   async getAllMembers(
     getAllMembers: GetAllMembers
   ): Promise<LMResponse<GetAllMembersResponse>> {
     return this.userClient.getAllMembers(getAllMembers, LMChatClient.dlClient);
   }
 
-  // Sync
+  // Method to call syncChatroom API
   async syncChatroom(
     request: SyncChatroomRequest
   ): Promise<LMResponse<SyncChatroomResponse>> {
     return this.syncClient.syncChatroom(request, LMChatClient.dlClient);
   }
 
+  // Method to call syncConversation API
   async syncConversation(
     request: SyncConversationRequest
   ): Promise<LMResponse<SyncConversationResponse>> {
     return this.syncClient.syncConversation(request, LMChatClient.dlClient);
   }
 
+  // Method to get ExploreTabCount
   async getExploreTabCount(): Promise<LMResponse<GetExploreTabCountResponse>> {
     return this.homeFeedClient.getExploreTabCount(LMChatClient.dlClient);
   }
 
+  // Method to save community
   async saveCommunity(communityData) {
     return saveCommunity(communityData);
   }
+
+  // Method to save chatroom in localDB
   async saveChatroomResponse(
     data: SyncChatroomResponse,
     chatrooms: ChatroomModel[],
@@ -589,33 +635,53 @@ class LMChatClient {
   ) {
     return saveChatroomResponse(data, chatrooms, communityId);
   }
+
+  // Method to get community from localDB
   async getCommunity() {
     return getCommunity();
   }
+
+  // Method to get chatrooms from localDB
   async getChatrooms() {
     return getChatrooms();
   }
+
+  // Method to update timestamp in localDB
   async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return updateTimeStamp(minTimeStamp, maxTimeStamp);
   }
+
+  // Method to save timestamp in localDB
   async saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
     return saveTimeStamp(minTimeStamp, maxTimeStamp);
   }
+
+  // Method to get timestamp from localDB
   async getTimeStamp() {
     return getTimeStamp();
   }
+
+  // Method to delete chatroom from localDB
   async deleteChatroom(chatroomId: string) {
     return deleteChatroom(chatroomId);
   }
+
+  // Method to update mute status from localDB
   async updateMuteStatus(chatroomId: string, muteStats: boolean) {
     return updateMuteStatus(chatroomId, muteStats);
   }
+
+  // Method to update unseen count in localDB
   async updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(chatroomId);
   }
+
+  // Method to get instance
   getInstance() {
     return Db.getInstance();
   }
+
+  // Method to save conversation in localDB
   async saveConversationData(
     data: SyncConversationResponse,
     chatroomData: ChatroomModel[],
@@ -629,15 +695,23 @@ class LMChatClient {
       communityId
     );
   }
+
+  // Method to get all conversations of a chatroom from localDB
   async getConversations(chatroomId: string) {
     return getConversations(chatroomId);
   }
+
+  // Method to update conversation in localDB
   async updateConversation(conversationId: string, data: ConversationModel) {
     return updateConversation(conversationId, data);
   }
+
+  // Method to save new conversation in localDB
   async saveNewConversation(chatroomId: string, data: ConversationModel) {
     return saveNewConversation(chatroomId, data);
   }
+
+  // Method to delete a conversation from localDB
   async deleteConversation(
     conversationId: string,
     user: Member,
@@ -645,24 +719,38 @@ class LMChatClient {
   ) {
     return deleteConversation(conversationId, user, conversations);
   }
+
+  // Method to get a particular convesation from localDB
   async getConversation(conversationId: string) {
     return getConversation(conversationId);
   }
+
+  // Method to update deletedBy from localDB
   async updateDeletedBy(conversationId: string, data: ConversationModel) {
     return updateDeletedBy(conversationId, data);
   }
+
+  // Method to replace save conversation from localDB
   async replaceSavedConversation(data: ConversationModel) {
     return replaceSavedConversation(data);
   }
+
+  // Method to save a conversation's attachment in localDB
   async saveAttachmentUploadConversation(key: string, value: string) {
     return saveAttachmentUploadConversation(key, value);
   }
+
+  // Method to get all attachment from localDB
   async getAllAttachmentUploadConversations() {
     return getAllAttachmentUploadConversations();
   }
+
+  // Method to remove attachment from localDB
   async removeAttactmentUploadConversationByKey(key: string) {
     return removeAttactmentUploadConversationByKey(key);
   }
+
+  // Method to get filtered chatroom whether it belongs to DM feed or Group feed
   async getFilteredChatrooms(isDm: boolean) {
     return getFilteredChatrooms(isDm);
   }
