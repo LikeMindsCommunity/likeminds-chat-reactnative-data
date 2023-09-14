@@ -140,6 +140,16 @@ export async function saveChatroomResponse(
   });
 }
 
+export async function getFilteredChatrooms(isDm: boolean) {
+  const realm = await Realm.open(Db.getInstance());
+  const items = realm.objects(ChatroomRO.schema.name);
+  const filteredChatroom = isDm
+    ? items.filtered(`type = 10`)
+    : items.filtered(`type = 0 || type=7`);
+  const sortedChatroom = filteredChatroom.sorted("updatedAt", true);
+  return sortedChatroom;
+}
+
 // To get chatroom data from Realm
 export async function getChatrooms() {
   const realm = await Realm.open(Db.getInstance());

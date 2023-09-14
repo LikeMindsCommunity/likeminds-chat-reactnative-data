@@ -12,6 +12,8 @@ import Realm from "realm";
 import { Chatroom } from "src/shared/responseModels/Chatroom";
 import { SyncConversationResponse } from "src/sync/model/syncConversationResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
+import { updateDeletedBy } from "./functionalities";
+import { Member } from "src/shared/responseModels/Member";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -33,7 +35,6 @@ export async function saveConversationData(
     const chatroomId = Object.keys(chatroomData);
     const chatroom = chatroomData[chatroomId[0]];
     const creatorId = chatroom.userId;
-
     const creator = data.userMeta[creatorId?.toString()];
     if (!creator) return;
     const conversationCreatorRO = convertToMemberRO(creator, communityId);
@@ -43,7 +44,6 @@ export async function saveConversationData(
       conversationCreatorRO,
       Realm.UpdateMode.All
     );
-
     // save conversations
     conversationData.map((item) => {
       const conversation = item;
@@ -52,6 +52,27 @@ export async function saveConversationData(
       const creator = data.userMeta[creatorId?.toString()];
       if (!creator) return;
       const conversationCreatorRO = convertToMemberRO(creator, communityId);
+
+      if (conversation.deletedByUserId != null) {
+        conversation.deletedBy =
+          data?.userMeta[conversation.deletedByUserId].id.toString();
+        conversation.deletedByMember =
+          data?.userMeta[conversation.deletedByUserId];
+      }
+
+      if (conversation?.replyId !== null && conversation?.replyId !== "null") {
+        const conversations = realm.objects(ConversationRO.schema.name);
+        const conversationToBeReplied = conversations.filtered(
+          `id = "${conversation.replyId}"`
+        );
+
+        const stringifiedConversation = JSON.stringify(conversationToBeReplied);
+        const parsedReplyConversation = JSON.parse(stringifiedConversation);
+
+        if (conversationToBeReplied.length !== 0) {
+          conversation.replyConversationObject = parsedReplyConversation[0];
+        }
+      }
 
       if (!conversationCreatorRO) return;
       realm.create(
@@ -104,8 +125,11 @@ export async function saveConversationData(
 export async function getConversations(chatroomId: string) {
   const realm = await Realm.open(Db.getInstance());
   const conversations = realm.objects(ConversationRO.schema.name);
-  const chatroom = conversations.filtered(`chatroomId = "${chatroomId}"`);
-  const conversationObject = chatroom.map((chatroom) => {
+  const filteredConversation = conversations.filtered(
+    `chatroomId = "${chatroomId}"`
+  );
+  const sortedConversation = filteredConversation.sorted("createdEpoch", true);
+  const conversationObject = sortedConversation.map((chatroom) => {
     const stringifiedConversation = JSON.stringify(chatroom);
     return {
       ...JSON.parse(stringifiedConversation),
@@ -174,13 +198,24 @@ export async function updateConversation(
 }
 
 // To delete a single conversation data from realm
-export async function deleteConversation(conversationId: string) {
-  const realm = await Realm.open(Db.getInstance());
-  const conversations = realm.objects(ConversationRO.schema.name);
-  const conversation: any = conversations.filtered(`id = "${conversationId}"`);
-  realm.write(() => {
-    conversation[0].deletedBy = true;
-  });
+export async function deleteConversation(
+  conversationId: string,
+  user: Member,
+  conversations: Conversation[]
+) {
+  const conversationFromRealm = await getConversation(conversationId);
+  conversationFromRealm[0].deletedBy = user?.id;
+  conversationFromRealm[0].deletedByMember = user;
+
+  await updateDeletedBy(conversationId, conversationFromRealm[0]);
+
+  for (let j = 0; j < conversations.length; j++) {
+    if (conversations[j].id == conversationFromRealm[0].id) {
+      conversations[j] = conversationFromRealm[0];
+      break;
+    }
+  }
+  return conversations;
 }
 
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id

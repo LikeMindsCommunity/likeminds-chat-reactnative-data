@@ -12,8 +12,35 @@ import {
 } from "@likeminds.community/chat-js/dist/pages/home-feed/types";
 import { GetInvitesResponse } from "./responseModels/GetInvitesResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
+import { GetExploreTabCountResponse } from "./responseModels/GetExploreTabCountResponse";
+import { API } from "src/shared/constants/api.constant";
 
 class HomeFeedClient {
+  async getExploreTabCount(
+    dlClient: DLClient
+  ): Promise<LMResponse<GetExploreTabCountResponse>> {
+    return dlClient
+      .makeAuthenticatedRequest(`${API.GET_EXPLORE_TAB_COUNT}`)
+      .then((resData: any) => {
+        // Handle the response and return the LMResponse object
+        const responseData: GetExploreTabCountResponse =
+          ModelConverter.responseBodyParser(resData);
+
+        return new LMResponse<GetExploreTabCountResponse>(
+          responseData,
+          null,
+          true
+        );
+      })
+      .catch((error) => {
+        return new LMResponse<GetExploreTabCountResponse>(
+          null,
+          error.message || "An error occurred",
+          false
+        );
+      });
+  }
+
   async getHomeFeed(
     homeFeed: HomeFeed,
     dlClient: DLClient

@@ -161,10 +161,13 @@ import {
 import {
   deleteChatroom,
   getChatrooms,
+  getFilteredChatrooms,
   saveChatroomResponse,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
+import { GetExploreTabCountResponse } from "./pages/homeFeed/responseModels/GetExploreTabCountResponse";
+import { Member } from "./shared/responseModels/Member";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -572,6 +575,10 @@ class LMChatClient {
     return this.syncClient.syncConversation(request, LMChatClient.dlClient);
   }
 
+  async getExploreTabCount(): Promise<LMResponse<GetExploreTabCountResponse>> {
+    return this.homeFeedClient.getExploreTabCount(LMChatClient.dlClient);
+  }
+
   async saveCommunity(communityData) {
     return saveCommunity(communityData);
   }
@@ -631,8 +638,12 @@ class LMChatClient {
   async saveNewConversation(chatroomId: string, data: ConversationModel) {
     return saveNewConversation(chatroomId, data);
   }
-  async deleteConversation(conversationId: string) {
-    return deleteConversation(conversationId);
+  async deleteConversation(
+    conversationId: string,
+    user: Member,
+    conversations: ConversationModel[]
+  ) {
+    return deleteConversation(conversationId, user, conversations);
   }
   async getConversation(conversationId: string) {
     return getConversation(conversationId);
@@ -651,6 +662,9 @@ class LMChatClient {
   }
   async removeAttactmentUploadConversationByKey(key: string) {
     return removeAttactmentUploadConversationByKey(key);
+  }
+  async getFilteredChatrooms(isDm: boolean) {
+    return getFilteredChatrooms(isDm);
   }
 }
 
