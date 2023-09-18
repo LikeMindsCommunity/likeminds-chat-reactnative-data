@@ -9,11 +9,11 @@ import {
   OPTIONAL_MEMBER_RO,
   OPTIONAL_STRING,
   STRING,
-} from '../Constants';
-import {AttachmentRO} from './AttachmentRO';
-import {LinkRO} from './LinkRO';
-import {MemberRO} from './MemberRO';
-import Realm from 'realm';
+} from "../Constants";
+import { AttachmentRO } from "./AttachmentRO";
+import { LinkRO } from "./LinkRO";
+import { MemberRO } from "./MemberRO";
+import Realm from "realm";
 
 export class LastConversationRO extends Realm.Object<LastConversationRO> {
   id!: string;
@@ -32,6 +32,7 @@ export class LastConversationRO extends Realm.Object<LastConversationRO> {
   communityId!: string;
   link?: LinkRO | null;
   deletedByMember?: MemberRO | null;
+  lastUpdatedAt: number;
 
   static schema: Realm.ObjectSchema = {
     name: LAST_CONVERSATION_RO,
@@ -52,6 +53,7 @@ export class LastConversationRO extends Realm.Object<LastConversationRO> {
       communityId: STRING,
       link: OPTIONAL_LINK_RO,
       deletedByMember: OPTIONAL_MEMBER_RO,
+      lastUpdatedAt: INT,
     },
     primaryKey: ID,
   };

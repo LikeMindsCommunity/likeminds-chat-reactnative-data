@@ -42,25 +42,39 @@ export default class Db {
     deleteRealmIfMigrationNeeded: false, // Set to true to delete the realm if schema needs migration
     inMemory: false, // Set to true to create an in-memory realm
     readOnly: false, // Set to true for read-only access
-    path: 'likeminds-chat-sdk.realm',
+    path: "likeminds-chat-sdk.realm",
   };
-  static getInstance(): Realm {
-    if (!Db.instance) {
-      Db.instance = new Realm(Db.realmConfig);
-    }
-    return Db.instance;
+  // static getInstance(): Realm {
+  //   if (!Db.instance) {
+  //     Db.instance = new Realm(Db.realmConfig);
+  //   }
+  //   return Db.instance;
+  // }
+
+  static getInstance() {
+    // if (!Db.instance) {
+    //   Db.instance = new Realm(Db.realmConfig);
+    // }
+    // const CONFIG = { schema: Db.realmConfig.schema };
+    // console.log("CONFIG ==", CONFIG);
+    // return CONFIG;
+    return Db.realmConfig;
   }
 
-  static write(callback: (realm: Realm) => void) {
-    const realm = Db.getInstance();
-    try {
-      realm.write(() => {
-        callback(realm);
-      });
-    } catch (error) {
-      console.error('Error during Realm write:', error);
-    }
+  static getConfig() {
+    return Db.realmConfig;
   }
+
+  // static write(callback: (realm: Realm) => void) {
+  //   const realm = Db.getInstance();
+  //   try {
+  //     realm.write(() => {
+  //       callback(realm);
+  //     });
+  //   } catch (error) {
+  //     console.error("Error during Realm write:", error);
+  //   }
+  // }
 
   // Other methods like query, insert, etc.
 }

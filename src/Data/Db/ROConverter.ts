@@ -61,30 +61,32 @@ export const convertCommunity = (community: Community): CommunityRO => {
 export const convertToLastConversationRO = (
   lastConversation: Conversation,
   chatroomCreatorRO: MemberRO | undefined,
-  chatroomId: number,
+  chatroomId: string,
   attachment: Attachment[],
   deletedByMember: MemberRO | undefined
 ): LastConversationRO => {
+  console.log(" convertToLastConversationRO == chatroomId ==>", chatroomId);
   const lastConversationRO: LastConversationRO = {
     id: lastConversation?.id?.toString() || "",
     member: chatroomCreatorRO,
-    createdAt: lastConversation.createdAt || null,
-    answer: lastConversation.answer,
-    state: lastConversation.state,
+    createdAt: lastConversation?.createdAt || null,
+    answer: lastConversation?.answer,
+    state: lastConversation?.state,
     attachments: convertToAttachment(
       attachment,
       chatroomId?.toString(),
-      lastConversation.communityId?.toString()
+      lastConversation?.communityId?.toString()
     ),
-    date: lastConversation.date || null,
-    deletedBy: lastConversation.deletedBy,
-    uploadWorkerUUID: lastConversation.uploadWorkerUUID,
-    createdEpoch: lastConversation.createdEpoch,
+    date: lastConversation?.date || null,
+    deletedBy: lastConversation?.deletedBy,
+    uploadWorkerUUID: lastConversation?.uploadWorkerUUID,
+    createdEpoch: lastConversation?.createdEpoch,
     chatroomId: chatroomId?.toString(),
-    communityId: lastConversation.communityId?.toString(),
-    attachmentCount: lastConversation.attachmentCount,
-    attachmentsUploaded: lastConversation.attachmentUploaded,
+    communityId: lastConversation?.communityId?.toString(),
+    attachmentCount: lastConversation?.attachmentCount,
+    attachmentsUploaded: lastConversation?.attachmentUploaded,
     deletedByMember: deletedByMember,
+    lastUpdatedAt: lastConversation?.lastUpdatedAt || 0,
     ...dummyKeys(LastConversationRO),
   };
 
@@ -96,11 +98,13 @@ export const convertToPollRO = (poll: Poll, communityId: string) => {
   const pollRO: PollRO = {
     id: poll?.id?.toString(),
     text: poll?.text,
-    subText: poll.subText,
-    isSelected: poll.isSelected,
-    percentage: poll.percentage,
-    noVotes: poll.noVotes,
-    member: !!poll.member ? convertToMemberRO(poll?.member, communityId) : null,
+    subText: poll?.subText,
+    isSelected: poll?.isSelected,
+    percentage: poll?.percentage,
+    noVotes: poll?.noVotes,
+    member: !!poll?.member
+      ? convertToMemberRO(poll?.member, communityId)
+      : null,
     ...dummyKeys(PollRO),
   };
   return pollRO;
@@ -179,19 +183,19 @@ export const convertToMemberRO = (
   );
 
   const memberRO: MemberRO = {
-    uid: member.id?.toString(),
-    id: member.id?.toString(),
-    name: member.name,
-    imageUrl: member.imageUrl || "",
-    state: member.state || 0,
-    customIntroText: member.customIntroText || null,
-    customClickText: member.customClickText || null,
-    customTitle: member.customTitle || null,
+    uid: member?.id?.toString(),
+    id: member?.id?.toString(),
+    name: member?.name,
+    imageUrl: member?.imageUrl || "",
+    state: member?.state || 0,
+    customIntroText: member?.customIntroText || null,
+    customClickText: member?.customClickText || null,
+    customTitle: member?.customTitle || null,
     communityId: communityId?.toString(),
     isOwner: member?.isOwner,
-    isGuest: member.isGuest,
-    userUniqueId: member.userUniqueId,
-    uuid: member.uuid,
+    isGuest: member?.isGuest,
+    userUniqueId: member?.userUniqueId,
+    uuid: member?.uuid,
     sdkClientInfoRO: convertedSdkClientInfo,
     ...dummyKeys(MemberRO),
   };
@@ -254,7 +258,7 @@ const convertToReactionRO = (
 
   const reactionRO: ReactionRO = {
     member: convertedMember,
-    reaction: reaction.reaction,
+    reaction: reaction?.reaction,
     ...dummyKeys(ReactionRO),
   };
   return reactionRO;
@@ -269,10 +273,12 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
+  console.log("conversation convertToConversationRO ==", conversation);
+  console.log("conversation convertToConversationRO lastSeen ==", conversation?.lastSeen);
   const conversationRO: ConversationRO = {
-    id: conversation.id?.toString() || "",
+    id: conversation?.id?.toString() || "",
     chatroomId: chatroomId?.toString(),
-    communityId: conversation.communityId?.toString() || "",
+    communityId: conversation?.communityId?.toString() || "",
     member: chatroomCreatorRO,
     answer: conversation?.answer,
     state: conversation?.state,
@@ -280,13 +286,13 @@ export const convertToConversationRO = (
     createdAt: conversation?.createdAt || null,
     date: conversation?.date || null,
     isEdited: conversation?.isEdited || null,
-    lastSeen: conversation?.lastSeen || false,
+    // lastSeen: conversation?.lastSeen || false,
     replyConversationId: conversation?.replyConversationId || null,
     deletedBy: conversation?.deletedBy || null,
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
     uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
-    localSavedEpoch: conversation?.localCreatedEpoch || 0,
+    // localSavedEpoch: conversation?.localCreatedEpoch || 0,
     temporaryId: conversation?.temporaryId || null,
     isAnonymous: conversation?.isAnonymous || null,
     allowAddOption: conversation?.allowAddOption || null,
@@ -326,8 +332,8 @@ const convertToSecretChatroomParticipants = (
   secretChatroomParticipants: number[]
 ): List<number> => {
   let convertedAttachments: any = [];
-  for (let i = 0; i < secretChatroomParticipants.length; i++) {
-    convertedAttachments.push(secretChatroomParticipants[i]);
+  for (let i = 0; i < secretChatroomParticipants?.length; i++) {
+    convertedAttachments?.push(secretChatroomParticipants[i]);
   }
   return convertedAttachments;
 };
@@ -343,47 +349,47 @@ export const convertToChatroomRO = (
 ): ChatroomRO => {
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
-    communityId: chatroom.communityId?.toString() || "",
-    title: chatroom.title,
-    state: chatroom.state,
+    communityId: chatroom?.communityId?.toString() || "",
+    title: chatroom?.title,
+    state: chatroom?.state,
     member: !!member ? member : null,
-    createdAt: chatroom.createdAt || null,
-    type: chatroom.type || null,
-    chatroomImageUrl: chatroom.chatroomImageUrl || null,
-    header: chatroom.header || null,
-    cardCreationTime: chatroom.cardCreationTime || null,
+    createdAt: chatroom?.createdAt || null,
+    type: chatroom?.type || null,
+    chatroomImageUrl: chatroom?.chatroomImageUrl || null,
+    header: chatroom?.header || null,
+    cardCreationTime: chatroom?.cardCreationTime || null,
     totalResponseCount:
       chatroom?.totalResponseCount == undefined
         ? 0
-        : parseInt(chatroom.totalResponseCount),
+        : parseInt(chatroom?.totalResponseCount),
     totalAllResponseCount:
       chatroom?.totalAllResponseCount == undefined
         ? 0
-        : parseInt(chatroom.totalAllResponseCount),
-    muteStatus: chatroom.muteStatus || false,
-    followStatus: chatroom.followStatus || null,
-    hasBeenNamed: chatroom.hasBeenNamed || null,
-    date: chatroom.date || null,
-    isTagged: chatroom.isTagged || null,
-    isPending: chatroom.isPending || null,
-    deletedBy: chatroom.deletedBy || null,
-    updatedAt: chatroom.updatedAt || null,
+        : parseInt(chatroom?.totalAllResponseCount),
+    muteStatus: chatroom?.muteStatus || false,
+    followStatus: chatroom?.followStatus || null,
+    hasBeenNamed: chatroom?.hasBeenNamed || null,
+    date: chatroom?.date || null,
+    isTagged: chatroom?.isTagged || null,
+    isPending: chatroom?.isPending || null,
+    deletedBy: chatroom?.deletedBy || null,
+    updatedAt: chatroom?.updatedAt || null,
     chatroomWithUserId:
-      chatroom.chatroomWithUserId !== undefined
-        ? chatroom.chatroomWithUserId
+      chatroom?.chatroomWithUserId !== undefined
+        ? chatroom?.chatroomWithUserId
         : null,
     lastConversation: lastConversation,
     lastConversationRO: lastConversationRO,
     lastSeenConversationId:
       chatroom?.lastSeenConversationId?.toString() || null,
     lastSeenConversation: lastSeenConversation ? lastSeenConversation : null,
-    dateEpoch: chatroom.dateEpoch || null,
-    unseenCount: chatroom.unseenCount || 0,
+    dateEpoch: chatroom?.dateEpoch || null,
+    unseenCount: chatroom?.unseenCount || 0,
     relationshipNeeded: false, // Assign as needed
-    isSecret: chatroom.isSecret || null,
+    isSecret: chatroom?.isSecret || null,
     chatroomWithUserName:
-      chatroom.chatroomWithUserName !== undefined
-        ? chatroom.chatroomWithUserName
+      chatroom?.chatroomWithUserName !== undefined
+        ? chatroom?.chatroomWithUserName
         : null,
     // TODO
     // secretChatRoomParticipants: chatroom?.secretChatroomParticipants
@@ -391,19 +397,22 @@ export const convertToChatroomRO = (
     //       chatroom?.secretChatroomParticipants
     //     )
     //   : new List(),
-    secretChatRoomLeft: chatroom.secretChatroomLeft || null,
-    topicId: `${chatroom.topicId}` || null,
-    autoFollowDone: chatroom.autoFollowDone || null,
-    memberCanMessage: chatroom.memberCanMessage || null,
-    isEdited: chatroom.isEdited || null,
+    secretChatRoomLeft: chatroom?.secretChatroomLeft || null,
+    topicId: `${chatroom?.topicId}` || null,
+    autoFollowDone: chatroom?.autoFollowDone || null,
+    memberCanMessage: chatroom?.memberCanMessage || null,
+    isEdited: chatroom?.isEdited || null,
     reactions: chatroom?.reactions
-      ? convertToReaction(chatroom?.reactions, `${chatroom.communityId}`)
+      ? convertToReaction(
+          chatroom?.reactions,
+          chatroom?.communityId?.toString()
+        )
       : null,
-    unreadConversationsCount: chatroom.unreadConversationCount || null,
-    accessWithoutSubscription: chatroom.accessWithoutSubscription || false,
-    externalSeen: chatroom.externalSeen || null,
+    unreadConversationsCount: chatroom?.unreadConversationCount || null,
+    accessWithoutSubscription: chatroom?.accessWithoutSubscription || false,
+    externalSeen: chatroom?.externalSeen || null,
     isConversationStored: chatroom?.isConversationStored || false,
-    lastConversationId: `${chatroom.lastConversationId}` || null,
+    lastConversationId: chatroom?.lastConversationId?.toString() || null,
     isChatroomVisited: !!isChatroomVisited ? isChatroomVisited : false,
     ...dummyKeys(ChatroomRO),
   };
