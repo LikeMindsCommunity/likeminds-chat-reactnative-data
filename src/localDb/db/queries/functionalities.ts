@@ -8,19 +8,18 @@ import { Conversation } from "src/shared/responseModels/Conversation";
 // Updation of mute status in Realm
 export async function updateMuteStatus(
   chatroomId: string,
-  muteStatus: boolean
+  muteStatus: boolean,
+  realm: Realm
 ) {
-  const chatroom: any = await getChatroom(chatroomId);
-  const realm = await Realm.open(Db.getInstance());
+  const chatroom: any = await getChatroom(chatroomId, realm);
   realm.write(() => {
     chatroom[0].muteStatus = !muteStatus;
   });
 }
 
 // Updation of unseen count in Realm
-export async function updateUnseenCount(chatroomId: string) {
-  const chatroom: any = await getChatroom(chatroomId);
-  const realm = await Realm.open(Db.getInstance());
+export async function updateUnseenCount(chatroomId: string, realm: Realm) {
+  const chatroom: any = await getChatroom(chatroomId, realm);
   realm.write(() => {
     chatroom[0].unseenCount = 0;
   });
@@ -29,9 +28,9 @@ export async function updateUnseenCount(chatroomId: string) {
 // To update deletedBy and deletedByMember of a conversation in realm
 export async function updateDeletedBy(
   conversationId: string,
-  data: Conversation
+  data: Conversation,
+  realm: Realm
 ) {
-  const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
     const conversations = realm.objects(ConversationRO.schema.name);
     const conversationObj: any = conversations.filtered(

@@ -20,9 +20,9 @@ import { ConversationRO } from "src/localDb/models/ConversationRO";
 export async function saveChatroomResponse(
   data: SyncChatroomResponse,
   chatrooms: Chatroom[],
-  communityId: string
+  communityId: string,
+  realm: Realm
 ) {
-  const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
     const chatDBUtil = new ChatDBUtil();
     const community = data.communityMeta[communityId];
@@ -140,18 +140,19 @@ export async function saveChatroomResponse(
   });
 }
 
-export async function getFilteredChatrooms(isDm: boolean) {
-  const realm = await Realm.open(Db.getInstance());
+export async function getFilteredChatrooms(isDm: boolean, realm: Realm) {
   const items = realm.objects(ChatroomRO.schema.name);
   const filteredAndSortedChatroom = isDm
     ? items.filtered(`type = 10`).sorted("updatedAt", true)
     : items.filtered(`type = 0 || type=7`).sorted("updatedAt", true);
-  return filteredAndSortedChatroom;
+  const stringifiedChatroom = JSON.parse(
+    JSON.stringify(filteredAndSortedChatroom)
+  );
+  return stringifiedChatroom;
 }
 
 // To get chatroom data from Realm
-export async function getChatrooms() {
-  const realm = await Realm.open(Db.getInstance());
+export async function getChatrooms(realm: Realm) {
   const chatrooms = realm.objects(ChatroomRO.schema.name);
   const listOfChatroomObject = chatrooms.map((chatroom) => {
     const stringifiedChatroom = JSON.stringify(chatroom);
@@ -163,16 +164,15 @@ export async function getChatrooms() {
 }
 
 // To fetch one chatroom details from Realm
-export async function getChatroom(chatroomId: string) {
-  const realm = await Realm.open(Db.getInstance());
+export async function getChatroom(chatroomId: string, realm: Realm) {
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
-  return chatroom;
+  const stringifiedChatroom = JSON.parse(JSON.stringify(chatroom));
+  return stringifiedChatroom;
 }
 
 // For deletion of one chatroom from Realm
-export async function deleteChatroom(chatroomId: string) {
-  const realm = await Realm.open(Db.getInstance());
+export async function deleteChatroom(chatroomId: string, realm: Realm) {
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
   realm.write(() => {

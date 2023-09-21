@@ -174,6 +174,19 @@ class LMChatClient {
   private static platformCode: string | null = null;
   private static versionCode: number | null = null;
   private static dlClient: DLClient;
+  private static realm: Realm | null = null;
+
+  constructor() {
+    // Initialize the Realm instance in the constructor or as needed.
+    LMChatClient.realm = new Realm(Db.getInstance());
+  }
+
+  finalize() {
+    if (LMChatClient.realm) {
+      // Close the Realm instance
+      LMChatClient.realm.close();
+    }
+  }
 
   static setApiKey(apiKey: string) {
     this.apiKey = apiKey;
@@ -624,7 +637,7 @@ class LMChatClient {
 
   // Method to save community
   async saveCommunity(communityData) {
-    return saveCommunity(communityData);
+    return saveCommunity(communityData, LMChatClient.realm);
   }
 
   // Method to save chatroom in localDB
@@ -633,47 +646,52 @@ class LMChatClient {
     chatrooms: ChatroomModel[],
     communityId: string
   ) {
-    return saveChatroomResponse(data, chatrooms, communityId);
+    return saveChatroomResponse(
+      data,
+      chatrooms,
+      communityId,
+      LMChatClient.realm
+    );
   }
 
   // Method to get community from localDB
   async getCommunity() {
-    return getCommunity();
+    return getCommunity(LMChatClient.realm);
   }
 
   // Method to get chatrooms from localDB
   async getChatrooms() {
-    return getChatrooms();
+    return getChatrooms(LMChatClient.realm);
   }
 
   // Method to update timestamp in localDB
   async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return updateTimeStamp(minTimeStamp, maxTimeStamp);
+    return updateTimeStamp(minTimeStamp, maxTimeStamp, LMChatClient.realm);
   }
 
   // Method to save timestamp in localDB
   async saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return saveTimeStamp(minTimeStamp, maxTimeStamp);
+    return saveTimeStamp(minTimeStamp, maxTimeStamp, LMChatClient.realm);
   }
 
   // Method to get timestamp from localDB
   async getTimeStamp() {
-    return getTimeStamp();
+    return getTimeStamp(LMChatClient.realm);
   }
 
   // Method to delete chatroom from localDB
   async deleteChatroom(chatroomId: string) {
-    return deleteChatroom(chatroomId);
+    return deleteChatroom(chatroomId, LMChatClient.realm);
   }
 
   // Method to update mute status from localDB
   async updateMuteStatus(chatroomId: string, muteStats: boolean) {
-    return updateMuteStatus(chatroomId, muteStats);
+    return updateMuteStatus(chatroomId, muteStats, LMChatClient.realm);
   }
 
   // Method to update unseen count in localDB
   async updateUnseenCount(chatroomId: string) {
-    return updateUnseenCount(chatroomId);
+    return updateUnseenCount(chatroomId, LMChatClient.realm);
   }
 
   // Method to get instance
@@ -692,23 +710,24 @@ class LMChatClient {
       data,
       chatroomData,
       conversationData,
-      communityId
+      communityId,
+      LMChatClient.realm
     );
   }
 
   // Method to get all conversations of a chatroom from localDB
   async getConversations(chatroomId: string) {
-    return getConversations(chatroomId);
+    return getConversations(chatroomId, LMChatClient.realm);
   }
 
   // Method to update conversation in localDB
   async updateConversation(conversationId: string, data: ConversationModel) {
-    return updateConversation(conversationId, data);
+    return updateConversation(conversationId, data, LMChatClient.realm);
   }
 
   // Method to save new conversation in localDB
   async saveNewConversation(chatroomId: string, data: ConversationModel) {
-    return saveNewConversation(chatroomId, data);
+    return saveNewConversation(chatroomId, data, LMChatClient.realm);
   }
 
   // Method to delete a conversation from localDB
@@ -717,42 +736,47 @@ class LMChatClient {
     user: Member,
     conversations: ConversationModel[]
   ) {
-    return deleteConversation(conversationId, user, conversations);
+    return deleteConversation(
+      conversationId,
+      user,
+      conversations,
+      LMChatClient.realm
+    );
   }
 
   // Method to get a particular convesation from localDB
   async getConversation(conversationId: string) {
-    return getConversation(conversationId);
+    return getConversation(conversationId, LMChatClient.realm);
   }
 
   // Method to update deletedBy from localDB
   async updateDeletedBy(conversationId: string, data: ConversationModel) {
-    return updateDeletedBy(conversationId, data);
+    return updateDeletedBy(conversationId, data, LMChatClient.realm);
   }
 
   // Method to replace save conversation from localDB
   async replaceSavedConversation(data: ConversationModel) {
-    return replaceSavedConversation(data);
+    return replaceSavedConversation(data, LMChatClient.realm);
   }
 
   // Method to save a conversation's attachment in localDB
   async saveAttachmentUploadConversation(key: string, value: string) {
-    return saveAttachmentUploadConversation(key, value);
+    return saveAttachmentUploadConversation(key, value, LMChatClient.realm);
   }
 
   // Method to get all attachment from localDB
   async getAllAttachmentUploadConversations() {
-    return getAllAttachmentUploadConversations();
+    return getAllAttachmentUploadConversations(LMChatClient.realm);
   }
 
   // Method to remove attachment from localDB
   async removeAttactmentUploadConversationByKey(key: string) {
-    return removeAttactmentUploadConversationByKey(key);
+    return removeAttactmentUploadConversationByKey(key, LMChatClient.realm);
   }
 
   // Method to get filtered chatroom whether it belongs to DM feed or Group feed
   async getFilteredChatrooms(isDm: boolean) {
-    return getFilteredChatrooms(isDm);
+    return getFilteredChatrooms(isDm, LMChatClient.realm);
   }
 }
 

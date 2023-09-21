@@ -4,18 +4,15 @@ import Db from "../db";
 import Realm from "realm";
 
 // method to save the community data in realm
-export function saveCommunity(communityData: any) {
-  return Realm.open(Db.getInstance()).then((realm) => {
-    realm.write(() => {
-      let community = convertToCommunity(communityData);
-      realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);
-    });
+export function saveCommunity(communityData: any, realm: Realm) {
+  realm.write(() => {
+    let community = convertToCommunity(communityData);
+    realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);
   });
 }
 
 // To get community data from Realm
-export async function getCommunity() {
-  const realm = await Realm.open(Db.getInstance());
+export async function getCommunity(realm: Realm) {
   const communities = realm.objects(CommunityRO.schema.name);
   const communityObject = communities.map((community) => {
     const stringifiedCommunity = JSON.stringify(community);
