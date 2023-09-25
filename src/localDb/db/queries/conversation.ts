@@ -282,3 +282,45 @@ export async function saveNewConversation(
     );
   });
 }
+
+export async function getConversationData(
+  realm: Realm,
+  chatroomId: string,
+  pageSize: number
+) {
+  const conversations = realm.objects(ConversationRO.schema.name);
+  const filteredConversations = conversations
+    .filtered(`chatroomId = "${chatroomId}"`)
+    .sorted("createdEpoch", true)
+    .slice(0, pageSize);
+  const conversationObject = filteredConversations.map((conversation) => {
+    const stringifiedConversation = JSON.stringify(conversation);
+    return {
+      ...JSON.parse(stringifiedConversation),
+    };
+  });
+
+  return conversationObject;
+}
+
+export async function paginateUp(
+  realm: Realm,
+  chatroomId: string,
+  createdEpoch: number,
+  pageSize: number
+) {
+  const conversations = realm.objects(ConversationRO.schema.name);
+  const filteredConversations = conversations
+    .filtered(`chatroomId = "${chatroomId}" AND createdEpoch < ${createdEpoch}`)
+    .sorted("createdEpoch", true)
+    .slice(0, pageSize);
+
+  const conversationObject = filteredConversations.map((conversation) => {
+    const stringifiedConversation = JSON.stringify(conversation);
+    return {
+      ...JSON.parse(stringifiedConversation),
+    };
+  });
+
+  return conversationObject;
+}

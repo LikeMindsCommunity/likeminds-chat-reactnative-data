@@ -1,6 +1,5 @@
 import { ConversationRO } from "../../models/ConversationRO";
 import { convertToMemberRO } from "../ROConverter";
-import Db from "../db";
 import Realm from "realm";
 import { getChatroom } from "./chatroom";
 import { Conversation } from "src/shared/responseModels/Conversation";
@@ -11,7 +10,7 @@ export async function updateMuteStatus(
   chatroomId: string,
   muteStatus: boolean
 ) {
-  const chatroom: any = await getChatroom(chatroomId, realm);
+  const chatroom: any = await getChatroom(realm, chatroomId);
   realm.write(() => {
     chatroom[0].muteStatus = !muteStatus;
   });
@@ -19,9 +18,17 @@ export async function updateMuteStatus(
 
 // Updation of unseen count in Realm
 export async function updateUnseenCount(realm: Realm, chatroomId: string) {
-  const chatroom: any = await getChatroom(chatroomId, realm);
+  const chatroom: any = await getChatroom(realm, chatroomId);
   realm.write(() => {
     chatroom[0].unseenCount = 0;
+  });
+}
+
+// Updation of followStatus to false in case of leaving of chatroom
+export async function updateFollowStatus(realm: Realm, chatroomId: string) {
+  const chatroom: any = await getChatroom(realm, chatroomId);
+  realm.write(() => {
+    chatroom[0].followStatus = false;
   });
 }
 

@@ -21,6 +21,7 @@ import { ReactionRO } from "../models/ReactionRO";
 import { Attachment } from "../../shared/responseModels/Attachment";
 import { dummyKeys } from "../constants/dummyKeys";
 import { TimeStampRO } from "../models/TimeStampRO";
+import { getChatroom, getChatrooms } from "./queries/chatroom";
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO
 export const convertToTimeStampRO = (
@@ -76,6 +77,7 @@ export const convertToLastConversationRO = (
     communityId: lastConversation.communityId?.toString(),
     attachmentCount: lastConversation.attachmentCount,
     attachmentsUploaded: lastConversation.attachmentUploaded,
+    lastUpdatedAt: lastConversation?.lastUpdatedAt || 0,
     deletedByMember: deletedByMember,
     ...dummyKeys(LastConversationRO),
   };
@@ -348,8 +350,30 @@ export const convertToChatroomRO = (
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
-  const stringifiedConversation = JSON.stringify(conversation);
-  const lastConversation = JSON.parse(stringifiedConversation);
+  const lastConversation = JSON.parse(JSON.stringify(conversation));
+
+  const lastSeenConversations = realm.objects(LastConversationRO.schema.name);
+  const lastSeenConversation = lastSeenConversations.filtered(
+    `id = "${chatroom?.lastSeenConversationId}"`
+  );
+  const lastSeenConversationStringified = JSON.parse(
+    JSON.stringify(lastSeenConversation)
+  );
+
+  const items = realm.objects(ChatroomRO.schema.name);
+  const chatroomData = items.filtered(`id = "${chatroom?.id?.toString()}"`);
+  const chatroomObject = chatroomData.map((item) => {
+    const stringifiedChatroom = JSON.stringify(item);
+    return {
+      ...JSON.parse(stringifiedChatroom),
+    };
+  });
+  const currentChatroom = chatroomObject[0];
+
+  const updatedAt =
+    lastConversationRO?.createdEpoch ??
+    currentChatroom?.lastConversationRO?.createdEpoch ??
+    chatroom.createdAt;
 
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
@@ -362,6 +386,9 @@ export const convertToChatroomRO = (
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
     cardCreationTime: chatroom.cardCreationTime || null,
+    lastSeenConversation: lastSeenConversationStringified[0]
+      ? lastSeenConversationStringified[0]
+      : null,
     totalResponseCount:
       chatroom?.totalResponseCount == undefined
         ? 0
@@ -377,7 +404,7 @@ export const convertToChatroomRO = (
     isTagged: chatroom.isTagged || null,
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
-    updatedAt: chatroom.updatedAt || null,
+    updatedAt: updatedAt || null,
     chatroomWithUserId:
       chatroom.chatroomWithUserId !== undefined
         ? chatroom.chatroomWithUserId
@@ -403,6 +430,9 @@ export const convertToChatroomRO = (
     externalSeen: chatroom.externalSeen || null,
     isConversationStored: chatroom?.isConversationStored || false,
     lastConversationId: chatroom.lastConversationId?.toString() || null,
+    isChatroomVisited: !!currentChatroom?.isChatroomVisited
+      ? currentChatroom?.isChatroomVisited
+      : false,
     ...dummyKeys(ChatroomRO),
   };
 

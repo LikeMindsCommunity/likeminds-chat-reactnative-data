@@ -20,6 +20,7 @@ export interface Conversation {
   memberId?: string;
   replyConversation?: string;
   replyConversationId?: string;
+  lastUpdatedAt?: number;
   replyConversationObject?: Conversation;
   deletedBy?: string;
   createdEpoch: number;
