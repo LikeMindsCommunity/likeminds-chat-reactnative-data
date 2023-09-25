@@ -4,7 +4,7 @@ import Db from "../db";
 import Realm from "realm";
 
 // method to save the community data in realm
-export function saveCommunity(communityData: any, realm: Realm) {
+export function saveCommunity(realm: Realm, communityData: any) {
   realm.write(() => {
     let community = convertToCommunity(communityData);
     realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);

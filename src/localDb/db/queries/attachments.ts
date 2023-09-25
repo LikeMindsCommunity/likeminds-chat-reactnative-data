@@ -4,9 +4,9 @@ import { ATTACHMENT_UPLOAD_CONVERSATIONS } from "../../constants/index";
 
 // Save a attachment upload conversation to handle all the cases of attachment upload
 export async function saveAttachmentUploadConversation(
+  realm: Realm,
   key: string,
-  value: string,
-  realm: Realm
+  value: string
 ) {
   realm.write(() => {
     realm.create(
@@ -29,8 +29,8 @@ export async function getAllAttachmentUploadConversations(realm: Realm) {
 
 // Remove a conversation by its key (conversation ID)
 export async function removeAttactmentUploadConversationByKey(
-  key: string,
-  realm: Realm
+  realm: Realm,
+  key: string
 ) {
   const conversation = realm.objectForPrimaryKey(
     ATTACHMENT_UPLOAD_CONVERSATIONS,

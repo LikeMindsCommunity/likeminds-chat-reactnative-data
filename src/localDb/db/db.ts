@@ -52,8 +52,4 @@ export default class Db {
   static getInstance() {
     return Db.realmConfig;
   }
-
-  static getConfig() {
-    return Db.realmConfig;
-  }
 }

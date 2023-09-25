@@ -5,9 +5,9 @@ import Realm from "realm";
 
 // To updated the timestamp in realm
 export async function updateTimeStamp(
+  realm: Realm,
   minTimeStamp: number,
-  maxTimeStamp: number,
-  realm: Realm
+  maxTimeStamp: number
 ) {
   realm.write(() => {
     const timeStampStored: any = realm.objects(TimeStampRO.schema.name)[0];
@@ -25,9 +25,9 @@ export async function getTimeStamp(realm: Realm) {
 
 // To save timestamp in Realm
 export async function saveTimeStamp(
+  realm: Realm,
   minTimeStamp: number,
-  maxTimeStamp: number,
-  realm: Realm
+  maxTimeStamp: number
 ) {
   let timeStampRO = convertToTimeStampRO(minTimeStamp, maxTimeStamp);
   realm.write(() => {

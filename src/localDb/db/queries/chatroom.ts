@@ -18,10 +18,10 @@ import { ConversationRO } from "src/localDb/models/ConversationRO";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
+  realm: Realm,
   data: SyncChatroomResponse,
   chatrooms: Chatroom[],
-  communityId: string,
-  realm: Realm
+  communityId: string
 ) {
   realm.write(() => {
     const chatDBUtil = new ChatDBUtil();
@@ -140,7 +140,7 @@ export async function saveChatroomResponse(
   });
 }
 
-export async function getFilteredChatrooms(isDm: boolean, realm: Realm) {
+export async function getFilteredChatrooms(realm: Realm, isDm: boolean) {
   const items = realm.objects(ChatroomRO.schema.name);
   const filteredAndSortedChatroom = isDm
     ? items.filtered(`type = 10`).sorted("updatedAt", true)
@@ -172,7 +172,7 @@ export async function getChatroom(chatroomId: string, realm: Realm) {
 }
 
 // For deletion of one chatroom from Realm
-export async function deleteChatroom(chatroomId: string, realm: Realm) {
+export async function deleteChatroom(realm: Realm, chatroomId: string) {
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
   realm.write(() => {
