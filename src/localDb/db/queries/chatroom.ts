@@ -293,7 +293,6 @@ export async function chatroomViewed(realm: Realm, chatroomId: string) {
   realm.write(() => {
     const chatrooms = realm.objects(ChatroomRO.schema.name);
     const filteredChatroom: any = chatrooms.filtered(`id = "${chatroomId}"`)[0];
-
     filteredChatroom.isChatroomVisited = true;
   });
 }

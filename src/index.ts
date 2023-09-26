@@ -164,6 +164,7 @@ import {
 import {
   chatroomViewed,
   deleteChatroom,
+  getChatroom,
   getChatrooms,
   getFilteredChatrooms,
   saveChatroomResponse,
@@ -255,8 +256,12 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
-    return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
+  // async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
+  //   return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
+  // }
+
+  async getChatroom(chatroomId: string) {
+    return getChatroom(LMChatClient.realm, chatroomId);
   }
 
   // Method to mark a chatroom as read
