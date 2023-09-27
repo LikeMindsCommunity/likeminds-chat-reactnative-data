@@ -140,11 +140,16 @@ export async function saveChatroomResponse(
   });
 }
 
+// To get chatroom filtered based on DMFeed or GroupFeed
 export async function getFilteredChatrooms(realm: Realm, isDm: boolean) {
   const items = realm.objects(ChatroomRO.schema.name);
   const filteredAndSortedChatroom = isDm
-    ? items.filtered(`type = 10`).sorted("updatedAt", true)
-    : items.filtered(`type = 0 || type=7`).sorted("updatedAt", true);
+    ? items
+        .filtered(`(type = 10) && (followStatus=true)`)
+        .sorted("updatedAt", true)
+    : items
+        .filtered(`(type = 0 || type=7) && (followStatus=true)`)
+        .sorted("updatedAt", true);
   const stringifiedChatroom = JSON.parse(
     JSON.stringify(filteredAndSortedChatroom)
   );
@@ -164,11 +169,10 @@ export async function getChatrooms(realm: Realm) {
 }
 
 // To fetch one chatroom details from Realm
-export async function getChatroom(chatroomId: string, realm: Realm) {
-  const items = realm.objects(ChatroomRO.schema.name);
+export async function getChatroom(realm: Realm, chatroomId: string) {
+  const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
-  const stringifiedChatroom = JSON.parse(JSON.stringify(chatroom));
-  return stringifiedChatroom;
+  return chatroom[0];
 }
 
 // For deletion of one chatroom from Realm
