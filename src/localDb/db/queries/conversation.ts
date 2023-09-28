@@ -121,6 +121,29 @@ export async function saveConversationData(
   });
 }
 
+export async function saveSingleConversation(
+  realm: Realm,
+  conversation: Conversation,
+  communityId: string
+) {
+  realm.write(() => {
+    const member = conversation?.member;
+    const memberRO = convertToMemberRO(member, communityId);
+    const conversationRO = convertToConversationRO(
+      conversation,
+      memberRO,
+      conversation?.chatroomId?.toString()
+    );
+    if (conversationRO) {
+      realm.create(
+        ConversationRO.schema.name,
+        conversationRO,
+        Realm.UpdateMode.All
+      );
+    }
+  });
+}
+
 // To get a all conversations data of a single chatroom from realm
 export async function getConversations(realm: Realm, chatroomId: string) {
   const conversations = realm.objects(ConversationRO.schema.name);

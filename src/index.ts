@@ -136,8 +136,8 @@ import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
   setFollowStatus,
+  updateChatRequestState,
   updateDeletedBy,
-  updateFollowStatus,
   updateMuteStatus,
   updateUnseenCount,
 } from "./localDb/db/queries/functionalities";
@@ -161,6 +161,7 @@ import {
   getConversationData,
   paginateUp,
   getConversations,
+  saveSingleConversation,
 } from "./localDb/db/queries/conversation";
 import {
   chatroomViewed,
@@ -174,6 +175,7 @@ import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
 import { GetExploreTabCountResponse } from "./pages/homeFeed/responseModels/GetExploreTabCountResponse";
 import { Member } from "./shared/responseModels/Member";
+import { ChatroomResponseModel } from "./pages/chatroom/responseModels/ChatroomResponseModel";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -794,9 +796,34 @@ class LMChatClient {
     return getFilteredChatrooms(LMChatClient.realm, isDm);
   }
 
+  async getChatroomV2(
+    chatroom: ChatroomRequest
+  ): Promise<LMResponse<ChatroomResponseModel>> {
+    return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
+  }
+
   // to get next set of conversation data
   async getConversationData(chatroomId: string, pageSize: number) {
     return getConversationData(LMChatClient.realm, chatroomId, pageSize);
+  }
+
+  async updateChatRequestState(chatroomId: string, chatRequestState: number) {
+    return updateChatRequestState(
+      LMChatClient.realm,
+      chatroomId,
+      chatRequestState
+    );
+  }
+
+  async saveSingleConversation(
+    conversation: ConversationModel,
+    communityId: string
+  ) {
+    return saveSingleConversation(
+      LMChatClient.realm,
+      conversation,
+      communityId
+    );
   }
 
   // to update isChatroomViewed key
@@ -807,11 +834,6 @@ class LMChatClient {
   // for pagination
   async paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
     return paginateUp(LMChatClient.realm, chatroomId, createdEpoch, pageSize);
-  }
-
-  // For updation of followStatus in case of leaving of chatroom
-  async updateFollowStatus(chatroomId: string) {
-    return updateFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 

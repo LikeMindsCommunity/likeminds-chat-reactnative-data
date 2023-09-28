@@ -71,6 +71,11 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   lastConversationId?: string | null;
   communities?: Realm.Results<CommunityRO> | null;
   isChatroomVisited!: boolean;
+  chatRequestState?: number;
+  chatRequestedBy?: MemberRO;
+  chatRequestCreatedAt?: number;
+  chatRequestedById?: number;
+  chatroomWithUser?: MemberRO;
 
   static schema: Realm.ObjectSchema = {
     name: CHATROOM_RO,
@@ -79,6 +84,11 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       communityId: STRING,
       title: STRING,
       state: INT,
+      chatroomWithUser: OPTIONAL_MEMBER_RO,
+      chatRequestState: OPTIONAL_INT,
+      chatRequestedBy: OPTIONAL_MEMBER_RO,
+      chatRequestCreatedAt: OPTIONAL_INT,
+      chatRequestedById: OPTIONAL_INT,
       member: OPTIONAL_MEMBER_RO,
       createdAt: OPTIONAL_INT,
       type: OPTIONAL_INT,

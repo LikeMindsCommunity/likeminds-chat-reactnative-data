@@ -50,6 +50,34 @@ export async function saveChatroomResponse(
         Realm.UpdateMode.All
       );
 
+      const chatRequestedById = chatroom?.chatRequestedById;
+      let chatRequestedByRO;
+      if (chatRequestedById !== null) {
+        const chatRequestedBy = data.userMeta[chatRequestedById?.toString()];
+        chatRequestedByRO = convertToMemberRO(chatRequestedBy, communityId);
+        if (chatRequestedByRO) {
+          realm.create(
+            MemberRO.schema.name,
+            chatRequestedByRO,
+            Realm.UpdateMode.All
+          );
+        }
+      }
+
+      const chatroomWithUserId = chatroom?.chatroomWithUserId;
+      let chatroomWithUserRO;
+      if (chatroomWithUserId !== null) {
+        const chatroomWithUser = data.userMeta[chatroomWithUserId?.toString()];
+        chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
+        if (chatroomWithUserRO) {
+          realm.create(
+            MemberRO.schema.name,
+            chatroomWithUserRO,
+            Realm.UpdateMode.All
+          );
+        }
+      }
+
       // save lastConversation details
       const lastConversationId = chatroom.lastConversationId;
       const lastConversation =
@@ -217,12 +245,17 @@ export async function saveChatroomResponse(
           lastSeenConversationDeletedByMemberRO
         );
 
+        console.log("lastSeenConversationROConverter", lastSeenConversationRO);
+
         if (lastSeenConversationRO) {
+          console.log("645321");
+
           realm.create(
             ConversationRO.schema.name,
             lastSeenConversationRO,
             Realm.UpdateMode.All
           );
+          console.log("134t32");
         }
         if (lastSeenConversationCreatorRO) {
           realm.create(
@@ -238,7 +271,10 @@ export async function saveChatroomResponse(
         realm,
         chatroom,
         chatroomCreatorRO,
-        lastConversationRO
+        chatRequestedByRO,
+        chatroomWithUserRO,
+        lastConversationRO,
+        lastSeenConversationRO
       );
 
       // save to local DB

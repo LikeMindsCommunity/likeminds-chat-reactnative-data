@@ -12,6 +12,9 @@ export async function updateMuteStatus(
   muteStatus: boolean
 ) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
+  console.log("muteStatusChatroom", muteStatus);
+  console.log("chatroomMuteSraaer", chatroom);
+
   realm.write(() => {
     chatroom.muteStatus = !muteStatus;
   });
@@ -30,6 +33,17 @@ export async function setFollowStatus(realm: Realm, chatroomId: string) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
     chatroom.followStatus = false;
+  });
+}
+
+export async function updateChatRequestState(
+  realm: Realm,
+  chatroomId: string,
+  chatRequestState: number
+) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
+  realm.write(() => {
+    chatroom.chatRequestState = chatRequestState;
   });
 }
 
