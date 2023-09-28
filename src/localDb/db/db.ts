@@ -49,23 +49,7 @@ export default class Db {
     readOnly: false, // Set to true for read-only access
     path: DB_SCHEMA_NAME,
   };
-  static getInstance(): Realm {
-    if (!Db.instance) {
-      Db.instance = new Realm(Db.realmConfig);
-    }
-    return Db.instance;
+  static getInstance() {
+    return Db.realmConfig;
   }
-
-  static write(callback: (realm: Realm) => void) {
-    const realm = Db.getInstance();
-    try {
-      realm.write(() => {
-        callback(realm);
-      });
-    } catch (error) {
-      console.error("Error during Realm write:", error);
-    }
-  }
-
-  // Other methods like query, insert, etc.
 }

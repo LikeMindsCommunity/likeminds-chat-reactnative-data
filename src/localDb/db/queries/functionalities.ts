@@ -4,34 +4,42 @@ import Db from "../db";
 import Realm from "realm";
 import { getChatroom } from "./chatroom";
 import { Conversation } from "src/shared/responseModels/Conversation";
+import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 
 // Updation of mute status in Realm
 export async function updateMuteStatus(
+  realm: Realm,
   chatroomId: string,
   muteStatus: boolean
 ) {
-  const chatroom: any = await getChatroom(chatroomId);
-  const realm = await Realm.open(Db.getInstance());
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom[0].muteStatus = !muteStatus;
+    chatroom.muteStatus = !muteStatus;
   });
 }
 
 // Updation of unseen count in Realm
-export async function updateUnseenCount(chatroomId: string) {
-  const chatroom: any = await getChatroom(chatroomId);
-  const realm = await Realm.open(Db.getInstance());
+export async function updateUnseenCount(realm: Realm, chatroomId: string) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom[0].unseenCount = 0;
+    chatroom.unseenCount = 0;
+  });
+}
+
+// Updation of followStatus of a chatroom in Realm
+export async function setFollowStatus(realm: Realm, chatroomId: string) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
+  realm.write(() => {
+    chatroom.followStatus = false;
   });
 }
 
 // To update deletedBy and deletedByMember of a conversation in realm
 export async function updateDeletedBy(
+  realm: Realm,
   conversationId: string,
   data: Conversation
 ) {
-  const realm = await Realm.open(Db.getInstance());
   realm.write(() => {
     const conversations = realm.objects(ConversationRO.schema.name);
     const conversationObj: any = conversations.filtered(
