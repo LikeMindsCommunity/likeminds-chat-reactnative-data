@@ -135,6 +135,7 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
+  setFollowStatus,
   updateDeletedBy,
   updateFollowStatus,
   updateMuteStatus,
@@ -701,6 +702,11 @@ class LMChatClient {
   // Method to update unseen count in localDB
   async updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(LMChatClient.realm, chatroomId);
+  }
+
+  // Method to update followStatus to false in localDB
+  async setFollowStatus(chatroomId: string) {
+    return setFollowStatus(LMChatClient.realm, chatroomId);
   }
 
   // Method to get instance
