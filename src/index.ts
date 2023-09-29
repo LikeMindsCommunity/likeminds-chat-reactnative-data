@@ -137,6 +137,7 @@ import { SyncConversationResponse } from "./sync/model/syncConversationResponse"
 import {
   setFollowStatus,
   updateChatRequestState,
+  updateChatroomFollowStatus,
   updateDeletedBy,
   updateMuteStatus,
   updateUnseenCount,
@@ -161,7 +162,7 @@ import {
   getConversationData,
   paginateUp,
   getConversations,
-  saveSingleConversation,
+  // saveSingleConversation,
 } from "./localDb/db/queries/conversation";
 import {
   chatroomViewed,
@@ -170,6 +171,7 @@ import {
   getChatrooms,
   getFilteredChatrooms,
   saveChatroomResponse,
+  saveDMChatroom,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -815,16 +817,16 @@ class LMChatClient {
     );
   }
 
-  async saveSingleConversation(
-    conversation: ConversationModel,
-    communityId: string
-  ) {
-    return saveSingleConversation(
-      LMChatClient.realm,
-      conversation,
-      communityId
-    );
-  }
+  // async saveSingleConversation(
+  //   conversation: ConversationModel,
+  //   communityId: string
+  // ) {
+  //   return saveSingleConversation(
+  //     LMChatClient.realm,
+  //     conversation,
+  //     communityId
+  //   );
+  // }
 
   // to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
@@ -834,6 +836,18 @@ class LMChatClient {
   // for pagination
   async paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
     return paginateUp(LMChatClient.realm, chatroomId, createdEpoch, pageSize);
+  }
+
+  async saveDMChatroom(
+    chatroom: ChatroomModel,
+    communityId: string,
+    user: Member
+  ) {
+    return saveDMChatroom(LMChatClient.realm, chatroom, communityId, user);
+  }
+
+  async updateChatroomFollowStatus(chatroomId: string) {
+    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 

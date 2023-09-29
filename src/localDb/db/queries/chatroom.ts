@@ -16,6 +16,7 @@ import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { ConversationRO } from "src/localDb/models/ConversationRO";
 import { Conversation } from "src/shared/responseModels/Conversation";
+import { Member } from "src/shared/responseModels/Member";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -117,6 +118,7 @@ export async function saveChatroomResponse(
       if (!lastConversationCreatorRO) return;
 
       const conversationRO = convertToConversationRO(
+        realm,
         lastConversation,
         lastConversationCreatorRO,
         chatroom?.id,
@@ -271,8 +273,8 @@ export async function saveChatroomResponse(
         realm,
         chatroom,
         chatroomCreatorRO,
-        chatRequestedByRO,
         chatroomWithUserRO,
+        chatRequestedByRO,
         lastConversationRO,
         lastSeenConversationRO
       );
@@ -283,6 +285,35 @@ export async function saveChatroomResponse(
         realm.create(ChatroomRO.schema.name, chatroomRO, Realm.UpdateMode.All);
       }
     });
+  });
+}
+
+export async function saveDMChatroom(
+  realm: Realm,
+  chatroom: Chatroom,
+  communityId: string,
+  user: Member
+) {
+  realm.write(() => {
+    const member = chatroom?.member;
+    const memberRO = convertToMemberRO(member, communityId);
+    const chatroomWithUser = chatroom?.chatroomWithUser;
+    const chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
+    console.log("userCaurrent", user);
+
+    const chatRequestedByRO = convertToMemberRO(user, communityId);
+    console.log("chatRequestedByRO", chatRequestedByRO?.sdkClientInfo?.uuid);
+
+    const chatroomRO = convertToChatroomRO(
+      realm,
+      chatroom,
+      memberRO,
+      chatroomWithUserRO,
+      chatRequestedByRO
+    );
+    if (chatroomRO) {
+      realm.create(ChatroomRO.schema.name, chatroomRO, Realm.UpdateMode.All);
+    }
   });
 }
 

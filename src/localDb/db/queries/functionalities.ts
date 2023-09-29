@@ -28,6 +28,21 @@ export async function updateUnseenCount(realm: Realm, chatroomId: string) {
   });
 }
 
+export async function updateChatroomFollowStatus(
+  realm: Realm,
+  chatroomId: string
+) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
+  console.log("chatroomFollowStatus", chatroom?.followStatus);
+
+  realm.write(() => {
+    chatroom.followStatus = true;
+  });
+
+  const chatroomNew: ChatroomRO = await getChatroom(realm, chatroomId);
+  console.log("chatroomFollowStatusNew", chatroomNew?.followStatus);
+}
+
 // Updation of followStatus of a chatroom in Realm
 export async function setFollowStatus(realm: Realm, chatroomId: string) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);

@@ -29,6 +29,7 @@ export interface Chatroom {
   date?: string;
   isTagged?: boolean;
   isPending?: boolean;
+  isPrivateMember?: boolean;
   isPinned?: boolean;
   isDeleted?: boolean;
   userId?: string;

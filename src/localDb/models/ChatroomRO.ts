@@ -43,6 +43,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   date?: string | null;
   isTagged?: boolean | null;
   isPending?: boolean | null;
+  isPrivateMember?: boolean;
   deletedBy?: string | null;
   updatedAt?: number | null;
   lastConversation?: ConversationRO | null;
@@ -94,6 +95,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       type: OPTIONAL_INT,
       chatroomImageUrl: OPTIONAL_STRING,
       header: OPTIONAL_STRING,
+      isPrivateMember: OPTIONAL_BOOLEAN,
       cardCreationTime: OPTIONAL_STRING,
       totalResponseCount: INT,
       totalAllResponseCount: INT,

@@ -58,6 +58,13 @@ export const convertToLastConversationRO = (
   attachment: Attachment[],
   deletedByMember: MemberRO | null
 ): LastConversationRO => {
+  console.log("lastConversationTEmppp", lastConversation);
+
+  console.log(
+    "lastConversation?.lastUpdatedAt",
+    lastConversation?.lastUpdatedAt
+  );
+
   const lastConversationRO: LastConversationRO = {
     id: lastConversation?.id?.toString() || "",
     member: chatroomCreatorRO,
@@ -260,6 +267,7 @@ const convertToReactionRO = (
 
 // convertToConversationRO method takes Conversation data and converts it to ConversationRO
 export const convertToConversationRO = (
+  realm: Realm,
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
   chatroomId: string,
@@ -267,6 +275,15 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
+  console.log("conversation?.lastUpdated", conversation?.lastUpdated);
+  const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+  const chatroom = items.filtered(`id = "${chatroomId}"`);
+  console.log("chatroomConvertToCOnversation", chatroom[0]);
+  console.log(
+    "chatroomConvertToCOnversationdsfaa",
+    chatroom[0]?.isPrivateMember
+  );
+
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -313,6 +330,7 @@ export const convertToConversationRO = (
     replyConversationObject:
       conversation?.replyConversationObject != undefined
         ? convertToConversationRO(
+            realm,
             conversation?.replyConversationObject,
             convertToMemberRO(
               conversation?.replyConversationObject?.member,
@@ -335,6 +353,7 @@ export const convertToConversationRO = (
     ),
     polls: convertToPoll(polls, conversation?.communityId?.toString()),
     ...dummyKeys(ConversationRO),
+    isPrivateMember: chatroom[0]?.isPrivateMember || false,
   };
   return conversationRO;
 };
@@ -344,8 +363,8 @@ export const convertToChatroomRO = (
   realm: Realm,
   chatroom: Chatroom,
   member: MemberRO,
-  chatRequestedByRO: MemberRO,
   chatroomWithUserRO: MemberRO,
+  chatRequestedByRO?: MemberRO,
   lastConversationRO?: LastConversationRO,
   lastSeenConversationRO?: LastConversationRO
 ): ChatroomRO => {
@@ -353,7 +372,11 @@ export const convertToChatroomRO = (
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
+  console.log("75432");
+
   const lastConversation = JSON.parse(JSON.stringify(conversation));
+
+  console.log("123456", lastConversation);
 
   // const lastSeenConversations = realm.objects(LastConversationRO.schema.name);
   // const lastSeenConversation = lastSeenConversations.filtered(
@@ -373,12 +396,23 @@ export const convertToChatroomRO = (
   });
   const currentChatroom = chatroomObject[0];
 
-  const updatedAt =
+  let updatedAt =
     lastConversationRO?.createdEpoch ??
     currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;
 
   console.log("lastSeenConversationRO12345", lastSeenConversationRO);
+
+  let createdAt;
+  if (typeof chatroom?.createdAt === "string") {
+    createdAt = parseInt(chatroom?.createdAt);
+  } else {
+    createdAt = chatroom?.createdAt;
+  }
+
+  if (typeof updatedAt === "string") {
+    updatedAt = parseInt(updatedAt);
+  }
 
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
@@ -386,7 +420,7 @@ export const convertToChatroomRO = (
     title: chatroom.title,
     state: chatroom.state,
     member: member,
-    createdAt: chatroom.createdAt || null,
+    createdAt: createdAt || null,
     type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
@@ -406,6 +440,7 @@ export const convertToChatroomRO = (
     followStatus: chatroom.followStatus || null,
     hasBeenNamed: chatroom.hasBeenNamed || null,
     date: chatroom.date || null,
+    isPrivateMember: chatroom?.isPrivateMember || false,
     isTagged: chatroom.isTagged || null,
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
