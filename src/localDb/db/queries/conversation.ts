@@ -182,6 +182,46 @@ export async function saveConversationData(
       Realm.UpdateMode.All
     );
 
+    const chatRequestedById = chatroom?.chatRequestedById;
+    let chatRequestedByRO;
+    if (chatRequestedById !== null) {
+      const chatRequestedBy = data.userMeta[chatRequestedById?.toString()];
+      chatRequestedByRO = convertToMemberRO(chatRequestedBy, communityId);
+      if (chatRequestedByRO) {
+        realm.create(
+          MemberRO.schema.name,
+          chatRequestedByRO,
+          Realm.UpdateMode.All
+        );
+      }
+    }
+
+    const chatroomWithUserId = chatroom?.chatroomWithUserId;
+    let chatroomWithUserRO;
+    if (chatroomWithUserId !== null) {
+      const chatroomWithUser = data.userMeta[chatroomWithUserId?.toString()];
+      chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
+      if (chatroomWithUserRO) {
+        realm.create(
+          MemberRO.schema.name,
+          chatroomWithUserRO,
+          Realm.UpdateMode.All
+        );
+      }
+    }
+
+    const chatroomRO = convertToChatroomRO(
+      realm,
+      chatroom,
+      conversationCreatorRO,
+      chatroomWithUserRO,
+      chatRequestedByRO
+    );
+
+    if (chatroomRO) {
+      realm.create(ChatroomRO.schema.name, chatroomRO, Realm.UpdateMode.All);
+    }
+
     // save conversations
     conversationData.map((item) => {
       const conversation = item;
@@ -278,45 +318,6 @@ export async function saveConversationData(
         console.log("3245423r");
       }
     });
-    const chatRequestedById = chatroom?.chatRequestedById;
-    let chatRequestedByRO;
-    if (chatRequestedById !== null) {
-      const chatRequestedBy = data.userMeta[chatRequestedById?.toString()];
-      chatRequestedByRO = convertToMemberRO(chatRequestedBy, communityId);
-      if (chatRequestedByRO) {
-        realm.create(
-          MemberRO.schema.name,
-          chatRequestedByRO,
-          Realm.UpdateMode.All
-        );
-      }
-    }
-
-    const chatroomWithUserId = chatroom?.chatroomWithUserId;
-    let chatroomWithUserRO;
-    if (chatroomWithUserId !== null) {
-      const chatroomWithUser = data.userMeta[chatroomWithUserId?.toString()];
-      chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
-      if (chatroomWithUserRO) {
-        realm.create(
-          MemberRO.schema.name,
-          chatroomWithUserRO,
-          Realm.UpdateMode.All
-        );
-      }
-    }
-
-    const chatroomRO = convertToChatroomRO(
-      realm,
-      chatroom,
-      conversationCreatorRO,
-      chatroomWithUserRO,
-      chatRequestedByRO
-    );
-
-    if (chatroomRO) {
-      realm.create(ChatroomRO.schema.name, chatroomRO, Realm.UpdateMode.All);
-    }
   });
 }
 

@@ -288,6 +288,19 @@ export async function saveChatroomResponse(
   });
 }
 
+export async function editChatroomDetails(
+  realm: Realm,
+  chatroomWithUser: Member,
+  chatroomId: string,
+  communityId: string
+) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
+  const chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
+  realm.write(() => {
+    chatroom.chatroomWithUser = chatroomWithUserRO;
+  });
+}
+
 export async function saveDMChatroom(
   realm: Realm,
   chatroom: Chatroom,

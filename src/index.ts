@@ -167,6 +167,7 @@ import {
 import {
   chatroomViewed,
   deleteChatroom,
+  editChatroomDetails,
   getChatroom,
   getChatrooms,
   getFilteredChatrooms,
@@ -814,6 +815,19 @@ class LMChatClient {
       LMChatClient.realm,
       chatroomId,
       chatRequestState
+    );
+  }
+
+  async editChatroomDetails(
+    chatroomWithUser: Member,
+    chatroomId: string,
+    communityId: string
+  ) {
+    return editChatroomDetails(
+      LMChatClient.realm,
+      chatroomWithUser,
+      chatroomId,
+      communityId
     );
   }
 
