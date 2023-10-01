@@ -282,6 +282,29 @@ export async function saveConversationData(
         conversation?.hasReactions === true
           ? data?.convReactionsMeta[conversation?.id?.toString()]
           : [];
+
+      console.log("conversationReactionasdas", conversationReaction);
+      console.log("sadsfdsa", conversationReaction[0]?.userId);
+
+      const reactionCreator =
+        conversation?.hasReactions === true && conversationReaction.length > 0
+          ? data?.userMeta[conversationReaction[0]?.userId]
+          : null;
+      console.log("reactionCreator", reactionCreator);
+
+      if (reactionCreator !== null && conversationReaction.length > 0) {
+        // const reactionCreatorRO = convertToMemberRO(
+        //   reactionCreator,
+        //   communityId
+        // );
+        console.log("reactionCreator", reactionCreator);
+
+        conversationReaction[0].member = reactionCreator;
+        console.log("updateddsfdsadadsadsk", conversationReaction);
+      }
+
+      console.log("updateddsfdsad", conversationReaction);
+
       // save polls
 
       const conversationState = conversation?.state;
@@ -379,42 +402,52 @@ export async function updateConversation(
   data: Conversation
 ) {
   const conversations = realm.objects(ConversationRO.schema.name);
-  const filteredConversation = conversations.filtered(
+  const filteredConversation: any = conversations.filtered(
     `id = "${conversationId}"`
   );
+  console.log("dataDsadasd", data);
 
-  const stringifiedConversation = JSON.stringify(data);
-  let parsedConversation = JSON.parse(stringifiedConversation);
-  const keys = Object.keys(parsedConversation);
-  const conversationObject: any = filteredConversation[0];
-  const sdkClientInfo = data?.member?.sdkClientInfo;
-  const community = sdkClientInfo?.communityId.toString();
-  const user = sdkClientInfo?.user.toString();
-  const editedSDkClinetInfo = {
-    ...sdkClientInfo,
-    community: community,
-    user: user,
-  };
-  const member = data?.member;
-  const id = member?.id.toString();
-  const editedMember = {
-    ...member,
-    sdkClientInfo: editedSDkClinetInfo,
-    id: id,
-  };
+  console.log("filteredConversation", filteredConversation);
+
   realm.write(() => {
-    for (let i = 0; i < keys.length; i++) {
-      if (conversationObject[keys[i]] != undefined) {
-        if (typeof conversationObject[keys[i]] == "string") {
-          conversationObject[keys[i]] = parsedConversation[keys[i]].toString();
-        } else if (keys[i] == "member") {
-          conversationObject[keys[i]] = editedMember;
-        } else {
-          conversationObject[keys[i]] = parsedConversation[keys[i]];
-        }
-      }
-    }
+    filteredConversation[0].answer = data?.answer;
+    filteredConversation[0].createdAt = data?.createdAt;
   });
+
+  console.log("filteredConversationUpdated", filteredConversation);
+
+  // const stringifiedConversation = JSON.stringify(data);
+  // let parsedConversation = JSON.parse(stringifiedConversation);
+  // const keys = Object.keys(parsedConversation);
+  // const conversationObject: any = filteredConversation[0];
+  // const sdkClientInfo = data?.member?.sdkClientInfo;
+  // const community = sdkClientInfo?.communityId.toString();
+  // const user = sdkClientInfo?.user.toString();
+  // const editedSDkClinetInfo = {
+  //   ...sdkClientInfo,
+  //   community: community,
+  //   user: user,
+  // };
+  // const member = data?.member;
+  // const id = member?.id.toString();
+  // const editedMember = {
+  //   ...member,
+  //   sdkClientInfo: editedSDkClinetInfo,
+  //   id: id,
+  // };
+  // realm.write(() => {
+  //   for (let i = 0; i < keys.length; i++) {
+  //     if (conversationObject[keys[i]] != undefined) {
+  //       if (typeof conversationObject[keys[i]] == "string") {
+  //         conversationObject[keys[i]] = parsedConversation[keys[i]].toString();
+  //       } else if (keys[i] == "member") {
+  //         conversationObject[keys[i]] = editedMember;
+  //       } else {
+  //         conversationObject[keys[i]] = parsedConversation[keys[i]];
+  //       }
+  //     }
+  //   }
+  // });
 }
 
 // To delete a single conversation data from realm
@@ -425,10 +458,13 @@ export async function deleteConversation(
   conversations: Conversation[]
 ) {
   const conversationFromRealm = await getConversation(realm, conversationId);
+  console.log("conversationFromRealmWrapper", conversationFromRealm);
   conversationFromRealm[0].deletedBy = user?.id;
   conversationFromRealm[0].deletedByMember = user;
 
   await updateDeletedBy(realm, conversationId, conversationFromRealm[0]);
+
+  console.log("conversationFromRealmWrapperNew", conversationFromRealm);
 
   for (let j = 0; j < conversations.length; j++) {
     if (conversations[j].id == conversationFromRealm[0].id) {

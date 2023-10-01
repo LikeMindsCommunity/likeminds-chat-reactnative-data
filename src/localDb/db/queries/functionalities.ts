@@ -73,6 +73,7 @@ export async function updateDeletedBy(
     const conversationObj: any = conversations.filtered(
       `id = "${conversationId}"`
     );
+    console.log("conversationObjUpdatedBY", conversationObj);
     conversationObj[0].deletedBy = data.deletedBy.toString();
     const memberRO = convertToMemberRO(data.deletedByMember, data.communityId);
     conversationObj[0].deletedByMember = memberRO;

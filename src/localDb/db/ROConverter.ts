@@ -253,9 +253,10 @@ const convertToReactionRO = (
   reaction: Reaction,
   communityId: string
 ): ReactionRO => {
+  console.log("reaction.member", reaction?.member);
   const convertedMember =
-    reaction.member != undefined
-      ? convertToMemberRO(reaction.member, communityId)
+    reaction?.member != undefined
+      ? convertToMemberRO(reaction?.member, communityId)
       : null;
   const reactionRO: ReactionRO = {
     member: convertedMember,
@@ -283,6 +284,8 @@ export const convertToConversationRO = (
     "chatroomConvertToCOnversationdsfaa",
     chatroom[0]?.isPrivateMember
   );
+
+  console.log("reactionsRelkajhsd,.dm", reactions);
 
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
