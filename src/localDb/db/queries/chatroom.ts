@@ -247,17 +247,12 @@ export async function saveChatroomResponse(
           lastSeenConversationDeletedByMemberRO
         );
 
-        console.log("lastSeenConversationROConverter", lastSeenConversationRO);
-
         if (lastSeenConversationRO) {
-          console.log("645321");
-
           realm.create(
             ConversationRO.schema.name,
             lastSeenConversationRO,
             Realm.UpdateMode.All
           );
-          console.log("134t32");
         }
         if (lastSeenConversationCreatorRO) {
           realm.create(
@@ -312,11 +307,7 @@ export async function saveDMChatroom(
     const memberRO = convertToMemberRO(member, communityId);
     const chatroomWithUser = chatroom?.chatroomWithUser;
     const chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
-    console.log("userCaurrent", user);
-
     const chatRequestedByRO = convertToMemberRO(user, communityId);
-    console.log("chatRequestedByRO", chatRequestedByRO?.sdkClientInfo?.uuid);
-
     const chatroomRO = convertToChatroomRO(
       realm,
       chatroom,

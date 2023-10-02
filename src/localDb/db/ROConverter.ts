@@ -58,13 +58,6 @@ export const convertToLastConversationRO = (
   attachment: Attachment[],
   deletedByMember: MemberRO | null
 ): LastConversationRO => {
-  console.log("lastConversationTEmppp", lastConversation);
-
-  console.log(
-    "lastConversation?.lastUpdatedAt",
-    lastConversation?.lastUpdatedAt
-  );
-
   const lastConversationRO: LastConversationRO = {
     id: lastConversation?.id?.toString() || "",
     member: chatroomCreatorRO,
@@ -253,7 +246,6 @@ const convertToReactionRO = (
   reaction: Reaction,
   communityId: string
 ): ReactionRO => {
-  console.log("reaction.member", reaction?.member);
   const convertedMember =
     reaction?.member != undefined
       ? convertToMemberRO(reaction?.member, communityId)
@@ -276,17 +268,8 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
-  console.log("conversation?.lastUpdated", conversation?.lastUpdated);
   const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
   const chatroom = items.filtered(`id = "${chatroomId}"`);
-  console.log("chatroomConvertToCOnversation", chatroom[0]);
-  console.log(
-    "chatroomConvertToCOnversationdsfaa",
-    chatroom[0]?.isPrivateMember
-  );
-
-  console.log("reactionsRelkajhsd,.dm", reactions);
-
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -375,20 +358,7 @@ export const convertToChatroomRO = (
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
-  console.log("75432");
-
   const lastConversation = JSON.parse(JSON.stringify(conversation));
-
-  console.log("123456", lastConversation);
-
-  // const lastSeenConversations = realm.objects(LastConversationRO.schema.name);
-  // const lastSeenConversation = lastSeenConversations.filtered(
-  //   `id = "${chatroom?.lastSeenConversationId}"`
-  // );
-  // const lastSeenConversationStringified = JSON.parse(
-  //   JSON.stringify(lastSeenConversation)
-  // );
-
   const items = realm.objects(ChatroomRO.schema.name);
   const chatroomData = items.filtered(`id = "${chatroom?.id?.toString()}"`);
   const chatroomObject = chatroomData.map((item) => {
@@ -403,8 +373,6 @@ export const convertToChatroomRO = (
     lastConversationRO?.createdEpoch ??
     currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;
-
-  console.log("lastSeenConversationRO12345", lastSeenConversationRO);
 
   let createdAt;
   if (typeof chatroom?.createdAt === "string") {
@@ -421,7 +389,7 @@ export const convertToChatroomRO = (
     id: chatroom.id?.toString(),
     communityId: chatroom.communityId?.toString(),
     title: chatroom.title,
-    state: chatroom.state,
+    state: chatroom?.state,
     member: member,
     createdAt: createdAt || null,
     type: chatroom.type || 0,
@@ -477,7 +445,7 @@ export const convertToChatroomRO = (
     isChatroomVisited: !!currentChatroom?.isChatroomVisited
       ? currentChatroom?.isChatroomVisited
       : false,
-    chatRequestState: chatroom?.chatRequestState,
+    chatRequestState: chatroom?.chatRequestState || null,
     chatRequestedBy: chatRequestedByRO,
     chatRequestCreatedAt: chatroom?.chatRequestCreatedAt,
     chatRequestedById: chatroom?.chatRequestedById,

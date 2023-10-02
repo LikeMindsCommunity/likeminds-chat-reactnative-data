@@ -12,9 +12,6 @@ export async function updateMuteStatus(
   muteStatus: boolean
 ) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
-  console.log("muteStatusChatroom", muteStatus);
-  console.log("chatroomMuteSraaer", chatroom);
-
   realm.write(() => {
     chatroom.muteStatus = !muteStatus;
   });
@@ -33,14 +30,9 @@ export async function updateChatroomFollowStatus(
   chatroomId: string
 ) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
-  console.log("chatroomFollowStatus", chatroom?.followStatus);
-
   realm.write(() => {
     chatroom.followStatus = true;
   });
-
-  const chatroomNew: ChatroomRO = await getChatroom(realm, chatroomId);
-  console.log("chatroomFollowStatusNew", chatroomNew?.followStatus);
 }
 
 // Updation of followStatus of a chatroom in Realm
@@ -73,7 +65,6 @@ export async function updateDeletedBy(
     const conversationObj: any = conversations.filtered(
       `id = "${conversationId}"`
     );
-    console.log("conversationObjUpdatedBY", conversationObj);
     conversationObj[0].deletedBy = data.deletedBy.toString();
     const memberRO = convertToMemberRO(data.deletedByMember, data.communityId);
     conversationObj[0].deletedByMember = memberRO;

@@ -799,17 +799,19 @@ class LMChatClient {
     return getFilteredChatrooms(LMChatClient.realm, isDm);
   }
 
+  // Method to get chatroom details with v2 as accepted-version
   async getChatroomV2(
     chatroom: ChatroomRequest
   ): Promise<LMResponse<ChatroomResponseModel>> {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
-  // to get next set of conversation data
+  // Method to get next set of conversation data
   async getConversationData(chatroomId: string, pageSize: number) {
     return getConversationData(LMChatClient.realm, chatroomId, pageSize);
   }
 
+  // Method to update chatRequestState of a chatroom in localDB
   async updateChatRequestState(chatroomId: string, chatRequestState: number) {
     return updateChatRequestState(
       LMChatClient.realm,
@@ -818,6 +820,7 @@ class LMChatClient {
     );
   }
 
+  // Method to update edit chatroom details in localDB
   async editChatroomDetails(
     chatroomWithUser: Member,
     chatroomId: string,
@@ -831,27 +834,17 @@ class LMChatClient {
     );
   }
 
-  // async saveSingleConversation(
-  //   conversation: ConversationModel,
-  //   communityId: string
-  // ) {
-  //   return saveSingleConversation(
-  //     LMChatClient.realm,
-  //     conversation,
-  //     communityId
-  //   );
-  // }
-
-  // to update isChatroomViewed key
+  // Method to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
   }
 
-  // for pagination
+  // Method for pagination
   async paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
     return paginateUp(LMChatClient.realm, chatroomId, createdEpoch, pageSize);
   }
 
+  // Method to save new DM in localDB
   async saveDMChatroom(
     chatroom: ChatroomModel,
     communityId: string,
@@ -860,6 +853,7 @@ class LMChatClient {
     return saveDMChatroom(LMChatClient.realm, chatroom, communityId, user);
   }
 
+  // Method to update followStatus in localDB
   async updateChatroomFollowStatus(chatroomId: string) {
     return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
