@@ -71,7 +71,6 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   hasFiles?: boolean | null;
   lastUpdatedAt!: number;
   deletedByMember?: MemberRO | null;
-  isPrivateMember?: boolean;
   deletedByUserId?: string | null;
   community?: Realm.Results<CommunityRO> | null;
   chatroom?: Realm.Results<ChatroomRO> | null;
@@ -90,7 +89,6 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       createdAt: OPTIONAL_STRING,
       cardId: OPTIONAL_STRING,
       attachments: LIST_ATTACHMENT_RO,
-      isPrivateMember: OPTIONAL_BOOLEAN,
       replyConversation: OPTIONAL_STRING,
       replyConversationObject: OPTIONAL_REPLY_CONVERSATION_RO,
       date: OPTIONAL_STRING,

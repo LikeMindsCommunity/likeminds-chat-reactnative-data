@@ -24,13 +24,10 @@ import { TimeStampRO } from "../models/TimeStampRO";
 import { getChatroom, getChatrooms } from "./queries/chatroom";
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO
-export const convertToTimeStampRO = (
-  minTimeStamp: number,
-  maxTimeStamp: number
-): TimeStampRO => {
+export const convertToTimeStampRO = (): TimeStampRO => {
   const timeStampRO: TimeStampRO = {
-    minTimeStamp: minTimeStamp,
-    maxTimeStamp: maxTimeStamp,
+    minTimeStampDm: 0,
+    minTimeStampGroup: 0,
     ...dummyKeys(TimeStampRO),
   };
   return timeStampRO;
@@ -268,8 +265,6 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
-  const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
-  const chatroom = items.filtered(`id = "${chatroomId}"`);
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -339,7 +334,6 @@ export const convertToConversationRO = (
     ),
     polls: convertToPoll(polls, conversation?.communityId?.toString()),
     ...dummyKeys(ConversationRO),
-    isPrivateMember: chatroom[0]?.isPrivateMember || false,
   };
   return conversationRO;
 };
@@ -369,10 +363,9 @@ export const convertToChatroomRO = (
   );
 
   //Query to get existingChatroom from realm
-  const existingChatrooms = realm.objects(ChatroomRO.schema.name);
-  const chatroomData = existingChatrooms.filtered(
-    `id = "${chatroom?.id?.toString()}"`
-  );
+  const chatroomData = realm
+    .objects(ChatroomRO.schema.name)
+    .filtered(`id = "${chatroom?.id?.toString()}"`);
   const chatroomObject = chatroomData.map((existingChatroom) => {
     const stringifiedChatroom = JSON.stringify(existingChatroom);
     return {
@@ -387,24 +380,13 @@ export const convertToChatroomRO = (
     currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;
 
-  let createdAt;
-  if (typeof chatroom?.createdAt === "string") {
-    createdAt = parseInt(chatroom?.createdAt);
-  } else {
-    createdAt = chatroom?.createdAt;
-  }
-
-  if (typeof updatedAt === "string") {
-    updatedAt = parseInt(updatedAt);
-  }
-
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
     communityId: chatroom.communityId?.toString(),
     title: chatroom.title,
     state: chatroom?.state,
     member: member,
-    createdAt: createdAt || null,
+    createdAt: chatroom?.createdAt || null,
     type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
@@ -421,7 +403,7 @@ export const convertToChatroomRO = (
         ? 0
         : parseInt(chatroom.totalAllResponseCount),
     muteStatus: chatroom.muteStatus || false,
-    followStatus: chatroom.followStatus || null,
+    followStatus: chatroom?.followStatus || false,
     hasBeenNamed: chatroom.hasBeenNamed || null,
     date: chatroom.date || null,
     isPrivateMember: chatroom?.isPrivateMember || false,

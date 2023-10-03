@@ -295,31 +295,6 @@ export async function editChatroomDetails(
   });
 }
 
-export async function saveDMChatroom(
-  realm: Realm,
-  chatroom: Chatroom,
-  communityId: string,
-  user: Member
-) {
-  realm.write(() => {
-    const member = chatroom?.member;
-    const memberRO = convertToMemberRO(member, communityId);
-    const chatroomWithUser = chatroom?.chatroomWithUser;
-    const chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
-    const chatRequestedByRO = convertToMemberRO(user, communityId);
-    const chatroomRO = convertToChatroomRO(
-      realm,
-      chatroom,
-      memberRO,
-      chatroomWithUserRO,
-      chatRequestedByRO
-    );
-    if (chatroomRO) {
-      realm.create(ChatroomRO.schema.name, chatroomRO, Realm.UpdateMode.All);
-    }
-  });
-}
-
 // To get chatroom filtered based on DMFeed or GroupFeed
 export async function getFilteredChatrooms(realm: Realm, isDm: boolean) {
   const items = realm.objects(ChatroomRO.schema.name);

@@ -1,15 +1,15 @@
 import Realm from "realm";
-import { TIME_STAMP_RO, INT } from "../constants";
+import { TIME_STAMP_RO, OPTIONAL_INT } from "../constants";
 
 export class TimeStampRO extends Realm.Object<TimeStampRO> {
-  minTimeStamp!: number;
-  maxTimeStamp!: number;
+  minTimeStampGroup?: number;
+  minTimeStampDm?: number;
 
   static schema: Realm.ObjectSchema = {
     name: TIME_STAMP_RO,
     properties: {
-      minTimeStamp: INT,
-      maxTimeStamp: INT,
+      minTimeStampGroup: OPTIONAL_INT,
+      minTimeStampDm: OPTIONAL_INT,
     },
   };
 }

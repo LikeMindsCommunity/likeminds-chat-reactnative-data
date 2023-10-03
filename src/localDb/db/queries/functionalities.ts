@@ -6,14 +6,10 @@ import { Conversation } from "src/shared/responseModels/Conversation";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 
 // Updation of mute status in Realm
-export async function updateMuteStatus(
-  realm: Realm,
-  chatroomId: string,
-  muteStatus: boolean
-) {
+export async function updateMuteStatus(realm: Realm, chatroomId: string) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom.muteStatus = !muteStatus;
+    chatroom.muteStatus = !chatroom?.muteStatus;
   });
 }
 
@@ -31,15 +27,7 @@ export async function updateChatroomFollowStatus(
 ) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom.followStatus = true;
-  });
-}
-
-// Updation of followStatus of a chatroom in Realm
-export async function setFollowStatus(realm: Realm, chatroomId: string) {
-  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
-  realm.write(() => {
-    chatroom.followStatus = false;
+    chatroom.followStatus = !chatroom?.followStatus;
   });
 }
 

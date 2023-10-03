@@ -3,7 +3,7 @@ interface ChatroomActions {
   title: string;
 }
 
-export interface ChatroomResponseModel {
+export interface GetChatroomResponse {
   accessWithoutSubscription: boolean;
   canAccessSecretChatroom: boolean;
   chatroomActions: ChatroomActions[];

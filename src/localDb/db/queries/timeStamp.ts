@@ -6,30 +6,32 @@ import Realm from "realm";
 // To updated the timestamp in realm
 export async function updateTimeStamp(
   realm: Realm,
-  minTimeStamp: number,
-  maxTimeStamp: number
+  maxTimeStamp: number,
+  isDm: boolean
 ) {
   realm.write(() => {
-    const timeStampStored: any = realm.objects(TimeStampRO.schema.name)[0];
-    timeStampStored.minTimeStamp = minTimeStamp;
-    timeStampStored.maxTimeStamp = maxTimeStamp;
+    const timeStampStored = realm.objects<TimeStampRO>(
+      TimeStampRO.schema.name
+    )[0];
+    isDm
+      ? (timeStampStored.minTimeStampDm = maxTimeStamp)
+      : (timeStampStored.minTimeStampGroup = maxTimeStamp);
   });
 }
 
 // To get stored timestamp from Realm
-export async function getTimeStamp(realm: Realm) {
+export async function getTimeStamp(realm: Realm, isDm: boolean) {
   const timeStampStored = realm.objects(TimeStampRO.schema.name);
   const serializedData = JSON.parse(JSON.stringify(timeStampStored));
-  return serializedData;
+  if (isDm) {
+    return serializedData[0].minTimeStampDm;
+  }
+  return serializedData[0].minTimeStampGroup;
 }
 
 // To save timestamp in Realm
-export async function saveTimeStamp(
-  realm: Realm,
-  minTimeStamp: number,
-  maxTimeStamp: number
-) {
-  let timeStampRO = convertToTimeStampRO(minTimeStamp, maxTimeStamp);
+export async function initiateTimeStamp(realm: Realm) {
+  let timeStampRO = convertToTimeStampRO();
   realm.write(() => {
     realm.create(TimeStampRO.schema.name, timeStampRO, Realm.UpdateMode.All);
   });

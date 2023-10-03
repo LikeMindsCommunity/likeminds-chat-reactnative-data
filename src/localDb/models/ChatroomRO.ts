@@ -38,7 +38,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   totalResponseCount!: number;
   totalAllResponseCount!: number;
   muteStatus: boolean | null;
-  followStatus?: boolean | null;
+  followStatus?: boolean;
   hasBeenNamed?: boolean | null;
   date?: string | null;
   isTagged?: boolean | null;

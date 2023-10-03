@@ -99,17 +99,14 @@ export async function saveConversationData(
       if (!creator) return;
       const conversationCreatorRO = convertToMemberRO(creator, communityId);
 
-      if (
-        conversation?.deletedByUserId !== null &&
-        conversation?.deletedByUserId !== "null"
-      ) {
+      if (chatDbUtil.isNull(conversation?.deletedByUserId)) {
         conversation.deletedBy =
           data?.userMeta[conversation?.deletedByUserId]?.id?.toString();
         conversation.deletedByMember =
           data?.userMeta[conversation?.deletedByUserId];
       }
 
-      if (conversation?.replyId !== null && conversation?.replyId !== "null") {
+      if (chatDbUtil.isNull(conversation?.replyId)) {
         const conversations = realm.objects(ConversationRO.schema.name);
         const conversationToBeReplied = conversations.filtered(
           `id = "${conversation.replyId}"`
@@ -214,14 +211,13 @@ export async function updateConversation(
   conversationId: string,
   data: Conversation
 ) {
-  const conversations = realm.objects(ConversationRO.schema.name);
-  const filteredConversation: any = conversations.filtered(
-    `id = "${conversationId}"`
-  );
+  const conversation = realm
+    .objects<ConversationRO>(ConversationRO.schema.name)
+    .filtered(`id = "${conversationId}"`);
 
   realm.write(() => {
-    filteredConversation[0].answer = data?.answer;
-    filteredConversation[0].createdAt = data?.createdAt;
+    conversation[0].answer = data?.answer;
+    conversation[0].createdAt = data?.createdAt;
   });
 }
 
@@ -268,12 +264,12 @@ export async function replaceSavedConversation(
       `id = "${data?.temporaryId}"`
     );
 
-    const memberRo = convertToMemberRO(data?.member, data?.communityId);
+    const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
     const convertedConversation = convertToConversationRO(
       realm,
       data,
-      memberRo,
+      memberRO,
       data?.chatroomId,
       filteredConversation[0]?.attachments,
       filteredConversation[0]?.polls,

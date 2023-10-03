@@ -135,7 +135,6 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
-  setFollowStatus,
   updateChatRequestState,
   updateChatroomFollowStatus,
   updateDeletedBy,
@@ -149,7 +148,7 @@ import {
 } from "./localDb/db/queries/attachments";
 import {
   getTimeStamp,
-  saveTimeStamp,
+  initiateTimeStamp,
   updateTimeStamp,
 } from "./localDb/db/queries/timeStamp";
 import {
@@ -161,7 +160,6 @@ import {
   getConversation,
   getConversationData,
   getConversations,
-  // saveSingleConversation,
 } from "./localDb/db/queries/conversation";
 import {
   chatroomViewed,
@@ -171,13 +169,12 @@ import {
   getChatrooms,
   getFilteredChatrooms,
   saveChatroomResponse,
-  saveDMChatroom,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
 import { GetExploreTabCountResponse } from "./pages/homeFeed/responseModels/GetExploreTabCountResponse";
 import { Member } from "./shared/responseModels/Member";
-import { ChatroomResponseModel } from "./pages/chatroom/responseModels/ChatroomResponseModel";
+import { GetChatroomResponse } from "./pages/chatroom/responseModels/GetChatroomResponse";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -229,6 +226,7 @@ class LMChatClient {
     });
 
     const lmChatClient = new LMChatClient();
+    initiateTimeStamp(LMChatClient.realm);
 
     return lmChatClient;
   }
@@ -675,18 +673,32 @@ class LMChatClient {
   }
 
   // Method to update timestamp in localDB
-  async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return updateTimeStamp(LMChatClient.realm, minTimeStamp, maxTimeStamp);
+  async updateTimeStamp(maxTimeStampNow: number, isDm: boolean) {
+    return updateTimeStamp(LMChatClient.realm, maxTimeStampNow, isDm);
   }
 
   // Method to save timestamp in localDB
-  async saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return saveTimeStamp(LMChatClient.realm, minTimeStamp, maxTimeStamp);
+  async initiateTimeStamp() {
+    return initiateTimeStamp(LMChatClient.realm);
+  }
+
+  // Method to update edit chatroom details in localDB
+  async editChatroomDetails(
+    chatroomWithUser: Member,
+    chatroomId: string,
+    communityId: string
+  ) {
+    return editChatroomDetails(
+      LMChatClient.realm,
+      chatroomWithUser,
+      chatroomId,
+      communityId
+    );
   }
 
   // Method to get timestamp from localDB
-  async getTimeStamp() {
-    return getTimeStamp(LMChatClient.realm);
+  async getTimeStamp(isDm: boolean) {
+    return getTimeStamp(LMChatClient.realm, isDm);
   }
 
   // Method to delete chatroom from localDB
@@ -695,18 +707,13 @@ class LMChatClient {
   }
 
   // Method to update mute status from localDB
-  async updateMuteStatus(chatroomId: string, muteStats: boolean) {
-    return updateMuteStatus(LMChatClient.realm, chatroomId, muteStats);
+  async updateMuteStatus(chatroomId: string) {
+    return updateMuteStatus(LMChatClient.realm, chatroomId);
   }
 
   // Method to update unseen count in localDB
   async updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(LMChatClient.realm, chatroomId);
-  }
-
-  // Method to update followStatus to false in localDB
-  async setFollowStatus(chatroomId: string) {
-    return setFollowStatus(LMChatClient.realm, chatroomId);
   }
 
   // Method to get instance
@@ -795,9 +802,9 @@ class LMChatClient {
   }
 
   // Method to get chatroom details with v2 as accepted-version
-  async getChatroomV2(
+  async getChatroomActions(
     chatroom: ChatroomRequest
-  ): Promise<LMResponse<ChatroomResponseModel>> {
+  ): Promise<LMResponse<GetChatroomResponse>> {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
@@ -824,26 +831,12 @@ class LMChatClient {
     );
   }
 
-  // Method to update edit chatroom details in localDB
-  async editChatroomDetails(
-    chatroomWithUser: Member,
-    chatroomId: string,
-    communityId: string
-  ) {
-    return editChatroomDetails(
-      LMChatClient.realm,
-      chatroomWithUser,
-      chatroomId,
-      communityId
-    );
-  }
-
   // Method to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
   }
 
-  // Method to update followStatus in localDB
+  // Method to toggle followStatus in localDB
   async updateChatroomFollowStatus(chatroomId: string) {
     return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
