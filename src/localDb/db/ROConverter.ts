@@ -377,7 +377,7 @@ export const convertToChatroomRO = (
   //To create updatedAt key
   const updatedAt =
     lastConversationRO?.lastUpdatedAt ??
-    currentChatroom?.lastConversationRO?.createdEpoch ??
+    currentChatroom?.lastConversationRO?.lastUpdatedAt ??
     chatroom.createdAt;
 
   const chatroomRO: ChatroomRO = {
