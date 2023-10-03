@@ -440,7 +440,7 @@ export const convertToChatroomRO = (
     isChatroomVisited: !!currentChatroom?.isChatroomVisited
       ? currentChatroom?.isChatroomVisited
       : false,
-    chatRequestState: chatroom?.chatRequestState || null,
+    chatRequestState: chatroom?.chatRequestState,
     chatRequestedBy: chatRequestedByRO,
     chatRequestCreatedAt: chatroom?.chatRequestCreatedAt,
     chatRequestedById: chatroom?.chatRequestedById,
