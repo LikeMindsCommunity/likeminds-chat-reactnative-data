@@ -319,8 +319,11 @@ export async function saveNewConversation(
 export async function getConversationData(
   realm: Realm,
   chatroomId: string,
-  pageSize: number
+  pageSize: number,
+  createdEpoch?: number
 ) {
+  if (!!createdEpoch)
+    return paginateUp(realm, chatroomId, createdEpoch, pageSize);
   const conversations = realm.objects(ConversationRO.schema.name);
   const filteredConversations = conversations
     .filtered(`chatroomId = "${chatroomId}"`)

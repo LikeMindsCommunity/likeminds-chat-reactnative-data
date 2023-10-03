@@ -351,27 +351,40 @@ export const convertToChatroomRO = (
   member: MemberRO,
   chatroomWithUserRO: MemberRO,
   chatRequestedByRO?: MemberRO,
-  lastConversationRO?: LastConversationRO,
-  lastSeenConversationRO?: LastConversationRO
+  lastConversationRO?: LastConversationRO
 ): ChatroomRO => {
+  //Query to get lastConversation from realm
   const conversations = realm.objects(ConversationRO.schema.name);
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
   const lastConversation = JSON.parse(JSON.stringify(conversation));
-  const items = realm.objects(ChatroomRO.schema.name);
-  const chatroomData = items.filtered(`id = "${chatroom?.id?.toString()}"`);
-  const chatroomObject = chatroomData.map((item) => {
-    const stringifiedChatroom = JSON.stringify(item);
+
+  //Query to get lastSeenConversation from realm
+  const lastSeenConversation = conversations.filtered(
+    `id = "${chatroom?.lastSeenConversationId}"`
+  );
+  const lastSeenConversationStringified = JSON.parse(
+    JSON.stringify(lastSeenConversation)
+  );
+
+  //Query to get existingChatroom from realm
+  const existingChatrooms = realm.objects(ChatroomRO.schema.name);
+  const chatroomData = existingChatrooms.filtered(
+    `id = "${chatroom?.id?.toString()}"`
+  );
+  const chatroomObject = chatroomData.map((existingChatroom) => {
+    const stringifiedChatroom = JSON.stringify(existingChatroom);
     return {
       ...JSON.parse(stringifiedChatroom),
     };
   });
   const currentChatroom = chatroomObject[0];
 
+  //To create updatedAt key
   let updatedAt =
-    lastConversationRO?.createdEpoch ??
-    currentChatroom?.lastConversationRO?.createdEpoch ??
+    lastConversationRO?.lastUpdatedAt ??
+    currentChatroom?.lastConversationRO?.lastUpdatedAt ??
     chatroom.createdAt;
 
   let createdAt;
@@ -396,8 +409,8 @@ export const convertToChatroomRO = (
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
     cardCreationTime: chatroom.cardCreationTime || null,
-    lastSeenConversation: lastSeenConversationRO
-      ? lastSeenConversationRO
+    lastSeenConversation: lastSeenConversationStringified[0]
+      ? lastSeenConversationStringified[0]
       : null,
     totalResponseCount:
       chatroom?.totalResponseCount == undefined

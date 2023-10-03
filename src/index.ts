@@ -160,7 +160,6 @@ import {
   replaceSavedConversation,
   getConversation,
   getConversationData,
-  paginateUp,
   getConversations,
   // saveSingleConversation,
 } from "./localDb/db/queries/conversation";
@@ -806,9 +805,18 @@ class LMChatClient {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
-  // Method to get next set of conversation data
-  async getConversationData(chatroomId: string, pageSize: number) {
-    return getConversationData(LMChatClient.realm, chatroomId, pageSize);
+  // to get next set of conversation data
+  async getConversationData(
+    chatroomId: string,
+    pageSize: number,
+    createdEpoch?: number
+  ) {
+    return getConversationData(
+      LMChatClient.realm,
+      chatroomId,
+      pageSize,
+      createdEpoch
+    );
   }
 
   // Method to update chatRequestState of a chatroom in localDB
@@ -837,25 +845,6 @@ class LMChatClient {
   // Method to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
-  }
-
-  // Method for pagination
-  async paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
-    return paginateUp(LMChatClient.realm, chatroomId, createdEpoch, pageSize);
-  }
-
-  // Method to save new DM in localDB
-  async saveDMChatroom(
-    chatroom: ChatroomModel,
-    communityId: string,
-    user: Member
-  ) {
-    return saveDMChatroom(LMChatClient.realm, chatroom, communityId, user);
-  }
-
-  // Method to update followStatus in localDB
-  async updateChatroomFollowStatus(chatroomId: string) {
-    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 

@@ -3,7 +3,6 @@ class SyncConversationRequest {
   page: number;
   pageSize: number;
   chatroomId: string;
-  isLocalDb: boolean;
   maxTimestamp: number;
   minTimestamp: number;
   conversationId: string | undefined;
@@ -13,7 +12,6 @@ class SyncConversationRequest {
     page: number,
     pageSize: number,
     chatroomId: string,
-    isLocalDb: boolean,
     maxTimestamp: number,
     minTimestamp: number,
     conversationId: string | undefined
@@ -21,7 +19,6 @@ class SyncConversationRequest {
     this.page = page;
     this.pageSize = pageSize;
     this.chatroomId = chatroomId;
-    this.isLocalDb = isLocalDb;
     this.maxTimestamp = maxTimestamp;
     this.minTimestamp = minTimestamp;
     this.conversationId = conversationId;
@@ -37,7 +34,6 @@ export class SyncConversationRequestBuilder {
   private page: number;
   private pageSize: number;
   private chatroomId: string;
-  private isLocalDb: boolean;
   private maxTimestamp: number;
   private minTimestamp: number;
   private conversationId: string | undefined;
@@ -54,11 +50,6 @@ export class SyncConversationRequestBuilder {
 
   public setChatroomId(chatroomId: string): SyncConversationRequestBuilder {
     this.chatroomId = chatroomId;
-    return this;
-  }
-
-  public setIsLocalDb(isLocalDb: boolean): SyncConversationRequestBuilder {
-    this.isLocalDb = isLocalDb;
     return this;
   }
 
@@ -84,7 +75,6 @@ export class SyncConversationRequestBuilder {
       this.page,
       this.pageSize,
       this.chatroomId,
-      this.isLocalDb,
       this.maxTimestamp,
       this.minTimestamp,
       this.conversationId
