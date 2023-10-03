@@ -159,7 +159,6 @@ import {
   replaceSavedConversation,
   getConversation,
   getConversationData,
-  paginateUp,
   getConversations,
 } from "./localDb/db/queries/conversation";
 import {
@@ -790,18 +789,22 @@ class LMChatClient {
   }
 
   // to get next set of conversation data
-  async getConversationData(chatroomId: string, pageSize: number) {
-    return getConversationData(LMChatClient.realm, chatroomId, pageSize);
+  async getConversationData(
+    chatroomId: string,
+    pageSize: number,
+    createdEpoch?: number
+  ) {
+    return getConversationData(
+      LMChatClient.realm,
+      chatroomId,
+      pageSize,
+      createdEpoch
+    );
   }
 
   // to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
-  }
-
-  // for pagination
-  async paginateUp(chatroomId: string, createdEpoch: number, pageSize: number) {
-    return paginateUp(LMChatClient.realm, chatroomId, createdEpoch, pageSize);
   }
 
   // For updation of followStatus in case of leaving of chatroom

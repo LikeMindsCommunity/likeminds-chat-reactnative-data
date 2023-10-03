@@ -346,32 +346,37 @@ export const convertToChatroomRO = (
   member: MemberRO,
   lastConversationRO?: LastConversationRO
 ): ChatroomRO => {
+  //Query to get lastConversation from realm
   const conversations = realm.objects(ConversationRO.schema.name);
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
   const lastConversation = JSON.parse(JSON.stringify(conversation));
 
-  const lastSeenConversations = realm.objects(LastConversationRO.schema.name);
-  const lastSeenConversation = lastSeenConversations.filtered(
+  //Query to get lastSeenConversation from realm
+  const lastSeenConversation = conversations.filtered(
     `id = "${chatroom?.lastSeenConversationId}"`
   );
   const lastSeenConversationStringified = JSON.parse(
     JSON.stringify(lastSeenConversation)
   );
 
-  const items = realm.objects(ChatroomRO.schema.name);
-  const chatroomData = items.filtered(`id = "${chatroom?.id?.toString()}"`);
-  const chatroomObject = chatroomData.map((item) => {
-    const stringifiedChatroom = JSON.stringify(item);
+  //Query to get existingChatroom from realm
+  const existingChatrooms = realm.objects(ChatroomRO.schema.name);
+  const chatroomData = existingChatrooms.filtered(
+    `id = "${chatroom?.id?.toString()}"`
+  );
+  const chatroomObject = chatroomData.map((existingChatroom) => {
+    const stringifiedChatroom = JSON.stringify(existingChatroom);
     return {
       ...JSON.parse(stringifiedChatroom),
     };
   });
   const currentChatroom = chatroomObject[0];
 
+  //To create updatedAt key
   const updatedAt =
-    lastConversationRO?.createdEpoch ??
+    lastConversationRO?.lastUpdatedAt ??
     currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;
 

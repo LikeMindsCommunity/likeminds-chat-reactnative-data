@@ -48,7 +48,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   lastConversation?: ConversationRO | null;
   lastConversationRO?: LastConversationRO | null;
   lastSeenConversationId?: string | null;
-  lastSeenConversation?: LastConversationRO | null;
+  lastSeenConversation?: ConversationRO | null;
   dateEpoch?: number | null;
   unseenCount!: number;
   relationshipNeeded!: boolean;
