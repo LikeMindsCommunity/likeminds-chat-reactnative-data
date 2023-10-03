@@ -270,8 +270,7 @@ export async function saveChatroomResponse(
         chatroomCreatorRO,
         chatroomWithUserRO,
         chatRequestedByRO,
-        lastConversationRO,
-        lastSeenConversationRO
+        lastConversationRO
       );
 
       // save to local DB

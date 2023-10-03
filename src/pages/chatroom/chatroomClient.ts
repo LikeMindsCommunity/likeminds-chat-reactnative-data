@@ -41,6 +41,7 @@ import { DeleteConversationsResponse } from "./responseModels/DeleteConversation
 import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
 import { ChatroomResponseModel } from "./responseModels/ChatroomResponseModel";
+import { API } from "src/shared/constants/api.constant";
 
 class ChatroomClient {
   async muteChatroom(
@@ -71,18 +72,29 @@ class ChatroomClient {
     chatroom: ChatroomRequest,
     dlClient: DLClient
   ): Promise<LMResponse<ChatroomResponseModel>> {
-    try {
-      const resp = await dlClient.getChatroom(chatroom);
-      const convertedResp: ChatroomResponseModel =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<ChatroomResponseModel>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<ChatroomResponseModel>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
+    return dlClient
+      .makeAuthenticatedRequest(
+        `${API.CHATROOM}?chatroom_id=${chatroom.chatroomId}`,
+        {
+          headers: {
+            "x-accept-version": "v2",
+          },
+        }
+      )
+      .then((resData: any) => {
+        // Handle the response and return the LMResponse object
+        const responseData: ChatroomResponseModel =
+          ModelConverter.responseBodyParser(resData);
+
+        return new LMResponse<ChatroomResponseModel>(responseData, null, true);
+      })
+      .catch((error) => {
+        return new LMResponse<ChatroomResponseModel>(
+          null,
+          error.message || "An error occurred",
+          false
+        );
+      });
   }
 
   async markReadChatroom(

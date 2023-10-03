@@ -261,10 +261,6 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  // async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
-  //   return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
-  // }
-
   async getChatroom(chatroomId: string) {
     return getChatroom(LMChatClient.realm, chatroomId);
   }
@@ -845,6 +841,11 @@ class LMChatClient {
   // Method to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
+  }
+
+  // Method to update followStatus in localDB
+  async updateChatroomFollowStatus(chatroomId: string) {
+    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 
