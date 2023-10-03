@@ -15,6 +15,7 @@ import Realm from "realm";
 import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { ConversationRO } from "src/localDb/models/ConversationRO";
+import { Conversation } from "src/shared/responseModels/Conversation";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -123,12 +124,121 @@ export async function saveChatroomResponse(
         Realm.UpdateMode.All
       );
 
+      const lastSeenConversationId = chatroom.lastSeenConversationId;
+      let lastSeenConversation =
+        data.conversationMeta[lastSeenConversationId?.toString()];
+      let lastSeenConversationRO = undefined;
+
+      if (!lastSeenConversation) {
+        // get single conversation
+        const conversations = realm.objects(ConversationRO.schema.name);
+        const conversation = conversations.filtered(
+          `id = "${lastSeenConversationId}"`
+        );
+        const singleConversation: Conversation = conversation.map((item) => {
+          const stringifiedConversation = JSON.stringify(item);
+          return {
+            ...JSON.parse(stringifiedConversation),
+          };
+        })[0];
+
+        if (singleConversation) {
+          const lastSeenConversationCreatorRO = convertToMemberRO(
+            singleConversation?.member,
+            singleConversation?.communityId
+          );
+
+          const lastSeenConversationDeletedByMemberRO =
+            !!lastSeenConversation?.deletedBy
+              ? convertToMemberRO(
+                  data.userMeta[lastSeenConversation.deletedBy],
+                  communityId
+                )
+              : null;
+
+          let lastSeenConversationRO = convertToLastConversationRO(
+            singleConversation,
+            lastSeenConversationCreatorRO,
+            singleConversation?.chatroomId?.toString(),
+            singleConversation?.attachments,
+            lastSeenConversationDeletedByMemberRO
+          );
+
+          if (lastSeenConversationRO) {
+            realm.create(
+              ConversationRO.schema.name,
+              lastSeenConversationRO,
+              Realm.UpdateMode.All
+            );
+          }
+        }
+      }
+
+      if (lastSeenConversationId && lastSeenConversation) {
+        const lastSeenConversationCreator =
+          data.userMeta[lastSeenConversation?.userId?.toString()];
+
+        const lastSeenConversationCreatorRO = convertToMemberRO(
+          lastSeenConversationCreator,
+          communityId
+        );
+
+        const lastSeenConversationDeletedByMemberRO =
+          !!lastSeenConversation?.deletedBy
+            ? convertToMemberRO(
+                data.userMeta[lastSeenConversation.deletedBy],
+                communityId
+              )
+            : null;
+
+        const lastSeenConversationPolls = chatDBUtil.isPoll(
+          lastSeenConversation?.state || 0
+        )
+          ? (data?.convPollsMeta[lastSeenConversationId?.toString()] || []).map(
+              (poll: any) => {
+                let pollObject = { ...poll };
+                const user = data?.userMeta[poll.userId];
+                pollObject.member = user;
+                return pollObject;
+              }
+            )
+          : null;
+
+        const lastSeenConversationAttachments =
+          lastSeenConversation.attachmentCount > 0
+            ? data.convAttachmentsMeta[lastSeenConversationId?.toString()]
+            : [];
+
+        lastSeenConversationRO = convertToLastConversationRO(
+          lastSeenConversation,
+          lastSeenConversationCreatorRO,
+          chatroom?.id,
+          lastSeenConversationAttachments,
+          lastSeenConversationDeletedByMemberRO
+        );
+
+        if (lastSeenConversationRO) {
+          realm.create(
+            ConversationRO.schema.name,
+            lastSeenConversationRO,
+            Realm.UpdateMode.All
+          );
+        }
+        if (lastSeenConversationCreatorRO) {
+          realm.create(
+            MemberRO.schema.name,
+            lastSeenConversationCreatorRO,
+            Realm.UpdateMode.All
+          );
+        }
+      }
+
       // convert to ChatroomRO
       const chatroomRO = convertToChatroomRO(
         realm,
         chatroom,
         chatroomCreatorRO,
-        lastConversationRO //its of type LastConversationRO
+        lastConversationRO
       );
 
       // save to local DB
@@ -181,5 +291,14 @@ export async function deleteChatroom(realm: Realm, chatroomId: string) {
   const chatroom = items.filtered(`id = "${chatroomId}"`);
   realm.write(() => {
     realm.delete(chatroom);
+  });
+}
+
+export async function chatroomViewed(realm: Realm, chatroomId: string) {
+  realm.write(() => {
+    const chatrooms = realm.objects(ChatroomRO.schema.name);
+    const filteredChatroom: any = chatrooms.filtered(`id = "${chatroomId}"`)[0];
+
+    filteredChatroom.isChatroomVisited = true;
   });
 }

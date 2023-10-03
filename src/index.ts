@@ -137,6 +137,7 @@ import { SyncConversationResponse } from "./sync/model/syncConversationResponse"
 import {
   setFollowStatus,
   updateDeletedBy,
+  updateFollowStatus,
   updateMuteStatus,
   updateUnseenCount,
 } from "./localDb/db/queries/functionalities";
@@ -156,10 +157,12 @@ import {
   saveNewConversation,
   saveConversationData,
   replaceSavedConversation,
-  getConversations,
   getConversation,
+  getConversationData,
+  getConversations,
 } from "./localDb/db/queries/conversation";
 import {
+  chatroomViewed,
   deleteChatroom,
   getChatrooms,
   getFilteredChatrooms,
@@ -783,6 +786,30 @@ class LMChatClient {
   // Method to get filtered chatroom whether it belongs to DM feed or Group feed
   async getFilteredChatrooms(isDm: boolean) {
     return getFilteredChatrooms(LMChatClient.realm, isDm);
+  }
+
+  // to get next set of conversation data
+  async getConversationData(
+    chatroomId: string,
+    pageSize: number,
+    createdEpoch?: number
+  ) {
+    return getConversationData(
+      LMChatClient.realm,
+      chatroomId,
+      pageSize,
+      createdEpoch
+    );
+  }
+
+  // to update isChatroomViewed key
+  async chatroomViewed(chatroomId: string) {
+    return chatroomViewed(LMChatClient.realm, chatroomId);
+  }
+
+  // For updation of followStatus in case of leaving of chatroom
+  async updateFollowStatus(chatroomId: string) {
+    return updateFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 

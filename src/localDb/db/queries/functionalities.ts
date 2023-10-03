@@ -1,6 +1,5 @@
 import { ConversationRO } from "../../models/ConversationRO";
 import { convertToMemberRO } from "../ROConverter";
-import Db from "../db";
 import Realm from "realm";
 import { getChatroom } from "./chatroom";
 import { Conversation } from "src/shared/responseModels/Conversation";
@@ -31,6 +30,14 @@ export async function setFollowStatus(realm: Realm, chatroomId: string) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
     chatroom.followStatus = false;
+  });
+}
+
+// Updation of followStatus to false in case of leaving of chatroom
+export async function updateFollowStatus(realm: Realm, chatroomId: string) {
+  const chatroom: any = await getChatroom(realm, chatroomId);
+  realm.write(() => {
+    chatroom[0].followStatus = false;
   });
 }
 

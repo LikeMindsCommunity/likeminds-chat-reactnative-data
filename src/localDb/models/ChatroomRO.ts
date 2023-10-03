@@ -70,6 +70,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   isDraft?: boolean | null;
   lastConversationId?: string | null;
   communities?: Realm.Results<CommunityRO> | null;
+  isChatroomVisited!: boolean;
 
   static schema: Realm.ObjectSchema = {
     name: CHATROOM_RO,
@@ -123,6 +124,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
         objectType: COMMUNITY_RO,
         property: CHATROOMS,
       },
+      isChatroomVisited: BOOLEAN,
     },
     primaryKey: ID,
   };
