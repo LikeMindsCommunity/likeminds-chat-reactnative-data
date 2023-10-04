@@ -24,13 +24,10 @@ import { TimeStampRO } from "../models/TimeStampRO";
 import { getChatroom, getChatrooms } from "./queries/chatroom";
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO
-export const convertToTimeStampRO = (
-  minTimeStamp: number,
-  maxTimeStamp: number
-): TimeStampRO => {
+export const convertToTimeStampRO = (): TimeStampRO => {
   const timeStampRO: TimeStampRO = {
-    minTimeStamp: minTimeStamp,
-    maxTimeStamp: maxTimeStamp,
+    minTimeStampDm: 0,
+    minTimeStampGroup: 0,
     ...dummyKeys(TimeStampRO),
   };
   return timeStampRO;
@@ -185,7 +182,7 @@ export const convertToMemberRO = (
     customClickText: member.customClickText || null,
     customTitle: member.customTitle || null,
     communityId: communityId.toString(),
-    isOwner: member.isOwner,
+    isOwner: member.isOwner || false,
     isGuest: member.isGuest,
     userUniqueId: member.userUniqueId,
     uuid: member.uuid,
@@ -247,8 +244,8 @@ const convertToReactionRO = (
   communityId: string
 ): ReactionRO => {
   const convertedMember =
-    reaction.member != undefined
-      ? convertToMemberRO(reaction.member, communityId)
+    reaction?.member != undefined
+      ? convertToMemberRO(reaction?.member, communityId)
       : null;
   const reactionRO: ReactionRO = {
     member: convertedMember,
@@ -260,6 +257,7 @@ const convertToReactionRO = (
 
 // convertToConversationRO method takes Conversation data and converts it to ConversationRO
 export const convertToConversationRO = (
+  realm: Realm,
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
   chatroomId: string,
@@ -313,6 +311,7 @@ export const convertToConversationRO = (
     replyConversationObject:
       conversation?.replyConversationObject != undefined
         ? convertToConversationRO(
+            realm,
             conversation?.replyConversationObject,
             convertToMemberRO(
               conversation?.replyConversationObject?.member,
@@ -344,6 +343,8 @@ export const convertToChatroomRO = (
   realm: Realm,
   chatroom: Chatroom,
   member: MemberRO,
+  chatroomWithUserRO: MemberRO,
+  chatRequestedByRO?: MemberRO,
   lastConversationRO?: LastConversationRO
 ): ChatroomRO => {
   //Query to get lastConversation from realm
@@ -362,10 +363,9 @@ export const convertToChatroomRO = (
   );
 
   //Query to get existingChatroom from realm
-  const existingChatrooms = realm.objects(ChatroomRO.schema.name);
-  const chatroomData = existingChatrooms.filtered(
-    `id = "${chatroom?.id?.toString()}"`
-  );
+  const chatroomData = realm
+    .objects(ChatroomRO.schema.name)
+    .filtered(`id = "${chatroom?.id?.toString()}"`);
   const chatroomObject = chatroomData.map((existingChatroom) => {
     const stringifiedChatroom = JSON.stringify(existingChatroom);
     return {
@@ -375,18 +375,18 @@ export const convertToChatroomRO = (
   const currentChatroom = chatroomObject[0];
 
   //To create updatedAt key
-  const updatedAt =
-    lastConversationRO?.lastUpdatedAt ??
-    currentChatroom?.lastConversationRO?.lastUpdatedAt ??
+  let updatedAt =
+    lastConversationRO?.createdEpoch ??
+    currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;
 
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),
     communityId: chatroom.communityId?.toString(),
     title: chatroom.title,
-    state: chatroom.state,
+    state: chatroom?.state,
     member: member,
-    createdAt: chatroom.createdAt || null,
+    createdAt: chatroom?.createdAt || null,
     type: chatroom.type || 0,
     chatroomImageUrl: chatroom.chatroomImageUrl || null,
     header: chatroom.header || null,
@@ -403,9 +403,10 @@ export const convertToChatroomRO = (
         ? 0
         : parseInt(chatroom.totalAllResponseCount),
     muteStatus: chatroom.muteStatus || false,
-    followStatus: chatroom.followStatus || null,
+    followStatus: chatroom?.followStatus || false,
     hasBeenNamed: chatroom.hasBeenNamed || null,
     date: chatroom.date || null,
+    isPrivateMember: chatroom?.isPrivateMember || false,
     isTagged: chatroom.isTagged || null,
     isPending: chatroom.isPending || null,
     deletedBy: chatroom.deletedBy || null,
@@ -425,6 +426,7 @@ export const convertToChatroomRO = (
       chatroom.chatroomWithUserName !== undefined
         ? chatroom.chatroomWithUserName
         : null,
+    chatroomWithUser: chatroomWithUserRO,
     secretChatRoomLeft: chatroom.secretChatroomLeft || null,
     topicId: chatroom.topicId?.toString() || null,
     autoFollowDone: chatroom.autoFollowDone || null,
@@ -438,6 +440,10 @@ export const convertToChatroomRO = (
     isChatroomVisited: !!currentChatroom?.isChatroomVisited
       ? currentChatroom?.isChatroomVisited
       : false,
+    chatRequestState: chatroom?.chatRequestState,
+    chatRequestedBy: chatRequestedByRO,
+    chatRequestCreatedAt: chatroom?.chatRequestCreatedAt,
+    chatRequestedById: chatroom?.chatRequestedById,
     ...dummyKeys(ChatroomRO),
   };
 

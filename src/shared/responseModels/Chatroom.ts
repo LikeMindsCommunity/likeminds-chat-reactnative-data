@@ -29,6 +29,7 @@ export interface Chatroom {
   date?: string;
   isTagged?: boolean;
   isPending?: boolean;
+  isPrivateMember?: boolean;
   isPinned?: boolean;
   isDeleted?: boolean;
   userId?: string;
@@ -50,6 +51,7 @@ export interface Chatroom {
   memberCanMessage?: boolean;
   chatroomWithUserId?: number;
   chatroomWithUserName?: string;
+  chatroomWithUser?: Member;
   cohorts?: Cohort[];
   externalSeen?: boolean;
   unreadConversationCount?: number;
@@ -57,4 +59,8 @@ export interface Chatroom {
   accessWithoutSubscription?: boolean;
   totalAllResponseCount?: string;
   isConversationStored?: boolean;
+  chatRequestState?: number;
+  chatRequestedBy?: Member;
+  chatRequestCreatedAt?: number;
+  chatRequestedById?: number;
 }

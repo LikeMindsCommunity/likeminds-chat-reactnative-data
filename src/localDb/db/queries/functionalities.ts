@@ -6,14 +6,10 @@ import { Conversation } from "src/shared/responseModels/Conversation";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 
 // Updation of mute status in Realm
-export async function updateMuteStatus(
-  realm: Realm,
-  chatroomId: string,
-  muteStatus: boolean
-) {
+export async function updateMuteStatus(realm: Realm, chatroomId: string) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom.muteStatus = !muteStatus;
+    chatroom.muteStatus = !chatroom?.muteStatus;
   });
 }
 
@@ -25,19 +21,24 @@ export async function updateUnseenCount(realm: Realm, chatroomId: string) {
   });
 }
 
-// Updation of followStatus of a chatroom in Realm
-export async function setFollowStatus(realm: Realm, chatroomId: string) {
+export async function updateChatroomFollowStatus(
+  realm: Realm,
+  chatroomId: string
+) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom.followStatus = false;
+    chatroom.followStatus = !chatroom?.followStatus;
   });
 }
 
-// Updation of followStatus to false in case of leaving of chatroom
-export async function updateFollowStatus(realm: Realm, chatroomId: string) {
-  const chatroom: any = await getChatroom(realm, chatroomId);
+export async function updateChatRequestState(
+  realm: Realm,
+  chatroomId: string,
+  chatRequestState: number
+) {
+  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom[0].followStatus = false;
+    chatroom.chatRequestState = chatRequestState;
   });
 }
 

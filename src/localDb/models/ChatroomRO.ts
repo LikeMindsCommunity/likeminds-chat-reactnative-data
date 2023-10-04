@@ -38,11 +38,12 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   totalResponseCount!: number;
   totalAllResponseCount!: number;
   muteStatus: boolean | null;
-  followStatus?: boolean | null;
+  followStatus?: boolean;
   hasBeenNamed?: boolean | null;
   date?: string | null;
   isTagged?: boolean | null;
   isPending?: boolean | null;
+  isPrivateMember?: boolean;
   deletedBy?: string | null;
   updatedAt?: number | null;
   lastConversation?: ConversationRO | null;
@@ -71,6 +72,11 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   lastConversationId?: string | null;
   communities?: Realm.Results<CommunityRO> | null;
   isChatroomVisited!: boolean;
+  chatRequestState?: number;
+  chatRequestedBy?: MemberRO;
+  chatRequestCreatedAt?: number;
+  chatRequestedById?: number;
+  chatroomWithUser?: MemberRO;
 
   static schema: Realm.ObjectSchema = {
     name: CHATROOM_RO,
@@ -79,11 +85,17 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
       communityId: STRING,
       title: STRING,
       state: INT,
+      chatroomWithUser: OPTIONAL_MEMBER_RO,
+      chatRequestState: OPTIONAL_INT,
+      chatRequestedBy: OPTIONAL_MEMBER_RO,
+      chatRequestCreatedAt: OPTIONAL_INT,
+      chatRequestedById: OPTIONAL_INT,
       member: OPTIONAL_MEMBER_RO,
       createdAt: OPTIONAL_INT,
       type: OPTIONAL_INT,
       chatroomImageUrl: OPTIONAL_STRING,
       header: OPTIONAL_STRING,
+      isPrivateMember: OPTIONAL_BOOLEAN,
       cardCreationTime: OPTIONAL_STRING,
       totalResponseCount: INT,
       totalAllResponseCount: INT,

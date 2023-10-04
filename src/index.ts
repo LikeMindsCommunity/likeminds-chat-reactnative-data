@@ -135,9 +135,9 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
-  setFollowStatus,
+  updateChatRequestState,
+  updateChatroomFollowStatus,
   updateDeletedBy,
-  updateFollowStatus,
   updateMuteStatus,
   updateUnseenCount,
 } from "./localDb/db/queries/functionalities";
@@ -148,7 +148,7 @@ import {
 } from "./localDb/db/queries/attachments";
 import {
   getTimeStamp,
-  saveTimeStamp,
+  initiateTimeStamp,
   updateTimeStamp,
 } from "./localDb/db/queries/timeStamp";
 import {
@@ -164,6 +164,8 @@ import {
 import {
   chatroomViewed,
   deleteChatroom,
+  editChatroomDetails,
+  getChatroom,
   getChatrooms,
   getFilteredChatrooms,
   saveChatroomResponse,
@@ -172,6 +174,7 @@ import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
 import { GetExploreTabCountResponse } from "./pages/homeFeed/responseModels/GetExploreTabCountResponse";
 import { Member } from "./shared/responseModels/Member";
+import { GetChatroomResponse } from "./pages/chatroom/responseModels/GetChatroomResponse";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -255,8 +258,8 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  async getChatroom(chatroom: ChatroomRequest): Promise<LMResponse<Chatroom>> {
-    return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
+  async getChatroom(chatroomId: string) {
+    return getChatroom(LMChatClient.realm, chatroomId);
   }
 
   // Method to mark a chatroom as read
@@ -669,18 +672,32 @@ class LMChatClient {
   }
 
   // Method to update timestamp in localDB
-  async updateTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return updateTimeStamp(LMChatClient.realm, minTimeStamp, maxTimeStamp);
+  async updateTimeStamp(maxTimeStampNow: number, isDm: boolean) {
+    return updateTimeStamp(LMChatClient.realm, maxTimeStampNow, isDm);
   }
 
-  // Method to save timestamp in localDB
-  async saveTimeStamp(minTimeStamp: number, maxTimeStamp: number) {
-    return saveTimeStamp(LMChatClient.realm, minTimeStamp, maxTimeStamp);
+  // Method to update edit chatroom details in localDB
+  async editChatroomDetails(
+    chatroomWithUser: Member,
+    chatroomId: string,
+    communityId: string
+  ) {
+    return editChatroomDetails(
+      LMChatClient.realm,
+      chatroomWithUser,
+      chatroomId,
+      communityId
+    );
   }
 
   // Method to get timestamp from localDB
   async getTimeStamp() {
     return getTimeStamp(LMChatClient.realm);
+  }
+
+  // Method to initiate groupFeed and dmFeed minTimeStamp to 0
+  async initiateTimeStamp() {
+    return initiateTimeStamp(LMChatClient.realm);
   }
 
   // Method to delete chatroom from localDB
@@ -689,18 +706,13 @@ class LMChatClient {
   }
 
   // Method to update mute status from localDB
-  async updateMuteStatus(chatroomId: string, muteStats: boolean) {
-    return updateMuteStatus(LMChatClient.realm, chatroomId, muteStats);
+  async updateMuteStatus(chatroomId: string) {
+    return updateMuteStatus(LMChatClient.realm, chatroomId);
   }
 
   // Method to update unseen count in localDB
   async updateUnseenCount(chatroomId: string) {
     return updateUnseenCount(LMChatClient.realm, chatroomId);
-  }
-
-  // Method to update followStatus to false in localDB
-  async setFollowStatus(chatroomId: string) {
-    return setFollowStatus(LMChatClient.realm, chatroomId);
   }
 
   // Method to get instance
@@ -788,6 +800,13 @@ class LMChatClient {
     return getFilteredChatrooms(LMChatClient.realm, isDm);
   }
 
+  // Method to get chatroom details with v2 as accepted-version
+  async getChatroomActions(
+    chatroom: ChatroomRequest
+  ): Promise<LMResponse<GetChatroomResponse>> {
+    return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
+  }
+
   // to get next set of conversation data
   async getConversationData(
     chatroomId: string,
@@ -802,14 +821,23 @@ class LMChatClient {
     );
   }
 
-  // to update isChatroomViewed key
+  // Method to update chatRequestState of a chatroom in localDB
+  async updateChatRequestState(chatroomId: string, chatRequestState: number) {
+    return updateChatRequestState(
+      LMChatClient.realm,
+      chatroomId,
+      chatRequestState
+    );
+  }
+
+  // Method to update isChatroomViewed key
   async chatroomViewed(chatroomId: string) {
     return chatroomViewed(LMChatClient.realm, chatroomId);
   }
 
-  // For updation of followStatus in case of leaving of chatroom
-  async updateFollowStatus(chatroomId: string) {
-    return updateFollowStatus(LMChatClient.realm, chatroomId);
+  // Method to toggle followStatus in localDB
+  async updateChatroomFollowStatus(chatroomId: string) {
+    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
   }
 }
 
