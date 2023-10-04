@@ -23,11 +23,12 @@ export async function updateUnseenCount(realm: Realm, chatroomId: string) {
 
 export async function updateChatroomFollowStatus(
   realm: Realm,
-  chatroomId: string
+  chatroomId: string,
+  followStatus: boolean
 ) {
   const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
   realm.write(() => {
-    chatroom.followStatus = !chatroom?.followStatus;
+    chatroom.followStatus = followStatus;
   });
 }
 

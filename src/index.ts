@@ -821,8 +821,12 @@ class LMChatClient {
   }
 
   // Method to toggle followStatus in localDB
-  async updateChatroomFollowStatus(chatroomId: string) {
-    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
+  async updateChatroomFollowStatus(chatroomId: string, followStatus: boolean) {
+    return updateChatroomFollowStatus(
+      LMChatClient.realm,
+      chatroomId,
+      followStatus
+    );
   }
 }
 
