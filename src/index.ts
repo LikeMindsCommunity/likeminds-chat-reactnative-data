@@ -164,7 +164,6 @@ import {
 import {
   chatroomViewed,
   deleteChatroom,
-  editChatroomDetails,
   getChatroom,
   getChatrooms,
   getFilteredChatrooms,
@@ -676,20 +675,6 @@ class LMChatClient {
     return updateTimeStamp(LMChatClient.realm, maxTimeStampNow, isDm);
   }
 
-  // Method to update edit chatroom details in localDB
-  async editChatroomDetails(
-    chatroomWithUser: Member,
-    chatroomId: string,
-    communityId: string
-  ) {
-    return editChatroomDetails(
-      LMChatClient.realm,
-      chatroomWithUser,
-      chatroomId,
-      communityId
-    );
-  }
-
   // Method to get timestamp from localDB
   async getTimeStamp() {
     return getTimeStamp(LMChatClient.realm);
@@ -836,8 +821,12 @@ class LMChatClient {
   }
 
   // Method to toggle followStatus in localDB
-  async updateChatroomFollowStatus(chatroomId: string) {
-    return updateChatroomFollowStatus(LMChatClient.realm, chatroomId);
+  async updateChatroomFollowStatus(chatroomId: string, followStatus: boolean) {
+    return updateChatroomFollowStatus(
+      LMChatClient.realm,
+      chatroomId,
+      followStatus
+    );
   }
 }
 
