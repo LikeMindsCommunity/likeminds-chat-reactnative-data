@@ -20,13 +20,10 @@ export async function updateTimeStamp(
 }
 
 // To get stored timestamp from Realm
-export async function getTimeStamp(realm: Realm, isDm: boolean) {
+export async function getTimeStamp(realm: Realm) {
   const timeStampStored = realm.objects(TimeStampRO.schema.name);
   const serializedData = JSON.parse(JSON.stringify(timeStampStored));
-  if (isDm) {
-    return serializedData[0].minTimeStampDm;
-  }
-  return serializedData[0].minTimeStampGroup;
+  return serializedData;
 }
 
 // To save timestamp in Realm

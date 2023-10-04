@@ -226,7 +226,6 @@ class LMChatClient {
     });
 
     const lmChatClient = new LMChatClient();
-    initiateTimeStamp(LMChatClient.realm);
 
     return lmChatClient;
   }
@@ -677,11 +676,6 @@ class LMChatClient {
     return updateTimeStamp(LMChatClient.realm, maxTimeStampNow, isDm);
   }
 
-  // Method to save timestamp in localDB
-  async initiateTimeStamp() {
-    return initiateTimeStamp(LMChatClient.realm);
-  }
-
   // Method to update edit chatroom details in localDB
   async editChatroomDetails(
     chatroomWithUser: Member,
@@ -697,8 +691,13 @@ class LMChatClient {
   }
 
   // Method to get timestamp from localDB
-  async getTimeStamp(isDm: boolean) {
-    return getTimeStamp(LMChatClient.realm, isDm);
+  async getTimeStamp() {
+    return getTimeStamp(LMChatClient.realm);
+  }
+
+  // Method to initiate groupFeed and dmFeed minTimeStamp to 0
+  async initiateTimeStamp() {
+    return initiateTimeStamp(LMChatClient.realm);
   }
 
   // Method to delete chatroom from localDB
