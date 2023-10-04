@@ -134,11 +134,11 @@ export async function saveConversationData(
           : [];
 
       const reactionCreator =
-        conversation?.hasReactions === true && conversationReaction.length > 0
+        conversation?.hasReactions === true && conversationReaction?.length > 0
           ? data?.userMeta[conversationReaction[0]?.userId]
           : null;
 
-      if (reactionCreator !== null && conversationReaction.length > 0) {
+      if (reactionCreator !== null && conversationReaction?.length > 0) {
         conversationReaction[0].member = reactionCreator;
       }
 
@@ -234,7 +234,7 @@ export async function deleteConversation(
 
   await updateDeletedBy(realm, conversationId, conversationFromRealm[0]);
 
-  for (let j = 0; j < conversations.length; j++) {
+  for (let j = 0; j < conversations?.length; j++) {
     if (conversations[j].id == conversationFromRealm[0].id) {
       conversations[j] = conversationFromRealm[0];
       break;
