@@ -282,19 +282,6 @@ export async function saveChatroomResponse(
   });
 }
 
-export async function editChatroomDetails(
-  realm: Realm,
-  chatroomWithUser: Member,
-  chatroomId: string,
-  communityId: string
-) {
-  const chatroom: ChatroomRO = await getChatroom(realm, chatroomId);
-  const chatroomWithUserRO = convertToMemberRO(chatroomWithUser, communityId);
-  realm.write(() => {
-    chatroom.chatroomWithUser = chatroomWithUserRO;
-  });
-}
-
 // To get chatroom filtered based on DMFeed or GroupFeed
 export async function getFilteredChatrooms(realm: Realm, isDm: boolean) {
   const items = realm.objects(ChatroomRO.schema.name);

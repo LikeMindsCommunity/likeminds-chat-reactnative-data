@@ -164,7 +164,6 @@ import {
 import {
   chatroomViewed,
   deleteChatroom,
-  editChatroomDetails,
   getChatroom,
   getChatrooms,
   getFilteredChatrooms,
@@ -674,20 +673,6 @@ class LMChatClient {
   // Method to update timestamp in localDB
   async updateTimeStamp(maxTimeStampNow: number, isDm: boolean) {
     return updateTimeStamp(LMChatClient.realm, maxTimeStampNow, isDm);
-  }
-
-  // Method to update edit chatroom details in localDB
-  async editChatroomDetails(
-    chatroomWithUser: Member,
-    chatroomId: string,
-    communityId: string
-  ) {
-    return editChatroomDetails(
-      LMChatClient.realm,
-      chatroomWithUser,
-      chatroomId,
-      communityId
-    );
   }
 
   // Method to get timestamp from localDB
