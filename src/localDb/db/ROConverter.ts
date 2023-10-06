@@ -87,12 +87,12 @@ export const convertToPollRO = (poll: Poll, communityId: string) => {
   const pollRO: PollRO = {
     id: poll?.id?.toString(),
     text: poll?.text,
-    subText: poll.subText,
-    isSelected: poll.isSelected,
-    percentage: poll.percentage,
-    noVotes: poll.noVotes,
+    subText: poll?.subText,
+    isSelected: poll?.isSelected,
+    percentage: poll?.percentage,
+    noVotes: poll?.noVotes,
     member:
-      poll.member != undefined
+      poll.member != undefined || poll.member != null
         ? convertToMemberRO(poll?.member, communityId)
         : null,
     ...dummyKeys(PollRO),
@@ -154,9 +154,9 @@ const convertToSDKClientInfoRO = (
       sdkClientInfo.community != undefined
         ? sdkClientInfo.community.toString()
         : sdkClientInfo.communityId.toString(),
-    user: sdkClientInfo.user.toString(),
-    userUniqueId: sdkClientInfo.userUniqueId,
-    uuid: sdkClientInfo.uuid,
+    user: sdkClientInfo?.user?.toString(),
+    userUniqueId: sdkClientInfo?.userUniqueId,
+    uuid: sdkClientInfo?.uuid,
     ...dummyKeys(SDKClientInfoRO),
   };
   return sdkClientInfoRO;
@@ -167,13 +167,17 @@ export const convertToMemberRO = (
   member: Member,
   communityId: any
 ): MemberRO | undefined => {
-  if (!member?.sdkClientInfo) return undefined;
+  // if (!member?.sdkClientInfo) return undefined; // this is the problem
+  let convertedSdkClientInfo;
 
-  const convertedSdkClientInfo = convertToSDKClientInfoRO(
-    member?.sdkClientInfo
-  );
+  if (member?.sdkClientInfo !== null && member?.sdkClientInfo !== undefined) {
+    convertedSdkClientInfo = convertToSDKClientInfoRO(member?.sdkClientInfo);
+  } else {
+    convertedSdkClientInfo = null;
+  }
+
   const memberRO: MemberRO = {
-    uid: member.id.toString(),
+    uid: member.id.toString() || null,
     id: member.id.toString(),
     name: member.name,
     imageUrl: member.imageUrl || "",
@@ -228,7 +232,10 @@ const convertToReaction = (
 };
 
 // convertToPoll method takes Poll[] data and converts it to Realm.List<PollRO>
-const convertToPoll = (polls: Poll[], communityId: string): List<PollRO> => {
+export const convertToPoll = (
+  polls: Poll[],
+  communityId: string
+): List<PollRO> => {
   let convertedPolls: any = [];
   if (polls == undefined) return convertedPolls;
   for (let i = 0; i < polls.length; i++) {
@@ -301,7 +308,7 @@ export const convertToConversationRO = (
     pollTypeText: conversation?.pollTypeText || null,
     submitTypeText: conversation?.submitTypeText || null,
     expiryTime: conversation?.expiryTime || null,
-    multipleSelectNum: conversation?.multipleSelectNo || null,
+    multipleSelectNo: conversation?.multipleSelectNo || null,
     multipleSelectState: conversation?.multipleSelectState || null,
     pollAnswerText: conversation?.pollAnswerText || null,
     toShowResults: conversation?.toShowResults || null,
@@ -378,7 +385,7 @@ export const convertToChatroomRO = (
   let updatedAt =
     lastConversationRO?.createdEpoch ??
     currentChatroom?.lastConversationRO?.createdEpoch ??
-    chatroom.createdAt;
+    chatroom?.createdAt;
 
   const chatroomRO: ChatroomRO = {
     id: chatroom.id?.toString(),

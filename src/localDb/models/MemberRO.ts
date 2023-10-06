@@ -12,16 +12,16 @@ import { SDKClientInfoRO } from "./SDKClientInfoRO";
 import Realm from "realm";
 
 export class MemberRO extends Realm.Object<MemberRO> {
-  uid!: string;
+  uid?: string;
   id!: string;
   name!: string;
-  imageUrl!: string;
-  state!: number;
+  imageUrl?: string;
+  state?: number;
   customIntroText?: string | null;
   customClickText?: string | null;
   customTitle?: string | null;
   communityId?: string | null;
-  isOwner!: boolean;
+  isOwner?: boolean;
   isGuest!: boolean;
   userUniqueId!: string;
   uuid!: string;
