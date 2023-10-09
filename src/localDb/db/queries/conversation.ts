@@ -308,7 +308,10 @@ export async function replaceSavedConversation(data: Conversation) {
   try {
     const replyConv = data?.replyConversation;
     if (replyConv !== null && replyConv !== "null") {
-      const conversation = await getConversation(replyConv);
+      const conversations = realm
+        .objects<ConversationRO>(ConversationRO.schema.name)
+        .filtered(`id = "${replyConv}"`);
+      const conversation = JSON.parse(JSON.stringify(conversations));
       data.replyConversationObject = conversation[0];
     }
 

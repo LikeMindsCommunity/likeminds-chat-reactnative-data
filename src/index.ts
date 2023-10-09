@@ -182,19 +182,6 @@ class LMChatClient {
   private static platformCode: string | null = null;
   private static versionCode: number | null = null;
   private static dlClient: DLClient;
-  // private static realm: Realm | null = null;
-
-  // constructor() {
-  //   // Initialize the Realm instance in the constructor or as needed.
-  //   LMChatClient.realm = new Realm(Db.getInstance());
-  // }
-
-  // close() {
-  //   if (LMChatClient.realm) {
-  //     // Close the Realm instance
-  //     LMChatClient.realm.close();
-  //   }
-  // }
 
   static setApiKey(apiKey: string) {
     this.apiKey = apiKey;
