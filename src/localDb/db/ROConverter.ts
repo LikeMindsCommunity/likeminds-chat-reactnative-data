@@ -228,7 +228,10 @@ const convertToReaction = (
 };
 
 // convertToPoll method takes Poll[] data and converts it to Realm.List<PollRO>
-const convertToPoll = (polls: Poll[], communityId: string): List<PollRO> => {
+export const convertToPoll = (
+  polls: Poll[],
+  communityId: string
+): List<PollRO> => {
   let convertedPolls: any = [];
   if (polls == undefined) return convertedPolls;
   for (let i = 0; i < polls.length; i++) {
