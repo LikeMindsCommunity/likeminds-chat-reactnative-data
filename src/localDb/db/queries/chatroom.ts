@@ -298,10 +298,12 @@ export async function getFilteredChatrooms(isDm: boolean) {
     const items = realm.objects(ChatroomRO.schema.name);
     const filteredAndSortedChatroom = isDm
       ? items
-          .filtered(`(type = 10) && (followStatus=true)`)
+          .filtered(`(type = 10) && (followStatus=true) && (deletedBy = null)`)
           .sorted("updatedAt", true)
       : items
-          .filtered(`(type = 0 || type=7) && (followStatus=true)`)
+          .filtered(
+            `(type = 0 || type=7) && (followStatus=true) && (deletedBy = null)`
+          )
           .sorted("updatedAt", true);
     const stringifiedChatroom = JSON.parse(
       JSON.stringify(filteredAndSortedChatroom)
@@ -337,7 +339,7 @@ export async function getChatroom(chatroomId: string) {
     const chatroom = items.filtered(`id = "${chatroomId}"`);
     const stringifiedChatroom = JSON.parse(JSON.stringify(chatroom));
     console.log("stringifiedChatroom", stringifiedChatroom);
-    return stringifiedChatroom;
+    return stringifiedChatroom[0];
   } finally {
     realm.close();
   }

@@ -305,10 +305,14 @@ export async function updatePollVotes(
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
 export async function replaceSavedConversation(data: Conversation) {
   const realm = new Realm(Db.getInstance());
+  const chatDbUtil = new ChatDBUtil();
   try {
     const replyConv = data?.replyConversation;
-    if (replyConv !== null && replyConv !== "null") {
-      const conversation = await getConversation(replyConv);
+    if (chatDbUtil.isNull(replyConv)) {
+      const conversations = realm
+        .objects<ConversationRO>(ConversationRO.schema.name)
+        .filtered(`id = "${replyConv}"`);
+      const conversation = JSON.parse(JSON.stringify(conversations));
       data.replyConversationObject = conversation[0];
     }
 

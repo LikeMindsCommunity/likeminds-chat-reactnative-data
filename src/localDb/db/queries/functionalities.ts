@@ -10,9 +10,11 @@ import Db from "../db";
 export async function updateMuteStatus(chatroomId: string) {
   const realm = new Realm(Db.getInstance());
   try {
-    const chatroom: ChatroomRO = await getChatroom(chatroomId);
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      chatroom.muteStatus = !chatroom?.muteStatus;
+      chatroom[0].muteStatus = !chatroom[0]?.muteStatus;
     });
   } finally {
     realm.close();
@@ -23,9 +25,11 @@ export async function updateMuteStatus(chatroomId: string) {
 export async function updateUnseenCount(chatroomId: string) {
   const realm = new Realm(Db.getInstance());
   try {
-    const chatroom: ChatroomRO = await getChatroom(chatroomId);
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      chatroom.unseenCount = 0;
+      chatroom[0].unseenCount = 0;
     });
   } finally {
     realm.close();
@@ -38,9 +42,11 @@ export async function updateChatroomFollowStatus(
 ) {
   const realm = new Realm(Db.getInstance());
   try {
-    const chatroom: ChatroomRO = await getChatroom(chatroomId);
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      chatroom.followStatus = followStatus;
+      chatroom[0].followStatus = followStatus;
     });
   } finally {
     realm.close();
@@ -53,9 +59,11 @@ export async function updateChatRequestState(
 ) {
   const realm = new Realm(Db.getInstance());
   try {
-    const chatroom: ChatroomRO = await getChatroom(chatroomId);
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      chatroom.chatRequestState = chatRequestState;
+      chatroom[0].chatRequestState = chatRequestState;
     });
   } finally {
     realm.close();
