@@ -272,11 +272,14 @@ export async function deleteConversation(
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
 export async function replaceSavedConversation(data: Conversation) {
   const realm = new Realm(Db.getInstance());
+  const chatDbUtil = new ChatDBUtil();
   try {
     const replyConv = data?.replyConversation;
-    if (replyConv !== null && replyConv !== "null") {
-      const conversation = await getConversation(replyConv);
-      data.replyConversationObject = conversation[0];
+    if (chatDbUtil.isNull(replyConv)) {
+      const conversations = realm.objects(ConversationRO.schema.name);
+      const conversation = conversations.filtered(`id = "${replyConv}"`);
+      const stringifiedConversation = JSON.parse(JSON.stringify(conversation));
+      data.replyConversationObject = stringifiedConversation[0];
     }
 
     realm.write(() => {
@@ -357,11 +360,13 @@ export async function saveNewConversation(
         data?.reactions
       );
 
-      realm.create(
-        ConversationRO.schema.name,
-        conversationRO,
-        Realm.UpdateMode.All
-      );
+      if (conversationRO) {
+        realm.create(
+          ConversationRO.schema.name,
+          conversationRO,
+          Realm.UpdateMode.All
+        );
+      }
     });
   } finally {
     realm.close();

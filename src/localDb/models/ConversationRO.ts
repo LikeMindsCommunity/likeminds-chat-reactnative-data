@@ -60,7 +60,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   pollTypeText?: string | null;
   submitTypeText?: string | null;
   expiryTime?: number | null;
-  multipleSelectNum?: number | null;
+  multipleSelectNo?: number | null;
   multipleSelectState?: number | null;
   polls!: Realm.List<PollRO>;
   pollAnswerText?: string | null;
@@ -111,7 +111,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       submitTypeText: OPTIONAL_STRING,
       deletedByUserId: OPTIONAL_STRING,
       expiryTime: OPTIONAL_INT,
-      multipleSelectNum: OPTIONAL_INT,
+      multipleSelectNo: OPTIONAL_INT,
       multipleSelectState: OPTIONAL_INT,
       polls: LIST_POLL_RO,
       pollAnswerText: OPTIONAL_STRING,

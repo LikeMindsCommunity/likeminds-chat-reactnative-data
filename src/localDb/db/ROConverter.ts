@@ -304,7 +304,7 @@ export const convertToConversationRO = (
     pollTypeText: conversation?.pollTypeText || null,
     submitTypeText: conversation?.submitTypeText || null,
     expiryTime: conversation?.expiryTime || null,
-    multipleSelectNum: conversation?.multipleSelectNo || null,
+    multipleSelectNo: conversation?.multipleSelectNo || null,
     multipleSelectState: conversation?.multipleSelectState || null,
     pollAnswerText: conversation?.pollAnswerText || null,
     toShowResults: conversation?.toShowResults || null,
