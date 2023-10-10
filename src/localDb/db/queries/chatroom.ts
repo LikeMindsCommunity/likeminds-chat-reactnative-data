@@ -342,21 +342,44 @@ export async function getChatroom(chatroomId: string) {
   }
 }
 
-// For deletion of one chatroom from Realm
-export async function deleteChatroom(chatroomId: string) {
+// Updation of chat request state in Realm
+export async function updateChatRequestState(
+  chatroomId: string,
+  chatRequestState: number
+) {
   const realm = new Realm(Db.getInstance());
   try {
-    const items = realm.objects(ChatroomRO.schema.name);
-    const chatroom = items.filtered(`id = "${chatroomId}"`);
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      realm.delete(chatroom);
+      chatroom[0].chatRequestState = chatRequestState;
     });
   } finally {
     realm.close();
   }
 }
 
-export async function chatroomViewed(chatroomId: string) {
+// Updation of chatroom follow status in Realm
+export async function updateChatroomFollowStatus(
+  chatroomId: string,
+  followStatus: boolean
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
+    realm.write(() => {
+      chatroom[0].followStatus = followStatus;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+// Updation of isChatroomViewed in Realm
+export async function updateChatroomViewed(chatroomId: string) {
   const realm = new Realm(Db.getInstance());
   try {
     realm.write(() => {
@@ -365,6 +388,36 @@ export async function chatroomViewed(chatroomId: string) {
         `id = "${chatroomId}"`
       )[0];
       filteredChatroom.isChatroomVisited = true;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+// Updation of unseen count in Realm
+export async function updateUnseenCount(chatroomId: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
+    realm.write(() => {
+      chatroom[0].unseenCount = 0;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+// Updation of mute status in Realm
+export async function updateMuteStatus(chatroomId: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
+    realm.write(() => {
+      chatroom[0].muteStatus = !chatroom[0]?.muteStatus;
     });
   } finally {
     realm.close();

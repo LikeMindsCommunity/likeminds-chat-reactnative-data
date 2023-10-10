@@ -135,13 +135,6 @@ import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
 import {
-  updateChatRequestState,
-  updateChatroomFollowStatus,
-  updateDeletedBy,
-  updateMuteStatus,
-  updateUnseenCount,
-} from "./localDb/db/queries/functionalities";
-import {
   getAllAttachmentUploadConversations,
   removeAttactmentUploadConversationByKey,
   saveAttachmentUploadConversation,
@@ -158,17 +151,20 @@ import {
   saveConversationData,
   replaceSavedConversation,
   getConversation,
-  getConversationData,
   getConversations,
   updatePollVotes,
+  updateDeletedBy,
 } from "./localDb/db/queries/conversation";
 import {
-  chatroomViewed,
-  deleteChatroom,
+  updateChatroomViewed,
   getChatroom,
   getChatrooms,
   getFilteredChatrooms,
   saveChatroomResponse,
+  updateChatRequestState,
+  updateChatroomFollowStatus,
+  updateUnseenCount,
+  updateMuteStatus,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -668,11 +664,6 @@ class LMChatClient {
     return initiateTimeStamp();
   }
 
-  // Method to delete chatroom from localDB
-  async deleteChatroom(chatroomId: string) {
-    return deleteChatroom(chatroomId);
-  }
-
   // Method to update mute status from localDB
   async updateMuteStatus(chatroomId: string) {
     return updateMuteStatus(chatroomId);
@@ -701,11 +692,6 @@ class LMChatClient {
       conversationData,
       communityId
     );
-  }
-
-  // Method to get all conversations of a chatroom from localDB
-  async getConversations(chatroomId: string) {
-    return getConversations(chatroomId);
   }
 
   // Method to update conversation in localDB
@@ -770,12 +756,12 @@ class LMChatClient {
   }
 
   // to get next set of conversation data
-  async getConversationData(
+  async getConversations(
     chatroomId: string,
     pageSize: number,
     createdEpoch?: number
   ) {
-    return getConversationData(chatroomId, pageSize, createdEpoch);
+    return getConversations(chatroomId, pageSize, createdEpoch);
   }
 
   // Method to update chatRequestState of a chatroom in localDB
@@ -784,8 +770,8 @@ class LMChatClient {
   }
 
   // Method to update isChatroomViewed key
-  async chatroomViewed(chatroomId: string) {
-    return chatroomViewed(chatroomId);
+  async updateChatroomViewed(chatroomId: string) {
+    return updateChatroomViewed(chatroomId);
   }
 
   // Method to toggle followStatus in localDB

@@ -15,7 +15,6 @@ import Realm from "realm";
 import { Chatroom } from "src/shared/responseModels/Chatroom";
 import { SyncConversationResponse } from "src/sync/model/syncConversationResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
-import { updateDeletedBy } from "./functionalities";
 import { Member } from "src/shared/responseModels/Member";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 
@@ -185,26 +184,6 @@ export async function saveConversationData(
   }
 }
 
-// To get a all conversations data of a single chatroom from realm
-export async function getConversations(chatroomId: string) {
-  const realm = new Realm(Db.getInstance());
-  try {
-    const conversations = realm.objects(ConversationRO.schema.name);
-    const filteredAndSortedConversation = conversations
-      .filtered(`chatroomId = "${chatroomId}"`)
-      .sorted("createdEpoch", true);
-    const conversationObject = filteredAndSortedConversation.map((chatroom) => {
-      const stringifiedConversation = JSON.stringify(chatroom);
-      return {
-        ...JSON.parse(stringifiedConversation),
-      };
-    });
-    return conversationObject;
-  } finally {
-    realm.close();
-  }
-}
-
 // To get a single conversation data from realm
 export async function getConversation(conversationId: string) {
   const realm = new Realm(Db.getInstance());
@@ -237,6 +216,32 @@ export async function updateConversation(
     realm.write(() => {
       conversation[0].answer = data?.answer;
       conversation[0].createdAt = data?.createdAt;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+// To update deletedBy and deletedByMember of a conversation in realm
+export async function updateDeletedBy(
+  conversationId: string,
+  data: Conversation
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    realm.write(() => {
+      const conversations = realm.objects<ConversationRO>(
+        ConversationRO.schema.name
+      );
+      const conversationObj = conversations.filtered(
+        `id = "${conversationId}"`
+      );
+      conversationObj[0].deletedBy = data.deletedBy.toString();
+      const memberRO = convertToMemberRO(
+        data.deletedByMember,
+        data.communityId
+      );
+      conversationObj[0].deletedByMember = memberRO;
     });
   } finally {
     realm.close();
@@ -373,7 +378,7 @@ export async function saveNewConversation(
   }
 }
 
-export async function getConversationData(
+export async function getConversations(
   chatroomId: string,
   pageSize: number,
   createdEpoch?: number
