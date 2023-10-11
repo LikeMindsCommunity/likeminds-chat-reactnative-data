@@ -2,6 +2,7 @@ import { convertToAppConfigRO } from "../ROConverter";
 import Db from "../db";
 import { AppConfigRO } from "src/localDb/models/AppConfigRO";
 
+// Method to set isGroupFeedChatroomsSynced or isDmFeedChatroomsSynced based on isDm param
 export async function setAppConfig(isDm: boolean) {
   const realm = new Realm(Db.getInstance());
   try {
@@ -16,6 +17,7 @@ export async function setAppConfig(isDm: boolean) {
   }
 }
 
+// Method to get app config
 export async function getAppConfig() {
   const realm = new Realm(Db.getInstance());
   try {
@@ -27,6 +29,7 @@ export async function getAppConfig() {
   }
 }
 
+// Method to initiate app config by false
 export async function initiateAppConfig() {
   const realm = new Realm(Db.getInstance());
   try {
