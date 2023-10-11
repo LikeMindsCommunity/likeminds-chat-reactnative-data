@@ -136,14 +136,16 @@ export async function saveConversationData(
             ? data?.convReactionsMeta[conversation?.id?.toString()]
             : [];
 
-        const reactionCreator =
-          conversation?.hasReactions === true &&
-          conversationReaction?.length > 0
-            ? data?.userMeta[conversationReaction[0]?.userId]
-            : null;
+        for (let i = 0; i < conversationReaction.length; i++) {
+          const reactionCreator =
+            conversation?.hasReactions === true &&
+            conversationReaction?.length > 0
+              ? data?.userMeta[conversationReaction[i]?.userId]
+              : null;
 
-        if (reactionCreator !== null && conversationReaction?.length > 0) {
-          conversationReaction[0].member = reactionCreator;
+          if (reactionCreator !== null && conversationReaction?.length > 0) {
+            conversationReaction[i].member = reactionCreator;
+          }
         }
 
         // save polls

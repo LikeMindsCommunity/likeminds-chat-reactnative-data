@@ -22,6 +22,17 @@ import { Attachment } from "../../shared/responseModels/Attachment";
 import { dummyKeys } from "../constants/dummyKeys";
 import { TimeStampRO } from "../models/TimeStampRO";
 import { getChatroom, getChatrooms } from "./queries/chatroom";
+import { AppConfigRO } from "../models/AppConfigRO";
+
+// convertToAppConfigRO method takes AppConfig and converts it to TimeStampRO
+export const convertToAppConfigRO = (): AppConfigRO => {
+  const appConfigRO: AppConfigRO = {
+    isGroupFeedChatroomsSynced: false,
+    isDmFeedChatroomsSynced: false,
+    ...dummyKeys(AppConfigRO),
+  };
+  return appConfigRO;
+};
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO
 export const convertToTimeStampRO = (): TimeStampRO => {
