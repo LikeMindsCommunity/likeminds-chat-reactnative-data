@@ -784,18 +784,22 @@ class LMChatClient {
     return updateChatroomFollowStatus(chatroomId, followStatus);
   }
 
+  // Method to update poll votes in localDB
   async updatePollVotes(data: ConversationModel[], communityId: string) {
     return updatePollVotes(data, communityId);
   }
 
+  // Method to setAppConfig
   async setAppConfig(isDm: boolean) {
     return setAppConfig(isDm);
   }
 
+  // Method to getAppConfig
   async getAppConfig() {
     return getAppConfig();
   }
 
+  // Method to initiateAppConfig
   async initiateAppConfig() {
     return initiateAppConfig();
   }
