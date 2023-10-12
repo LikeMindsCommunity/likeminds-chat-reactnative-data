@@ -371,6 +371,12 @@ export async function saveNewConversation(
           Realm.UpdateMode.All
         );
       }
+      const chatroom = realm
+        .objects<ChatroomRO>(ChatroomRO.schema.name)
+        .filtered(`id = "${chatroomId}"`);
+
+      chatroom[0].totalResponseCount = chatroom[0].totalResponseCount + 1;
+      chatroom[0].totalAllResponseCount = chatroom[0].totalAllResponseCount + 1;
     });
   } finally {
     realm.close();
