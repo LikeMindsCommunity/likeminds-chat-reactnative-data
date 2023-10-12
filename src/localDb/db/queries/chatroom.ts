@@ -382,12 +382,11 @@ export async function updateChatroomFollowStatus(
 export async function updateChatroomViewed(chatroomId: string) {
   const realm = new Realm(Db.getInstance());
   try {
+    const chatroom = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
-      const chatrooms = realm.objects(ChatroomRO.schema.name);
-      const filteredChatroom: any = chatrooms.filtered(
-        `id = "${chatroomId}"`
-      )[0];
-      filteredChatroom.isChatroomVisited = true;
+      chatroom[0].isChatroomVisited = true;
     });
   } finally {
     realm.close();

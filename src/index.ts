@@ -171,6 +171,11 @@ import Db from "./localDb/db/db";
 import { GetExploreTabCountResponse } from "./pages/homeFeed/responseModels/GetExploreTabCountResponse";
 import { Member } from "./shared/responseModels/Member";
 import { GetChatroomResponse } from "./pages/chatroom/responseModels/GetChatroomResponse";
+import {
+  getAppConfig,
+  initiateAppConfig,
+  setAppConfig,
+} from "./localDb/db/queries/appConfig";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -779,8 +784,24 @@ class LMChatClient {
     return updateChatroomFollowStatus(chatroomId, followStatus);
   }
 
+  // Method to update poll votes in localDB
   async updatePollVotes(data: ConversationModel[], communityId: string) {
     return updatePollVotes(data, communityId);
+  }
+
+  // Method to setAppConfig
+  async setAppConfig(isDm: boolean) {
+    return setAppConfig(isDm);
+  }
+
+  // Method to getAppConfig
+  async getAppConfig() {
+    return getAppConfig();
+  }
+
+  // Method to initiateAppConfig
+  async initiateAppConfig() {
+    return initiateAppConfig();
   }
 }
 
