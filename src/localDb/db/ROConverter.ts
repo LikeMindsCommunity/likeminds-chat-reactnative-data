@@ -287,7 +287,7 @@ export const convertToConversationRO = (
     answer: conversation?.answer,
     state: conversation?.state,
     createdEpoch: conversation?.createdEpoch || 0,
-    createdAt: conversation?.createdAt || null,
+    createdAt: conversation?.createdAt?.toString() || null,
     date: conversation?.date || null,
     isEdited: conversation?.isEdited || null,
     lastSeen: conversation?.lastSeen || false,
@@ -362,7 +362,9 @@ export const convertToChatroomRO = (
   lastConversationRO?: LastConversationRO
 ): ChatroomRO => {
   //Query to get lastConversation from realm
-  const conversations = realm.objects(ConversationRO.schema.name);
+  const conversations = realm.objects<ConversationRO>(
+    ConversationRO.schema.name
+  );
   const conversation = conversations.filtered(
     `id = "${chatroom?.lastConversationId}"`
   );
@@ -375,6 +377,14 @@ export const convertToChatroomRO = (
   const lastSeenConversationStringified = JSON.parse(
     JSON.stringify(lastSeenConversation)
   );
+  const allConversations = conversations.filtered(
+    `chatroomId = "${chatroom?.id}"`
+  );
+  const totalAllResponseCount = allConversations.length;
+  const filteredConversation = allConversations.filtered(
+    `(state = 0 || state = 10)`
+  );
+  const totalResponseCount = filteredConversation.length;
 
   //Query to get existingChatroom from realm
   const chatroomData = realm
@@ -408,14 +418,8 @@ export const convertToChatroomRO = (
     lastSeenConversation: lastSeenConversationStringified[0]
       ? lastSeenConversationStringified[0]
       : null,
-    totalResponseCount:
-      chatroom?.totalResponseCount == undefined
-        ? 0
-        : parseInt(chatroom.totalResponseCount),
-    totalAllResponseCount:
-      chatroom?.totalAllResponseCount == undefined
-        ? 0
-        : parseInt(chatroom.totalAllResponseCount),
+    totalResponseCount: totalResponseCount,
+    totalAllResponseCount: totalAllResponseCount,
     muteStatus: chatroom.muteStatus || false,
     followStatus: chatroom?.followStatus || false,
     hasBeenNamed: chatroom.hasBeenNamed || null,

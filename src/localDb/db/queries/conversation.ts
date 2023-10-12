@@ -108,18 +108,15 @@ export async function saveConversationData(
         }
 
         if (chatDbUtil.isNull(conversation?.replyId)) {
-          const conversations = realm.objects(ConversationRO.schema.name);
-          const conversationToBeReplied = conversations.filtered(
-            `id = "${conversation.replyId}"`
+          const repliedConversation =
+            data?.conversationMeta[conversation?.replyId];
+
+          const stringifiedConversation = JSON.parse(
+            JSON.stringify(repliedConversation)
           );
 
-          const stringifiedConversation = JSON.stringify(
-            conversationToBeReplied
-          );
-          const parsedReplyConversation = JSON.parse(stringifiedConversation);
-
-          if (conversationToBeReplied?.length !== 0) {
-            conversation.replyConversationObject = parsedReplyConversation[0];
+          if (repliedConversation) {
+            conversation.replyConversationObject = stringifiedConversation;
           }
         }
 

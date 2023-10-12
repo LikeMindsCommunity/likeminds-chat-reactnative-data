@@ -10,6 +10,7 @@ export interface SyncConversationResponse {
   userMeta: { [key: string]: Member };
   communityMeta: { [key: string]: Community };
   chatroomMeta: { [key: string]: Chatroom };
+  conversationMeta: { [key: string]: Conversation };
   conversationsData: { [key: string]: Conversation[] };
   chatroomReactionsMeta: { [key: string]: ReactionMeta[] };
   convReactionsMeta: { [key: string]: ReactionMeta[] };
