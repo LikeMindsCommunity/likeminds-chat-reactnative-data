@@ -377,10 +377,14 @@ export const convertToChatroomRO = (
   const lastSeenConversationStringified = JSON.parse(
     JSON.stringify(lastSeenConversation)
   );
+
+  //Query to get all conversations of a chatroom
   const allConversations = conversations.filtered(
     `chatroomId = "${chatroom?.id}"`
   );
   const totalAllResponseCount = allConversations.length;
+
+  //Query to get normal conversation and not state messages
   const filteredConversation = allConversations.filtered(
     `(state = 0 || state = 10)`
   );
