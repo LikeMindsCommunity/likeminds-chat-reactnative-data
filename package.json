@@ -1,5 +1,5 @@
 {
-  "name": "reactnative-chat-data",
+  "name": "@likeminds.community/chat-rn",
   "version": "1.0.0",
   "description": "LikeMinds ReactNative SDK for chat APIs",
   "main": "dist/index.js",
@@ -7,6 +7,7 @@
   "unpkg": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "npm-deploy": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap && npm publish --access public",
     "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
   },
   "author": "LikeMinds",
@@ -26,7 +27,7 @@
     "url": "git+https://github.com/LikeMindsCommunity/ReactNative-Chat-Data.git"
   },
   "dependencies": {
-    "@likeminds.community/chat-js": "^1.5.0",
+    "@likeminds.community/chat-js": "1.6.0",
     "firebase": "10.1.0",
     "react": "18.2.0",
     "react-native": "0.72.4",
