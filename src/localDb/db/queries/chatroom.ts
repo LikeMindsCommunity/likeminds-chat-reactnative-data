@@ -298,7 +298,9 @@ export async function getFilteredChatrooms(isDm: boolean) {
     const items = realm.objects(ChatroomRO.schema.name);
     const filteredAndSortedChatroom = isDm
       ? items
-          .filtered(`(type = 10) && (followStatus=true)`)
+          .filtered(
+            `(type = 10) && (followStatus=true) && (totalResponseCount>0)`
+          )
           .sorted("updatedAt", true)
       : items
           .filtered(`(type = 0 || type=7) && (followStatus=true)`)
