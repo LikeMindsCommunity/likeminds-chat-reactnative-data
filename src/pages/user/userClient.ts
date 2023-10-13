@@ -1,0 +1,102 @@
+import DLClient from "@likeminds.community/chat-js";
+import LMResponse from "src/core/services/lmresponse";
+import { ModelConverter } from "../../utils/ModelConverter";
+import {
+  GetProfile,
+  GetMemberChatroom,
+  EditProfile,
+  GetAllMembers,
+  Logout,
+  MemberState,
+  USERTYPE,
+  PROFILE,
+  Members,
+  Search,
+  InitUserWithUuid,
+} from "@likeminds.community/chat-js/dist/pages/user/types";
+import { InitiateUserResponse } from "./responseModels/InitUserResponse";
+import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
+import { SearchMembersResponse } from "./responseModels/SearchMembersResponse";
+import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
+import { Nothing } from "src/shared/responseModels/Nothing";
+
+class UserClient {
+  async initiateUser(
+    initUser: InitUserWithUuid,
+    dlClient: DLClient
+  ): Promise<LMResponse<InitiateUserResponse>> {
+    return await dlClient.initiateUserWithUuid(initUser);
+  }
+
+  async logout(
+    logout: Logout,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.logout(logout);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async getMemberState(
+    dlClient: DLClient
+  ): Promise<LMResponse<GetMemberStateResponse>> {
+    try {
+      const resp = await dlClient.getMemberState();
+      const convertedResp: GetMemberStateResponse =
+        ModelConverter.responseBodyParser(resp);
+      return new LMResponse<GetMemberStateResponse>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<GetMemberStateResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async searchMembers(
+    search: Search,
+    dlClient: DLClient
+  ): Promise<LMResponse<SearchMembersResponse>> {
+    try {
+      const resp = await dlClient.searchMembers(search);
+      const convertedResp: SearchMembersResponse =
+        ModelConverter.responseBodyParser(resp);
+      return new LMResponse<SearchMembersResponse>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<SearchMembersResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async getAllMembers(
+    getAllMembers: GetAllMembers,
+    dlClient: DLClient
+  ): Promise<LMResponse<GetAllMembersResponse>> {
+    try {
+      const resp = await dlClient.getAllMembers(getAllMembers);
+      const convertedResp: GetAllMembersResponse =
+        ModelConverter.responseBodyParser(resp);
+      return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<GetAllMembersResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+}
+
+export { UserClient as default };
