@@ -272,8 +272,6 @@ const convertToReactionRO = (
 };
 
 const convertToLinkOgTagRO = (linkOgTag: LinkOGTags): LinkOGTagsRO => {
-  console.log("linkOgTag", linkOgTag);
-
   const convertedLinkOgTags: LinkOGTagsRO = {
     description: linkOgTag?.description,
     image: linkOgTag?.image,
@@ -281,8 +279,6 @@ const convertToLinkOgTagRO = (linkOgTag: LinkOGTags): LinkOGTagsRO => {
     title: linkOgTag?.title,
     ...dummyKeys(LinkOGTagsRO),
   };
-  console.log("convertedLinkOgTags", convertedLinkOgTags);
-
   return convertedLinkOgTags;
 };
 
@@ -296,8 +292,6 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
-  console.log("ogTagsaasa", conversation?.ogTags);
-
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -372,9 +366,6 @@ export const convertToConversationRO = (
     polls: convertToPoll(polls, conversation?.communityId?.toString()),
     ...dummyKeys(ConversationRO),
   };
-
-  console.log("ogTagsaasaConvertedTitle", conversationRO?.ogTags?.title);
-
   return conversationRO;
 };
 
