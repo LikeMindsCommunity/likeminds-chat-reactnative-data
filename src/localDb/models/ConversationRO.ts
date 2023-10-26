@@ -12,6 +12,7 @@ import {
   LIST_REACTION_RO,
   OPTIONAL_BOOLEAN,
   OPTIONAL_INT,
+  OPTIONAL_LINK_OG_TAGS_RO,
   OPTIONAL_LINK_RO,
   OPTIONAL_LIST_CHATROOM_RO,
   OPTIONAL_LIST_COMMUNITY_RO,
@@ -24,6 +25,7 @@ import {
 import { AttachmentRO } from "./AttachmentRO";
 import { ChatroomRO } from "./ChatroomRO";
 import { CommunityRO } from "./CommunityRO";
+import { LinkOGTagsRO } from "./LinkOGTagsRO";
 import { MemberRO } from "./MemberRO";
 import { PollRO } from "./PollRO";
 import { ReactionRO } from "./ReactionRO";
@@ -35,6 +37,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   communityId!: string;
   cardId?: string;
   member?: MemberRO | null;
+  ogTags?: LinkOGTagsRO | null;
   answer!: string;
   state!: number;
   createdEpoch!: number;
@@ -83,6 +86,7 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       communityId: STRING,
       member: OPTIONAL_MEMBER_RO,
       replyId: OPTIONAL_STRING,
+      ogTags: OPTIONAL_LINK_OG_TAGS_RO,
       answer: STRING,
       state: INT,
       createdEpoch: INT,

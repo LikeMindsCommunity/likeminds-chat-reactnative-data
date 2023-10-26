@@ -19,6 +19,7 @@ import {
   DB_SCHEMA_VERSION,
   realmDbMigration,
 } from "./realmDbMigration";
+import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 
 export default class Db {
   private static instance: Realm;
@@ -41,6 +42,7 @@ export default class Db {
       UserRO,
       TimeStampRO,
       AttachmentUploadConversationsRO,
+      LinkOGTagsRO,
     ], // Update with your actual models
     schemaVersion: DB_SCHEMA_VERSION, // Increment when you change the schema
     onMigration: realmDbMigration,
