@@ -5,9 +5,11 @@ on:
     branches:
       - "master"
 
+permissions: write-all
+
 jobs:
   publish:
-    name: Publish to npm
+    name: Publish to npm  
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
