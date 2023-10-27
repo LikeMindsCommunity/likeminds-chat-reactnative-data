@@ -9,10 +9,10 @@
   "scripts": {
     "npm-deploy": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap && npm publish --access public",
     "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
-    "prettier": "prettier 'src/**/*.ts'",
-    "prettier:fix": "prettier --write 'src/**/*.ts'",
-    "eslint": "eslint 'src/**/*.ts'",
-    "eslint:fix": "eslint --fix 'src/**/*.ts'"
+    "eslint": "eslint .",
+    "eslint:fix": "eslint --fix .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "author": "LikeMinds",
   "homepage": "https://likeminds.community/",
