@@ -1,11 +1,10 @@
 import { ConversationRO } from "../models/ConversationRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
-  if (oldVersion.schemaVersion < DB_SCHEMA_VERSION) {
+  if (oldVersion.schemaVersion == 1) {
     const oldObjects = oldVersion.objects<ConversationRO>(
       ConversationRO.schema.name
     );
-
     // Perform the migration by iterating through existing objects and setting the new property
     for (let i = 0; i < oldObjects.length; i++) {
       const oldObject = oldObjects[i];
