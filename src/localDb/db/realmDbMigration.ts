@@ -1,7 +1,8 @@
 import { ConversationRO } from "../models/ConversationRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
-  if (oldVersion.schemaVersion == 1) {
+  let oldSchemaVersion = oldVersion.schemaVersion;
+  if (oldSchemaVersion == 1) {
     const oldObjects = oldVersion.objects<ConversationRO>(
       ConversationRO.schema.name
     );
@@ -12,6 +13,7 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
       const newObject = { ...oldObject, ogTags: null };
       newVersion.create(ConversationRO.schema.name, newObject);
     }
+    oldSchemaVersion++;
   }
 };
 
