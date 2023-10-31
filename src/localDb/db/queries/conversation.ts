@@ -133,7 +133,7 @@ export async function saveConversationData(
             ? data?.convReactionsMeta[conversation?.id?.toString()]
             : [];
 
-        for (let i = 0; i < conversationReaction.length; i++) {
+        for (let i = 0; i < conversationReaction?.length; i++) {
           const reactionCreator =
             conversation?.hasReactions === true &&
             conversationReaction?.length > 0

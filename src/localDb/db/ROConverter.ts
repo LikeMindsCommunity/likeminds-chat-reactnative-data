@@ -23,6 +23,8 @@ import { dummyKeys } from "../constants/dummyKeys";
 import { TimeStampRO } from "../models/TimeStampRO";
 import { getChatroom, getChatrooms } from "./queries/chatroom";
 import { AppConfigRO } from "../models/AppConfigRO";
+import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
+import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 
 // convertToAppConfigRO method takes AppConfig and converts it to TimeStampRO
 export const convertToAppConfigRO = (): AppConfigRO => {
@@ -269,6 +271,17 @@ const convertToReactionRO = (
   return reactionRO;
 };
 
+const convertToLinkOgTagRO = (linkOgTag: LinkOGTags): LinkOGTagsRO => {
+  const convertedLinkOgTags: LinkOGTagsRO = {
+    description: linkOgTag?.description,
+    image: linkOgTag?.image,
+    url: linkOgTag?.url,
+    title: linkOgTag?.title,
+    ...dummyKeys(LinkOGTagsRO),
+  };
+  return convertedLinkOgTags;
+};
+
 // convertToConversationRO method takes Conversation data and converts it to ConversationRO
 export const convertToConversationRO = (
   realm: Realm,
@@ -311,6 +324,10 @@ export const convertToConversationRO = (
     hasFiles: conversation?.hasFiles || false,
     allowAddOption: conversation?.allowAddOption || null,
     pollType: conversation?.pollType || null,
+    ogTags:
+      conversation?.ogTags !== undefined
+        ? convertToLinkOgTagRO(conversation?.ogTags)
+        : null,
     isInProgress: conversation?.isInProgress || null,
     pollTypeText: conversation?.pollTypeText || null,
     submitTypeText: conversation?.submitTypeText || null,
@@ -382,13 +399,13 @@ export const convertToChatroomRO = (
   const allConversations = conversations.filtered(
     `chatroomId = "${chatroom?.id}"`
   );
-  const totalAllResponseCount = allConversations.length;
+  const totalAllResponseCount = allConversations?.length;
 
   //Query to get normal conversation and not state messages
   const filteredConversation = allConversations.filtered(
     `(state = 0 || state = 10)`
   );
-  const totalResponseCount = filteredConversation.length;
+  const totalResponseCount = filteredConversation?.length;
 
   //Query to get existingChatroom from realm
   const chatroomData = realm
