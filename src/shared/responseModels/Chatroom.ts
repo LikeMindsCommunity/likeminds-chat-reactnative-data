@@ -1,5 +1,4 @@
 import { Member } from "./Member";
-import { Reaction } from "./Reaction";
 import { Conversation } from "./Conversation";
 import { Cohort } from "./Cohort";
 

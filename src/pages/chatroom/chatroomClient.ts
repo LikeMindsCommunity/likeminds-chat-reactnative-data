@@ -18,15 +18,11 @@ import {
   PushReport,
   LeaveSecretChatroom,
   ParticipantsType,
-  CHTYPE,
   CmetaType,
-  CRSeen,
-  ChatroomSeen,
   ChatroomSeenWithUuid,
   FollowChatroomWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../../core/services/lmresponse";
-import { Chatroom } from "../../shared/responseModels/Chatroom";
 import { ShareChatroomUrlResponse } from "./responseModels/ShareChatroomUrlResponse";
 import { GetTaggingListResponse } from "./responseModels/GetTaggingListResponse";
 import { GetConversationsResponse } from "./responseModels/GetConversationsResponse";

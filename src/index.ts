@@ -5,14 +5,12 @@ import ChatroomClient from "./pages/chatroom/chatroomClient";
 import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
-  FollowChatroom,
   MuteChatroom,
   Chatroom as ChatroomRequest,
   MarkRead,
   ShareChatroom,
   SetChatroom,
   TaggingList,
-  Conversation,
   PostConversation,
   EditConversation,
   DeleteConversation,
@@ -25,17 +23,12 @@ import {
   LeaveSecretChatroom,
   ParticipantsType,
   CmetaType,
-  CHTYPE,
-  CRSeen,
-  ChatroomSeen,
   FollowChatroomWithUuid,
   ChatroomSeenWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../src/core/services/lmresponse";
-import { Chatroom } from "./shared/responseModels/Chatroom";
 import { ShareChatroomUrlResponse } from "./pages/chatroom/responseModels/ShareChatroomUrlResponse";
 import { GetTaggingListResponse } from "./pages/chatroom/responseModels/GetTaggingListResponse";
-import { GetConversationsResponse } from "./pages/chatroom/responseModels/GetConversationsResponse";
 import { PutMultimediaResponse } from "./pages/chatroom/responseModels/PutMultimediaResponse";
 import { DecodeUrlResponse } from "./pages/chatroom/responseModels/DecodeUrlResponse";
 import { Nothing } from "./shared/responseModels/Nothing";
@@ -49,12 +42,8 @@ import { FetchConversationResponse } from "./pages/chatroom/responseModels/Fetch
 import {
   FetchDMFeed,
   CheckDMStatus,
-  CheckDMLimit,
-  CreateDMChatroom,
   SendDMRequest,
   BlockMember,
-  CID,
-  CANDM,
   CreateDMChatroomWithUuid,
   CheckDMLimitWithUuid,
   CANDMWithUuid,
@@ -67,7 +56,6 @@ import DirectMessageClient from "./pages/directMessage/directMessageClient";
 import { CreateDMChatroomResponse } from "./pages/directMessage/responseModels/CreateDMChatroomResponse";
 import { FetchDMResponse } from "./pages/directMessage/responseModels/FetchDMResponse";
 import { BlockDMRequestResponse } from "./pages/directMessage/responseModels/BlockDMRequestResponse";
-import { GetDMFeedResponse } from "./pages/directMessage/responseModels/GetDMFeedResponse";
 import { CanDMFeedResponse } from "./pages/directMessage/responseModels/CanDMFeedResponse";
 
 //Explore Feed
@@ -78,7 +66,6 @@ import ExploreFeedClient from "./pages/exploreFeed/exploreFeedClient";
 //HomeFeed
 import {
   HomeFeed,
-  CRid,
   INVITE,
   IaType,
   Device,
@@ -111,16 +98,8 @@ import SearchClient from "./pages/search/searchClient";
 
 //User
 import {
-  InitUser,
-  GetProfile,
-  GetMemberChatroom,
-  EditProfile,
   GetAllMembers,
   Logout,
-  MemberState,
-  USERTYPE,
-  PROFILE,
-  Members,
   Search,
   InitUserWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/user/types";

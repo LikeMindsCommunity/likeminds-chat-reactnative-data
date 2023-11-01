@@ -1,5 +1,5 @@
 import Realm from "realm";
-import { APP_CONFIG_RO, BOOLEAN, INT, LIST_STRING, ID } from "../constants";
+import { APP_CONFIG_RO, BOOLEAN } from "../constants";
 
 export class AppConfigRO extends Realm.Object<AppConfigRO> {
   isGroupFeedChatroomsSynced!: boolean;

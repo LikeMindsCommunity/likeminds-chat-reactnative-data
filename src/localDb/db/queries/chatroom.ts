@@ -16,7 +16,6 @@ import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { ConversationRO } from "src/localDb/models/ConversationRO";
 import { Conversation } from "src/shared/responseModels/Conversation";
-import { Member } from "src/shared/responseModels/Member";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -157,7 +156,7 @@ export async function saveChatroomResponse(
         );
 
         const lastSeenConversationId = chatroom.lastSeenConversationId;
-        let lastSeenConversation =
+        const lastSeenConversation =
           data.conversationMeta[lastSeenConversationId?.toString()];
         let lastSeenConversationRO = undefined;
 

@@ -4,7 +4,6 @@ import {
   INT,
   MEMBER_RO,
   OPTINAL_SDK_CLIENT_INFO_RO,
-  OPTIONAL_INT,
   OPTIONAL_STRING,
   STRING,
 } from "../constants";
