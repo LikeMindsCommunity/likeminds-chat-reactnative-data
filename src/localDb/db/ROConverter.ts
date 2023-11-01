@@ -21,7 +21,6 @@ import { ReactionRO } from "../models/ReactionRO";
 import { Attachment } from "../../shared/responseModels/Attachment";
 import { dummyKeys } from "../constants/dummyKeys";
 import { TimeStampRO } from "../models/TimeStampRO";
-import { getChatroom, getChatrooms } from "./queries/chatroom";
 import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
@@ -48,7 +47,7 @@ export const convertToTimeStampRO = (): TimeStampRO => {
 
 // convertToCommunity method takes Community data and converts it to CommunityRO
 export const convertToCommunity = (community: Community): CommunityRO => {
-  let communityRO: CommunityRO = {
+  const communityRO: CommunityRO = {
     id: community?.id?.toString(),
     name: community?.name?.toString(),
     imageUrl: community?.imageUrl,
@@ -178,7 +177,7 @@ const convertToSDKClientInfoRO = (
 // convertToMemberRO method takes Member data and converts it to MemberRO
 export const convertToMemberRO = (
   member: Member,
-  communityId: any
+  communityId: string
 ): MemberRO | undefined => {
   if (!member?.sdkClientInfo) return undefined;
 
@@ -420,7 +419,7 @@ export const convertToChatroomRO = (
   const currentChatroom = chatroomObject[0];
 
   //To create updatedAt key
-  let updatedAt =
+  const updatedAt =
     lastConversationRO?.createdEpoch ??
     currentChatroom?.lastConversationRO?.createdEpoch ??
     chatroom.createdAt;

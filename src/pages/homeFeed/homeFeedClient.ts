@@ -4,7 +4,6 @@ import { ModelConverter } from "../../utils/ModelConverter";
 import { HomeFeedResponse } from "./responseModels/HomeFeedResponse";
 import {
   HomeFeed,
-  CRid,
   INVITE,
   IaType,
   Device,

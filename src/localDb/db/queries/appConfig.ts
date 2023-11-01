@@ -33,7 +33,7 @@ export async function getAppConfig() {
 export async function initiateAppConfig() {
   const realm = new Realm(Db.getInstance());
   try {
-    let appConfigRO = convertToAppConfigRO();
+    const appConfigRO = convertToAppConfigRO();
     realm.write(() => {
       realm.create(AppConfigRO.schema.name, appConfigRO, Realm.UpdateMode.All);
     });

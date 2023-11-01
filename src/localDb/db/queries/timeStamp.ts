@@ -36,7 +36,7 @@ export async function getTimeStamp() {
 export async function initiateTimeStamp() {
   const realm = new Realm(Db.getInstance());
   try {
-    let timeStampRO = convertToTimeStampRO();
+    const timeStampRO = convertToTimeStampRO();
     realm.write(() => {
       realm.create(TimeStampRO.schema.name, timeStampRO, Realm.UpdateMode.All);
     });

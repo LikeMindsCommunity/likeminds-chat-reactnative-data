@@ -2,15 +2,8 @@ import DLClient from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
-  GetProfile,
-  GetMemberChatroom,
-  EditProfile,
   GetAllMembers,
   Logout,
-  MemberState,
-  USERTYPE,
-  PROFILE,
-  Members,
   Search,
   InitUserWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
