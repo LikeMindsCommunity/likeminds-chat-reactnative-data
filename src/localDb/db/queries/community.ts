@@ -8,7 +8,7 @@ export function saveCommunity(communityData: any) {
   const realm = new Realm(Db.getInstance());
   try {
     realm.write(() => {
-      let community = convertToCommunity(communityData);
+      const community = convertToCommunity(communityData);
       realm.create(CommunityRO.schema.name, community, Realm.UpdateMode.All);
     });
   } finally {

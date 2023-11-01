@@ -6,7 +6,6 @@ import {
   convertToCommunity,
   convertToMemberRO,
   convertToConversationRO,
-  convertToLastConversationRO,
   convertToChatroomRO,
   convertToPoll,
 } from "../ROConverter";
@@ -292,7 +291,7 @@ export async function replaceSavedConversation(data: Conversation) {
         `chatroomId = "${data?.chatroomId}"`
       );
 
-      let filteredConversation: any = allConversations.filtered(
+      const filteredConversation: any = allConversations.filtered(
         `id = "${data?.temporaryId}"`
       );
 

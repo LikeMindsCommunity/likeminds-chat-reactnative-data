@@ -2,12 +2,9 @@ import { ModelConverter } from "../../utils/ModelConverter";
 import {
   FetchDMFeed,
   CheckDMStatus,
-  CreateDMChatroom,
-  CheckDMLimit,
   SendDMRequest,
   BlockMember,
   CID,
-  CANDM,
   CheckDMLimitWithUuid,
   CreateDMChatroomWithUuid,
   CANDMWithUuid,
