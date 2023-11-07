@@ -16,6 +16,8 @@ import { SyncConversationResponse } from "src/sync/model/syncConversationRespons
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { Member } from "src/shared/responseModels/Member";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
+import { GetConversationsRequest } from "src/localDb/models/requestModels/GetConversationsRequest";
+import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -377,6 +379,60 @@ export async function saveNewConversation(
       chatroom[0].totalResponseCount = chatroom[0].totalResponseCount + 1;
       chatroom[0].totalAllResponseCount = chatroom[0].totalAllResponseCount + 1;
     });
+  } finally {
+    realm.close();
+  }
+}
+
+export async function getPaginatedConversations(
+  getConversationsRequest: GetConversationsRequest
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const conversations = realm.objects(ConversationRO.schema.name);
+    const filteredConversations = conversations
+      .filtered(
+        `chatroomId = "${getConversationsRequest?.medianConversation?.chatroomId}"`
+      )
+      .sorted("createdEpoch", false);
+
+    if (getConversationsRequest.type == GetConversationsType.ABOVE) {
+      const currentConversationIndex = filteredConversations.findIndex(
+        (val: any) => val?.id == getConversationsRequest?.medianConversation?.id
+      );
+      const aboveConversations = filteredConversations.slice(
+        currentConversationIndex - getConversationsRequest?.limit,
+        currentConversationIndex
+      );
+      const conversationObject = aboveConversations.map((conversation) => {
+        const stringifiedConversation = JSON.stringify(conversation);
+        return {
+          ...JSON.parse(stringifiedConversation),
+        };
+      });
+      return conversationObject;
+    } else if (getConversationsRequest.type == GetConversationsType.BELOW) {
+      const currentConversationIndex = filteredConversations.findIndex(
+        (val: any) => val?.id == getConversationsRequest?.medianConversation?.id
+      );
+      const belowConversations = filteredConversations.slice(
+        currentConversationIndex + 1,
+        currentConversationIndex + getConversationsRequest?.limit
+      );
+      const conversationObject = belowConversations.map((conversation) => {
+        const stringifiedConversation = JSON.stringify(conversation);
+        return {
+          ...JSON.parse(stringifiedConversation),
+        };
+      });
+      return conversationObject;
+    } else {
+      // TODO
+      return getConversations(
+        getConversationsRequest?.medianConversation?.chatroomId,
+        getConversationsRequest?.limit
+      );
+    }
   } finally {
     realm.close();
   }

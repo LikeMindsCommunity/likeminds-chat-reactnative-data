@@ -423,3 +423,45 @@ export async function updateMuteStatus(chatroomId: string) {
     realm.close();
   }
 }
+
+export async function updateChatroomTopic(
+  chatroomId: string,
+  topic: Conversation
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+    const chatroom = items.filtered(`id = "${chatroomId}"`);
+    const memberRO = convertToMemberRO(topic?.member, topic?.communityId);
+    const conversationRO = convertToConversationRO(
+      realm,
+      topic,
+      memberRO,
+      chatroomId,
+      topic?.attachments,
+      topic?.polls,
+      topic?.reactions
+    );
+    realm.write(() => {
+      (chatroom[0].topic = conversationRO),
+        (chatroom[0].topicId = topic?.id?.toString());
+    });
+    console.log("chatroomEditeddddd", chatroom);
+  } finally {
+    realm.close();
+  }
+}
+
+export async function deleteChatroomTopic(chatroomId: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+    const chatroom = items.filtered(`id = "${chatroomId}"`);
+    realm.write(() => {
+      (chatroom[0].topic = null), (chatroom[0].topicId = null);
+    });
+    console.log("chatroomCurrent", chatroom);
+  } finally {
+    realm.close();
+  }
+}
