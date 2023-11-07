@@ -133,6 +133,7 @@ import {
   getConversations,
   updatePollVotes,
   updateDeletedBy,
+  getPaginatedConversations,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -144,6 +145,8 @@ import {
   updateChatroomFollowStatus,
   updateUnseenCount,
   updateMuteStatus,
+  updateChatroomTopic,
+  deleteChatroomTopic,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -155,6 +158,7 @@ import {
   initiateAppConfig,
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
+import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -781,6 +785,20 @@ class LMChatClient {
   // Method to initiateAppConfig
   async initiateAppConfig() {
     return initiateAppConfig();
+  }
+
+  async getPaginatedConversations(
+    getConversationsRequest: GetConversationsRequest
+  ) {
+    return getPaginatedConversations(getConversationsRequest);
+  }
+
+  async updateChatroomTopic(chatroomId: string, topic: ConversationModel) {
+    return updateChatroomTopic(chatroomId, topic);
+  }
+
+  async deleteChatroomTopic(chatroomId: string) {
+    return deleteChatroomTopic(chatroomId);
   }
 }
 
