@@ -464,6 +464,63 @@ export async function getConversations(
   }
 }
 
+export async function paginateDown(
+  chatroomId: string,
+  conversation: Conversation,
+  pageSize: number
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const conversations = realm.objects(ConversationRO.schema.name);
+    const allConversations = conversations
+      .filtered(`chatroomId = "${chatroomId}"`)
+      .sorted("createdEpoch", true);
+
+    console.log("allConversations", allConversations);
+
+    const index = allConversations.findIndex(
+      (val: any) => val?.id == conversation?.id
+    );
+
+    console.log("indexFound", index);
+
+    let filteredConversation = allConversations.slice(0, index);
+    console.log("filteredConversations", filteredConversation);
+    filteredConversation = filteredConversation.reverse();
+    const finalConv = filteredConversation.slice(0, pageSize);
+    console.log("finalConv", finalConv);
+
+    // console.log("allConversations", allConversations);
+
+    // const filteredConversations = conversations
+    //   .filtered(
+    //     `chatroomId = "${chatroomId}" AND createdEpoch > ${createdEpoch}`
+    //   )
+    //   .sorted("createdEpoch", true);
+
+    // console.log("filteredConversations", filteredConversations);
+    // console.log("filteredConversationsLength", filteredConversations.length);
+
+    // const finalConv = filteredConversations.slice(0, pageSize);
+    // console.log("finalConv", finalConv);
+    // console.log("finalConvLength", finalConv.length);
+
+    const conversationObject = finalConv.map((conversation) => {
+      const stringifiedConversation = JSON.stringify(conversation);
+      return {
+        ...JSON.parse(stringifiedConversation),
+      };
+    });
+
+    console.log("conversationObject", conversationObject);
+    console.log("conversationObjectLength", conversationObject.length);
+
+    return conversationObject;
+  } finally {
+    realm.close();
+  }
+}
+
 export async function paginateUp(
   chatroomId: string,
   createdEpoch: number,

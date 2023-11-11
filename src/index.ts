@@ -134,6 +134,7 @@ import {
   updatePollVotes,
   updateDeletedBy,
   getPaginatedConversations,
+  paginateDown,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -799,6 +800,14 @@ class LMChatClient {
 
   async deleteChatroomTopic(chatroomId: string) {
     return deleteChatroomTopic(chatroomId);
+  }
+
+  async paginateDown(
+    chatroomId: string,
+    conversation: ConversationModel,
+    pageSize: number
+  ) {
+    return paginateDown(chatroomId, conversation, pageSize);
   }
 }
 
