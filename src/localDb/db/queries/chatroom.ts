@@ -446,7 +446,6 @@ export async function updateChatroomTopic(
       (chatroom[0].topic = conversationRO),
         (chatroom[0].topicId = topic?.id?.toString());
     });
-    console.log("chatroomEditeddddd", chatroom);
   } finally {
     realm.close();
   }
@@ -460,7 +459,6 @@ export async function deleteChatroomTopic(chatroomId: string) {
     realm.write(() => {
       (chatroom[0].topic = null), (chatroom[0].topicId = null);
     });
-    console.log("chatroomCurrent", chatroom);
   } finally {
     realm.close();
   }
