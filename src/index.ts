@@ -133,8 +133,8 @@ import {
   getConversations,
   updatePollVotes,
   updateDeletedBy,
-  getPaginatedConversations,
   paginateDown,
+  getPaginatedConversaton,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -147,7 +147,6 @@ import {
   updateUnseenCount,
   updateMuteStatus,
   updateChatroomTopic,
-  deleteChatroomTopic,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -160,6 +159,7 @@ import {
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
+import { GetConversationsType } from "./localDb/models/requestModels/GetConversationsType";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -254,11 +254,13 @@ class LMChatClient {
 
   // Method to set chatroom topic
   async setChatroomTopic(
-    setChatroom: SetChatroom
+    setChatroom: SetChatroom,
+    conversation: ConversationModel
   ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.setChatroomTopic(
       setChatroom,
-      LMChatClient.dlClient
+      LMChatClient.dlClient,
+      conversation
     );
   }
 
@@ -697,9 +699,17 @@ class LMChatClient {
   async deleteConversation(
     conversationId: string,
     user: Member,
-    conversations: ConversationModel[]
+    conversations: ConversationModel[],
+    isChatroomTopic: boolean,
+    chatroomId: string
   ) {
-    return deleteConversation(conversationId, user, conversations);
+    return deleteConversation(
+      conversationId,
+      user,
+      conversations,
+      isChatroomTopic,
+      chatroomId
+    );
   }
 
   // Method to get a particular convesation from localDB
@@ -744,15 +754,6 @@ class LMChatClient {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
-  // to get next set of conversation data
-  async getConversations(
-    chatroomId: string,
-    pageSize: number,
-    createdEpoch?: number
-  ) {
-    return getConversations(chatroomId, pageSize, createdEpoch);
-  }
-
   // Method to update chatRequestState of a chatroom in localDB
   async updateChatRequestState(chatroomId: string, chatRequestState: number) {
     return updateChatRequestState(chatroomId, chatRequestState);
@@ -788,26 +789,26 @@ class LMChatClient {
     return initiateAppConfig();
   }
 
-  async getPaginatedConversations(
-    getConversationsRequest: GetConversationsRequest
-  ) {
-    return getPaginatedConversations(getConversationsRequest);
+  async getConversations(getConversationsRequest: GetConversationsRequest) {
+    return getConversations(getConversationsRequest);
   }
 
   async updateChatroomTopic(chatroomId: string, topic: ConversationModel) {
     return updateChatroomTopic(chatroomId, topic);
   }
 
-  async deleteChatroomTopic(chatroomId: string) {
-    return deleteChatroomTopic(chatroomId);
-  }
-
-  async paginateDown(
+  async getPaginatedConversaton(
     chatroomId: string,
     conversation: ConversationModel,
-    pageSize: number
+    pageSize: number,
+    getConversationsType: GetConversationsType
   ) {
-    return paginateDown(chatroomId, conversation, pageSize);
+    return getPaginatedConversaton(
+      chatroomId,
+      conversation,
+      pageSize,
+      getConversationsType
+    );
   }
 }
 

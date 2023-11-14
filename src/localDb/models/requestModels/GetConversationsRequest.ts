@@ -2,7 +2,8 @@ import { Conversation } from "src/shared/responseModels/Conversation";
 import { GetConversationsType } from "./GetConversationsType";
 
 export interface GetConversationsRequest {
-  type: GetConversationsType;
+  chatroomId: string;
   limit: number;
   medianConversation?: Conversation;
+  type?: GetConversationsType;
 }

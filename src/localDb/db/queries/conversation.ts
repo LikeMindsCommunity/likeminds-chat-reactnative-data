@@ -18,6 +18,7 @@ import { Member } from "src/shared/responseModels/Member";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 import { GetConversationsRequest } from "src/localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
+import { deleteChatroomTopic } from "./chatroom";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -252,7 +253,9 @@ export async function updateDeletedBy(
 export async function deleteConversation(
   conversationId: string,
   user: Member,
-  conversations: Conversation[]
+  conversations: Conversation[],
+  isChatroomTopic: boolean,
+  chatroomId: string
 ) {
   const realm = new Realm(Db.getInstance());
   try {
@@ -267,6 +270,10 @@ export async function deleteConversation(
         conversations[j] = conversationFromRealm[0];
         break;
       }
+    }
+    // deleteing chatroom topic from local db as well
+    if (isChatroomTopic) {
+      await deleteChatroomTopic(chatroomId);
     }
     return conversations;
   } finally {
@@ -384,7 +391,7 @@ export async function saveNewConversation(
   }
 }
 
-export async function getPaginatedConversations(
+export async function getConversations(
   getConversationsRequest: GetConversationsRequest
 ) {
   const realm = new Realm(Db.getInstance());
@@ -427,99 +434,102 @@ export async function getPaginatedConversations(
       });
       return conversationObject;
     } else {
-      return getConversations(
-        getConversationsRequest?.medianConversation?.chatroomId,
-        getConversationsRequest?.limit
-      );
+      if (!!getConversationsRequest.medianConversation?.createdEpoch)
+        return paginateUp(
+          realm,
+          getConversationsRequest.chatroomId,
+          getConversationsRequest.medianConversation?.createdEpoch,
+          getConversationsRequest.limit
+        );
+      const conversations = realm.objects(ConversationRO.schema.name);
+      const filteredConversations = conversations
+        .filtered(`chatroomId = "${getConversationsRequest.chatroomId}"`)
+        .sorted("createdEpoch", true)
+        .slice(0, getConversationsRequest.limit);
+      const conversationObject = filteredConversations.map((conversation) => {
+        const stringifiedConversation = JSON.stringify(conversation);
+        return {
+          ...JSON.parse(stringifiedConversation),
+        };
+      });
+
+      return conversationObject;
     }
   } finally {
     realm.close();
   }
 }
 
-export async function getConversations(
+export async function getPaginatedConversaton(
   chatroomId: string,
+  conversation: Conversation,
   pageSize: number,
-  createdEpoch?: number
+  getConversationsType: GetConversationsType
 ) {
   const realm = new Realm(Db.getInstance());
   try {
-    if (!!createdEpoch) return paginateUp(chatroomId, createdEpoch, pageSize);
-    const conversations = realm.objects(ConversationRO.schema.name);
-    const filteredConversations = conversations
-      .filtered(`chatroomId = "${chatroomId}"`)
-      .sorted("createdEpoch", true)
-      .slice(0, pageSize);
-    const conversationObject = filteredConversations.map((conversation) => {
-      const stringifiedConversation = JSON.stringify(conversation);
-      return {
-        ...JSON.parse(stringifiedConversation),
-      };
-    });
-
-    return conversationObject;
+    if (getConversationsType == GetConversationsType.ABOVE) {
+      return paginateUp(
+        realm,
+        chatroomId,
+        conversation?.createdEpoch,
+        pageSize
+      );
+    } else {
+      return paginateDown(realm, chatroomId, conversation, pageSize);
+    }
   } finally {
     realm.close();
   }
 }
 
 export async function paginateDown(
+  realm: Realm,
   chatroomId: string,
   conversation: Conversation,
   pageSize: number
 ) {
-  const realm = new Realm(Db.getInstance());
-  try {
-    const conversations = realm.objects(ConversationRO.schema.name);
-    const allConversations = conversations
-      .filtered(`chatroomId = "${chatroomId}"`)
-      .sorted("createdEpoch", true);
+  const conversations = realm.objects(ConversationRO.schema.name);
+  const allConversations = conversations
+    .filtered(`chatroomId = "${chatroomId}"`)
+    .sorted("createdEpoch", true);
 
-    const index = allConversations.findIndex(
-      (val: any) => val?.id == conversation?.id
-    );
+  const index = allConversations.findIndex(
+    (val: any) => val?.id == conversation?.id
+  );
 
-    let filteredConversation = allConversations.slice(0, index);
-    filteredConversation = filteredConversation.reverse();
-    const finalConversationObject = filteredConversation.slice(0, pageSize);
+  let filteredConversation = allConversations.slice(0, index);
+  filteredConversation = filteredConversation.reverse();
+  const finalConversationObject = filteredConversation.slice(0, pageSize);
 
-    const conversationObject = finalConversationObject.map((conversation) => {
-      const stringifiedConversation = JSON.stringify(conversation);
-      return {
-        ...JSON.parse(stringifiedConversation),
-      };
-    });
+  const conversationObject = finalConversationObject.map((conversation) => {
+    const stringifiedConversation = JSON.stringify(conversation);
+    return {
+      ...JSON.parse(stringifiedConversation),
+    };
+  });
 
-    return conversationObject;
-  } finally {
-    realm.close();
-  }
+  return conversationObject;
 }
 
 export async function paginateUp(
+  realm: Realm,
   chatroomId: string,
   createdEpoch: number,
   pageSize: number
 ) {
-  const realm = new Realm(Db.getInstance());
-  try {
-    const conversations = realm.objects(ConversationRO.schema.name);
-    const filteredConversations = conversations
-      .filtered(
-        `chatroomId = "${chatroomId}" AND createdEpoch < ${createdEpoch}`
-      )
-      .sorted("createdEpoch", true)
-      .slice(0, pageSize);
+  const conversations = realm.objects(ConversationRO.schema.name);
+  const filteredConversations = conversations
+    .filtered(`chatroomId = "${chatroomId}" AND createdEpoch < ${createdEpoch}`)
+    .sorted("createdEpoch", true)
+    .slice(0, pageSize);
 
-    const conversationObject = filteredConversations.map((conversation) => {
-      const stringifiedConversation = JSON.stringify(conversation);
-      return {
-        ...JSON.parse(stringifiedConversation),
-      };
-    });
+  const conversationObject = filteredConversations.map((conversation) => {
+    const stringifiedConversation = JSON.stringify(conversation);
+    return {
+      ...JSON.parse(stringifiedConversation),
+    };
+  });
 
-    return conversationObject;
-  } finally {
-    realm.close();
-  }
+  return conversationObject;
 }

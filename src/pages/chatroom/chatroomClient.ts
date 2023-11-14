@@ -22,6 +22,7 @@ import {
   ChatroomSeenWithUuid,
   FollowChatroomWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
+import { Conversation as ConversationModel } from "src/shared/responseModels/Conversation";
 import LMResponse from "../../core/services/lmresponse";
 import { ShareChatroomUrlResponse } from "./responseModels/ShareChatroomUrlResponse";
 import { GetTaggingListResponse } from "./responseModels/GetTaggingListResponse";
@@ -38,6 +39,7 @@ import { GetReportTagsResponse } from "./responseModels/GetReportTagsResponse";
 import { FetchConversationResponse } from "./responseModels/FetchConversationResponse";
 import { API } from "src/shared/constants/api.constant";
 import { GetChatroomResponse } from "./responseModels/GetChatroomResponse";
+import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
 
 class ChatroomClient {
   async muteChatroom(
@@ -134,11 +136,17 @@ class ChatroomClient {
 
   async setChatroomTopic(
     setChatroom: SetChatroom,
-    dlClient: DLClient
+    dlClient: DLClient,
+    conversation: ConversationModel
   ): Promise<LMResponse<Nothing>> {
     try {
       const resp = await dlClient.setChatroomTopic(setChatroom);
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      // updating local db as well
+      await updateChatroomTopic(
+        setChatroom?.chatroomId?.toString(),
+        conversation
+      );
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<Nothing>(
