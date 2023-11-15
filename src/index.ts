@@ -110,6 +110,7 @@ import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberR
 import UserClient from "./pages/user/userClient";
 import SyncClient from "./sync/api";
 import SyncChatroomRequest from "./sync/model/syncChatroomRequest";
+import GetConversationsRequestBuilder from "./localDb/models/requestModels/GetConversationsRequestBuilder";
 import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
@@ -156,7 +157,6 @@ import {
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
-import { GetConversationsType } from "./localDb/models/requestModels/GetConversationsType";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -794,4 +794,9 @@ class LMChatClient {
   }
 }
 
-export { LMChatClient, SyncChatroomRequest, SyncConversationRequest };
+export {
+  LMChatClient,
+  SyncChatroomRequest,
+  SyncConversationRequest,
+  GetConversationsRequestBuilder,
+};

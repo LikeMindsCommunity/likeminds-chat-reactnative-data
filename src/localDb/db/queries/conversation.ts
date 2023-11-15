@@ -396,7 +396,9 @@ export async function getConversations(
 ) {
   const realm = new Realm(Db.getInstance());
   try {
-    const conversations = realm.objects(ConversationRO.schema.name);
+    const conversations = realm.objects<ConversationRO>(
+      ConversationRO.schema.name
+    );
     const filteredConversations = conversations
       .filtered(
         `chatroomId = "${getConversationsRequest?.medianConversation?.chatroomId}"`
@@ -405,7 +407,8 @@ export async function getConversations(
 
     if (getConversationsRequest.type == GetConversationsType.ABOVE) {
       const currentConversationIndex = filteredConversations.findIndex(
-        (val: any) => val?.id == getConversationsRequest?.medianConversation?.id
+        (val: ConversationRO) =>
+          val?.id == getConversationsRequest?.medianConversation?.id
       );
       const aboveConversations = filteredConversations.slice(
         currentConversationIndex - getConversationsRequest?.limit,
@@ -420,7 +423,8 @@ export async function getConversations(
       return conversationObject;
     } else if (getConversationsRequest.type == GetConversationsType.BELOW) {
       const currentConversationIndex = filteredConversations.findIndex(
-        (val: any) => val?.id == getConversationsRequest?.medianConversation?.id
+        (val: ConversationRO) =>
+          val?.id == getConversationsRequest?.medianConversation?.id
       );
       const belowConversations = filteredConversations.slice(
         currentConversationIndex + 1,
