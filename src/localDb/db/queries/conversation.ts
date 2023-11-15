@@ -424,7 +424,7 @@ export async function getConversations(
       );
       const belowConversations = filteredConversations.slice(
         currentConversationIndex + 1,
-        currentConversationIndex + getConversationsRequest?.limit
+        currentConversationIndex + getConversationsRequest?.limit + 1
       );
       const conversationObject = belowConversations.map((conversation) => {
         const stringifiedConversation = JSON.stringify(conversation);
@@ -454,29 +454,6 @@ export async function getConversations(
       });
 
       return conversationObject;
-    }
-  } finally {
-    realm.close();
-  }
-}
-
-export async function getPaginatedConversaton(
-  chatroomId: string,
-  conversation: Conversation,
-  pageSize: number,
-  getConversationsType: GetConversationsType
-) {
-  const realm = new Realm(Db.getInstance());
-  try {
-    if (getConversationsType == GetConversationsType.ABOVE) {
-      return paginateUp(
-        realm,
-        chatroomId,
-        conversation?.createdEpoch,
-        pageSize
-      );
-    } else {
-      return paginateDown(realm, chatroomId, conversation, pageSize);
     }
   } finally {
     realm.close();

@@ -220,15 +220,24 @@ class ChatroomClient {
   }
 
   async editConversation(
-    conversationId: EditConversation,
-    dlClient: DLClient
+    editConversation: EditConversation,
+    dlClient: DLClient,
+    conversation?: ConversationModel
   ): Promise<LMResponse<EditConversationResponse>> {
     try {
-      const resp = await dlClient.editConversation(conversationId);
-      const convertedResp: EditConversationResponse =
-        ModelConverter.responseBodyParser(resp);
+      const response = await dlClient.editConversation(editConversation);
+      const convertedResponse: EditConversationResponse =
+        ModelConverter.responseBodyParser(response);
+
+      // updating chatroom topic in local db as well
+      if (editConversation.conversationId == conversation?.id) {
+        await updateChatroomTopic(
+          conversation?.chatroomId?.toString(),
+          response?.data?.conversation
+        );
+      }
       return new LMResponse<EditConversationResponse>(
-        convertedResp,
+        convertedResponse,
         null,
         true
       );

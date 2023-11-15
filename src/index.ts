@@ -133,8 +133,6 @@ import {
   getConversations,
   updatePollVotes,
   updateDeletedBy,
-  paginateDown,
-  getPaginatedConversaton,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -146,7 +144,6 @@ import {
   updateChatroomFollowStatus,
   updateUnseenCount,
   updateMuteStatus,
-  updateChatroomTopic,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -286,11 +283,13 @@ class LMChatClient {
 
   // Method to edit a conversation
   async editConversation(
-    conversationId: EditConversation
+    editConversation: EditConversation,
+    conversation?: ConversationModel
   ): Promise<LMResponse<EditConversationResponse>> {
     return this.chatroomClient.editConversation(
-      conversationId,
-      LMChatClient.dlClient
+      editConversation,
+      LMChatClient.dlClient,
+      conversation
     );
   }
 
@@ -789,26 +788,9 @@ class LMChatClient {
     return initiateAppConfig();
   }
 
+  // Method to get conversations
   async getConversations(getConversationsRequest: GetConversationsRequest) {
     return getConversations(getConversationsRequest);
-  }
-
-  async updateChatroomTopic(chatroomId: string, topic: ConversationModel) {
-    return updateChatroomTopic(chatroomId, topic);
-  }
-
-  async getPaginatedConversaton(
-    chatroomId: string,
-    conversation: ConversationModel,
-    pageSize: number,
-    getConversationsType: GetConversationsType
-  ) {
-    return getPaginatedConversaton(
-      chatroomId,
-      conversation,
-      pageSize,
-      getConversationsType
-    );
   }
 }
 

@@ -283,6 +283,34 @@ export async function saveChatroomResponse(
             Realm.UpdateMode.All
           );
         }
+
+        let chatroomTopic = data?.conversationMeta[chatroom?.topicId];
+        if (chatroomTopic) {
+          if (chatroomTopic?.hasFiles == true) {
+            chatroomTopic.attachments =
+              data?.convAttachmentsMeta[chatroom?.topicId];
+          }
+          if (chatroomTopic?.state == 10) {
+            chatroomTopic.polls = data?.convPollsMeta[chatroom?.topicId];
+          }
+          const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+          const chatroomRo = items.filtered(`id = "${chatroom?.id}"`);
+          const memberRO = convertToMemberRO(
+            chatroomTopic?.member,
+            chatroomTopic?.communityId
+          );
+          const conversationRO = convertToConversationRO(
+            realm,
+            chatroomTopic,
+            memberRO,
+            chatroom?.id,
+            chatroomTopic?.attachments,
+            chatroomTopic?.polls,
+            chatroomTopic?.reactions
+          );
+          (chatroomRo[0].topic = conversationRO),
+            (chatroomRo[0].topicId = chatroomTopic?.id?.toString());
+        }
       });
     });
   } finally {
