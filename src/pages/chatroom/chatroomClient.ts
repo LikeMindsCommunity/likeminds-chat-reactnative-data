@@ -226,14 +226,13 @@ class ChatroomClient {
   ): Promise<LMResponse<EditConversationResponse>> {
     try {
       const response = await dlClient.editConversation(editConversation);
-      const convertedResponse: EditConversationResponse =
-        ModelConverter.responseBodyParser(response);
+      const convertedResponse = ModelConverter.responseBodyParser(response);
 
       // updating chatroom topic in local db as well
       if (editConversation.conversationId == conversation?.id) {
         await updateChatroomTopic(
           conversation?.chatroomId?.toString(),
-          response?.data?.conversation
+          convertedResponse?.conversation
         );
       }
       return new LMResponse<EditConversationResponse>(
