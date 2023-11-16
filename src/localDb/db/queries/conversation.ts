@@ -410,33 +410,40 @@ export async function getConversations(
         (val: ConversationRO) =>
           val?.id == getConversationsRequest?.medianConversation?.id
       );
-      const aboveConversations = filteredConversations.slice(
-        currentConversationIndex - getConversationsRequest?.limit,
-        currentConversationIndex
-      );
-      const conversationObject = aboveConversations.map((conversation) => {
-        const stringifiedConversation = JSON.stringify(conversation);
-        return {
-          ...JSON.parse(stringifiedConversation),
-        };
-      });
-      return conversationObject;
+      if (currentConversationIndex >= 0) {
+        const aboveConversations = filteredConversations.slice(
+          currentConversationIndex - getConversationsRequest?.limit,
+          currentConversationIndex
+        );
+        const conversationObject = aboveConversations.map((conversation) => {
+          const stringifiedConversation = JSON.stringify(conversation);
+          return {
+            ...JSON.parse(stringifiedConversation),
+          };
+        });
+        return conversationObject;
+      }
+      return [];
     } else if (getConversationsRequest.type == GetConversationsType.BELOW) {
       const currentConversationIndex = filteredConversations.findIndex(
         (val: ConversationRO) =>
           val?.id == getConversationsRequest?.medianConversation?.id
       );
-      const belowConversations = filteredConversations.slice(
-        currentConversationIndex + 1,
-        currentConversationIndex + getConversationsRequest?.limit + 1
-      );
-      const conversationObject = belowConversations.map((conversation) => {
-        const stringifiedConversation = JSON.stringify(conversation);
-        return {
-          ...JSON.parse(stringifiedConversation),
-        };
-      });
-      return conversationObject;
+      console.log("currentConversationIndex", currentConversationIndex);
+      if (currentConversationIndex >= 0) {
+        const belowConversations = filteredConversations.slice(
+          currentConversationIndex + 1,
+          currentConversationIndex + getConversationsRequest?.limit + 1
+        );
+        const conversationObject = belowConversations.map((conversation) => {
+          const stringifiedConversation = JSON.stringify(conversation);
+          return {
+            ...JSON.parse(stringifiedConversation),
+          };
+        });
+        return conversationObject;
+      }
+      return [];
     } else {
       if (!!getConversationsRequest.medianConversation?.createdEpoch)
         return paginateUp(
