@@ -429,7 +429,6 @@ export async function getConversations(
         (val: ConversationRO) =>
           val?.id == getConversationsRequest?.medianConversation?.id
       );
-      console.log("currentConversationIndex", currentConversationIndex);
       if (currentConversationIndex >= 0) {
         const belowConversations = filteredConversations.slice(
           currentConversationIndex + 1,
