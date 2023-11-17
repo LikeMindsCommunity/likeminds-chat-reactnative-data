@@ -283,6 +283,34 @@ export async function saveChatroomResponse(
             Realm.UpdateMode.All
           );
         }
+
+        let chatroomTopic = data?.conversationMeta[chatroom?.topicId];
+        if (chatroomTopic) {
+          if (chatroomTopic?.hasFiles == true) {
+            chatroomTopic.attachments =
+              data?.convAttachmentsMeta[chatroom?.topicId];
+          }
+          if (chatroomTopic?.state == 10) {
+            chatroomTopic.polls = data?.convPollsMeta[chatroom?.topicId];
+          }
+          const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+          const chatroomRo = items.filtered(`id = "${chatroom?.id}"`);
+          const memberRO = convertToMemberRO(
+            chatroomTopic?.member,
+            chatroomTopic?.communityId
+          );
+          const conversationRO = convertToConversationRO(
+            realm,
+            chatroomTopic,
+            memberRO,
+            chatroom?.id,
+            chatroomTopic?.attachments,
+            chatroomTopic?.polls,
+            chatroomTopic?.reactions
+          );
+          (chatroomRo[0].topic = conversationRO),
+            (chatroomRo[0].topicId = chatroomTopic?.id?.toString());
+        }
       });
     });
   } finally {
@@ -418,6 +446,46 @@ export async function updateMuteStatus(chatroomId: string) {
       .filtered(`id = "${chatroomId}"`);
     realm.write(() => {
       chatroom[0].muteStatus = !chatroom[0]?.muteStatus;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+export async function updateChatroomTopic(
+  chatroomId: string,
+  topic: Conversation
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+    const chatroom = items.filtered(`id = "${chatroomId}"`);
+    const memberRO = convertToMemberRO(topic?.member, topic?.communityId);
+    const conversationRO = convertToConversationRO(
+      realm,
+      topic,
+      memberRO,
+      chatroomId,
+      topic?.attachments,
+      topic?.polls,
+      topic?.reactions
+    );
+    realm.write(() => {
+      (chatroom[0].topic = conversationRO),
+        (chatroom[0].topicId = topic?.id?.toString());
+    });
+  } finally {
+    realm.close();
+  }
+}
+
+export async function deleteChatroomTopic(chatroomId: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
+    const chatroom = items.filtered(`id = "${chatroomId}"`);
+    realm.write(() => {
+      (chatroom[0].topic = null), (chatroom[0].topicId = null);
     });
   } finally {
     realm.close();

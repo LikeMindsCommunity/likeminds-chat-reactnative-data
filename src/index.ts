@@ -110,6 +110,7 @@ import { GetAllMembersResponse } from "./pages/user/responseModels/GetAllMemberR
 import UserClient from "./pages/user/userClient";
 import SyncClient from "./sync/api";
 import SyncChatroomRequest from "./sync/model/syncChatroomRequest";
+import GetConversationsRequestBuilder from "./localDb/models/requestModels/GetConversationsRequestBuilder";
 import { SyncChatroomResponse } from "./sync/model/syncChatroomResponse";
 import SyncConversationRequest from "./sync/model/syncConversationRequest";
 import { SyncConversationResponse } from "./sync/model/syncConversationResponse";
@@ -133,6 +134,7 @@ import {
   getConversations,
   updatePollVotes,
   updateDeletedBy,
+  deleteConversationFromRealm,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -155,6 +157,7 @@ import {
   initiateAppConfig,
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
+import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -249,11 +252,13 @@ class LMChatClient {
 
   // Method to set chatroom topic
   async setChatroomTopic(
-    setChatroom: SetChatroom
+    setChatroom: SetChatroom,
+    conversation: ConversationModel
   ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.setChatroomTopic(
       setChatroom,
-      LMChatClient.dlClient
+      LMChatClient.dlClient,
+      conversation
     );
   }
 
@@ -279,11 +284,13 @@ class LMChatClient {
 
   // Method to edit a conversation
   async editConversation(
-    conversationId: EditConversation
+    editConversation: EditConversation,
+    conversation?: ConversationModel
   ): Promise<LMResponse<EditConversationResponse>> {
     return this.chatroomClient.editConversation(
-      conversationId,
-      LMChatClient.dlClient
+      editConversation,
+      LMChatClient.dlClient,
+      conversation
     );
   }
 
@@ -692,9 +699,17 @@ class LMChatClient {
   async deleteConversation(
     conversationId: string,
     user: Member,
-    conversations: ConversationModel[]
+    conversations: ConversationModel[],
+    isChatroomTopic: boolean,
+    chatroomId: string
   ) {
-    return deleteConversation(conversationId, user, conversations);
+    return deleteConversation(
+      conversationId,
+      user,
+      conversations,
+      isChatroomTopic,
+      chatroomId
+    );
   }
 
   // Method to get a particular convesation from localDB
@@ -739,15 +754,6 @@ class LMChatClient {
     return this.chatroomClient.getChatroom(chatroom, LMChatClient.dlClient);
   }
 
-  // to get next set of conversation data
-  async getConversations(
-    chatroomId: string,
-    pageSize: number,
-    createdEpoch?: number
-  ) {
-    return getConversations(chatroomId, pageSize, createdEpoch);
-  }
-
   // Method to update chatRequestState of a chatroom in localDB
   async updateChatRequestState(chatroomId: string, chatRequestState: number) {
     return updateChatRequestState(chatroomId, chatRequestState);
@@ -782,6 +788,20 @@ class LMChatClient {
   async initiateAppConfig() {
     return initiateAppConfig();
   }
+
+  // Method to get conversations
+  async getConversations(getConversationsRequest: GetConversationsRequest) {
+    return getConversations(getConversationsRequest);
+  }
+
+  async deleteConversationFromRealm(conversationId: string) {
+    return deleteConversationFromRealm(conversationId);
+  }
 }
 
-export { LMChatClient, SyncChatroomRequest, SyncConversationRequest };
+export {
+  LMChatClient,
+  SyncChatroomRequest,
+  SyncConversationRequest,
+  GetConversationsRequestBuilder,
+};
