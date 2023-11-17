@@ -281,6 +281,19 @@ export async function deleteConversation(
   }
 }
 
+export async function deleteConversationFromRealm(conversationId: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const conversations = realm.objects(ConversationRO.schema.name);
+    const conversation = conversations.filtered(`id = "${conversationId}"`);
+    realm.write(() => {
+      realm.delete(conversation);
+    });
+  } finally {
+    realm.close();
+  }
+}
+
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
 export async function replaceSavedConversation(data: Conversation) {
   const realm = new Realm(Db.getInstance());

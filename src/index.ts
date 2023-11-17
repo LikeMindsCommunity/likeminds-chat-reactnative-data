@@ -134,6 +134,7 @@ import {
   getConversations,
   updatePollVotes,
   updateDeletedBy,
+  deleteConversationFromRealm,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -791,6 +792,10 @@ class LMChatClient {
   // Method to get conversations
   async getConversations(getConversationsRequest: GetConversationsRequest) {
     return getConversations(getConversationsRequest);
+  }
+
+  async deleteConversationFromRealm(conversationId: string) {
+    return deleteConversationFromRealm(conversationId);
   }
 }
 
