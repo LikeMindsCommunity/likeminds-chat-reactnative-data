@@ -445,7 +445,7 @@ class ChatroomClient {
   ): Promise<LMResponse<GetConversationNotificationUnreadResponse>> {
     return dlClient
       .makeAuthenticatedRequest(`${API.GET_UNREAD_CONVERSATION_NOTIFICATION}`)
-      .then((resData: any) => {
+      .then((resData) => {
         // Handle the response and return the LMResponse object
         const responseData: GetConversationNotificationUnreadResponse =
           ModelConverter.responseBodyParser(resData);
