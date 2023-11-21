@@ -40,6 +40,7 @@ import { FetchConversationResponse } from "./responseModels/FetchConversationRes
 import { API } from "src/shared/constants/api.constant";
 import { GetChatroomResponse } from "./responseModels/GetChatroomResponse";
 import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
+import { GetConversationNotificationUnreadResponse } from "./responseModels/GetConversationNotificationUnreadResponse";
 
 class ChatroomClient {
   async muteChatroom(
@@ -437,6 +438,31 @@ class ChatroomClient {
     dlClient: DLClient
   ): Promise<LMResponse<Nothing>> {
     return await dlClient.chatroomSeenWithUuid(chatroomSeen);
+  }
+
+  async getUnreadConversationNotification(
+    dlClient: DLClient
+  ): Promise<LMResponse<GetConversationNotificationUnreadResponse>> {
+    return dlClient
+      .makeAuthenticatedRequest(`${API.GET_UNREAD_CONVERSATION_NOTIFICATION}`)
+      .then((resData: any) => {
+        // Handle the response and return the LMResponse object
+        const responseData: GetConversationNotificationUnreadResponse =
+          ModelConverter.responseBodyParser(resData);
+
+        return new LMResponse<GetConversationNotificationUnreadResponse>(
+          responseData,
+          null,
+          true
+        );
+      })
+      .catch((error) => {
+        return new LMResponse<GetConversationNotificationUnreadResponse>(
+          null,
+          error.message || "An error occurred",
+          false
+        );
+      });
   }
 }
 

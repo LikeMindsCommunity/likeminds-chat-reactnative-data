@@ -158,6 +158,7 @@ import {
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
+import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -387,6 +388,15 @@ class LMChatClient {
   ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.chatroomSeen(
       chatroomSeen,
+      LMChatClient.dlClient
+    );
+  }
+
+  // Method to get unread conversation notification
+  async getUnreadConversationNotification(): Promise<
+    LMResponse<GetConversationNotificationUnreadResponse>
+  > {
+    return this.chatroomClient.getUnreadConversationNotification(
       LMChatClient.dlClient
     );
   }
