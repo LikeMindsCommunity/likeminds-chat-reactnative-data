@@ -135,6 +135,7 @@ import {
   updatePollVotes,
   updateDeletedBy,
   deleteConversationFromRealm,
+  updateReplyConversation,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -796,6 +797,16 @@ class LMChatClient {
 
   async deleteConversationFromRealm(conversationId: string) {
     return deleteConversationFromRealm(conversationId);
+  }
+
+  async updateReplyConversation(
+    replyConversationObject: ConversationModel,
+    currentConversationId: string
+  ) {
+    return updateReplyConversation(
+      replyConversationObject,
+      currentConversationId
+    );
   }
 }
 

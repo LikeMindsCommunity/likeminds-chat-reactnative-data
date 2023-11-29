@@ -223,6 +223,39 @@ export async function updateConversation(
   }
 }
 
+export async function updateReplyConversation(
+  replyConversationObject: Conversation,
+  currentConversationId: string
+) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const conversation = realm
+      .objects<ConversationRO>(ConversationRO.schema.name)
+      .filtered(`id = "${currentConversationId}"`);
+
+    const memberRO = convertToMemberRO(
+      replyConversationObject?.member,
+      replyConversationObject?.communityId
+    );
+
+    const replyConversationObjectRO = convertToConversationRO(
+      realm,
+      replyConversationObject,
+      memberRO,
+      replyConversationObject?.chatroomId,
+      replyConversationObject?.attachments,
+      replyConversationObject?.polls,
+      replyConversationObject?.reactions
+    );
+
+    realm.write(() => {
+      conversation[0].replyConversationObject = replyConversationObjectRO;
+    });
+  } finally {
+    realm.close();
+  }
+}
+
 // To update deletedBy and deletedByMember of a conversation in realm
 export async function updateDeletedBy(
   conversationId: string,
