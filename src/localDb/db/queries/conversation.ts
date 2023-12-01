@@ -119,6 +119,26 @@ export async function saveConversationData(
 
           if (repliedConversation) {
             conversation.replyConversationObject = stringifiedConversation;
+
+            const conversations = realm.objects(ConversationRO.schema.name);
+            const savedRepliedConversation = conversations.filtered(
+              `id = "${conversation?.replyId}"`
+            );
+
+            const stringifiedRepliedConversation = JSON.parse(
+              JSON.stringify(savedRepliedConversation)
+            );
+
+            if (repliedConversation?.state == 10) {
+              conversation.replyConversationObject.polls =
+                stringifiedRepliedConversation[0]?.polls;
+            } else if (repliedConversation?.hasFiles == true) {
+              conversation.replyConversationObject.attachments =
+                stringifiedRepliedConversation[0]?.attachments;
+            } else if (repliedConversation?.ogTags != null) {
+              conversation.replyConversationObject.ogTags =
+                stringifiedRepliedConversation[0]?.ogTags;
+            }
           }
         }
 
@@ -217,39 +237,6 @@ export async function updateConversation(
     realm.write(() => {
       conversation[0].answer = data?.answer;
       conversation[0].createdAt = data?.createdAt;
-    });
-  } finally {
-    realm.close();
-  }
-}
-
-export async function updateReplyConversation(
-  replyConversationObject: Conversation,
-  currentConversationId: string
-) {
-  const realm = new Realm(Db.getInstance());
-  try {
-    const conversation = realm
-      .objects<ConversationRO>(ConversationRO.schema.name)
-      .filtered(`id = "${currentConversationId}"`);
-
-    const memberRO = convertToMemberRO(
-      replyConversationObject?.member,
-      replyConversationObject?.communityId
-    );
-
-    const replyConversationObjectRO = convertToConversationRO(
-      realm,
-      replyConversationObject,
-      memberRO,
-      replyConversationObject?.chatroomId,
-      replyConversationObject?.attachments,
-      replyConversationObject?.polls,
-      replyConversationObject?.reactions
-    );
-
-    realm.write(() => {
-      conversation[0].replyConversationObject = replyConversationObjectRO;
     });
   } finally {
     realm.close();
