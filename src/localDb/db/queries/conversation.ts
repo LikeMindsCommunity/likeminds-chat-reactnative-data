@@ -129,6 +129,9 @@ export async function saveConversationData(
               JSON.stringify(savedRepliedConversation)
             );
 
+            conversation.replyConversationObject.createdEpoch =
+              stringifiedRepliedConversation[0]?.createdEpoch;
+
             if (repliedConversation?.state == 10) {
               conversation.replyConversationObject.polls =
                 stringifiedRepliedConversation[0]?.polls;
