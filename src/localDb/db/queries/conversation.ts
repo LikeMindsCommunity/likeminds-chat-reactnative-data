@@ -119,6 +119,29 @@ export async function saveConversationData(
 
           if (repliedConversation) {
             conversation.replyConversationObject = stringifiedConversation;
+
+            const conversations = realm.objects(ConversationRO.schema.name);
+            const savedRepliedConversation = conversations.filtered(
+              `id = "${conversation?.replyId}"`
+            );
+
+            const stringifiedRepliedConversation = JSON.parse(
+              JSON.stringify(savedRepliedConversation)
+            );
+
+            conversation.replyConversationObject.createdEpoch =
+              stringifiedRepliedConversation[0]?.createdEpoch;
+
+            if (repliedConversation?.state == 10) {
+              conversation.replyConversationObject.polls =
+                stringifiedRepliedConversation[0]?.polls;
+            } else if (repliedConversation?.hasFiles == true) {
+              conversation.replyConversationObject.attachments =
+                stringifiedRepliedConversation[0]?.attachments;
+            } else if (repliedConversation?.ogTags != null) {
+              conversation.replyConversationObject.ogTags =
+                stringifiedRepliedConversation[0]?.ogTags;
+            }
           }
         }
 
