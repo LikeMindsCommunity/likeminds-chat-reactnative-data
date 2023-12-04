@@ -226,7 +226,7 @@ const convertToAttachment = (
 };
 
 // convertToReaction method takes Reaction[] data and converts it to Realm.List<ReactionRO>
-const convertToReaction = (
+export const convertToReaction = (
   reactions: Reaction[],
   communityId: string
 ): List<ReactionRO> => {
@@ -339,7 +339,7 @@ export const convertToConversationRO = (
     lastUpdatedAt: conversation?.lastUpdated || 0,
     deletedByUserId: conversation.deletedByUserId?.toString() || null,
     replyConversationObject:
-      conversation?.replyConversationObject != undefined
+      conversation?.replyConversationObject != null
         ? convertToConversationRO(
             realm,
             conversation?.replyConversationObject,
