@@ -339,7 +339,7 @@ export const convertToConversationRO = (
     lastUpdatedAt: conversation?.lastUpdated || 0,
     deletedByUserId: conversation.deletedByUserId?.toString() || null,
     replyConversationObject:
-      conversation?.replyConversationObject != null
+      conversation?.replyConversationObject != undefined
         ? convertToConversationRO(
             realm,
             conversation?.replyConversationObject,
