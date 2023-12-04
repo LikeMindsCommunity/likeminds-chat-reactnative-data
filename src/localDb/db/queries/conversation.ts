@@ -8,7 +8,6 @@ import {
   convertToConversationRO,
   convertToChatroomRO,
   convertToPoll,
-  convertToReaction,
 } from "../ROConverter";
 import Db from "../db";
 import Realm from "realm";
@@ -216,13 +215,10 @@ export async function updateConversation(
       .objects<ConversationRO>(ConversationRO.schema.name)
       .filtered(`id = "${conversationId}"`);
 
-    const reactionRO = convertToReaction(data?.reactions, data?.communityId);
-
     realm.write(() => {
       conversation[0].answer = data?.answer;
       conversation[0].createdAt = data?.createdAt;
       conversation[0].isEdited = data?.isEdited;
-      conversation[0].reactions = reactionRO;
     });
   } finally {
     realm.close();
