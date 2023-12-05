@@ -23,6 +23,7 @@ export const OPTINAL_SDK_CLIENT_INFO_RO = "SDKClientInfoRO?";
 export const USER_RO = "UserRO";
 export const ATTACHMENT_UPLOAD_CONVERSATIONS =
   "AttachmentUploadConversationsRO";
+export const NUMBER_RO = "NumberRO";
 
 // schema types
 export const STRING = "string";
@@ -38,6 +39,7 @@ export const OPTIONAL_FLOAT = "float?";
 export const LIST_STRING = "string[]";
 export const OPTIONAL_LIST_STRING = "string[]?";
 export const LIST_INT = "int[]";
+export const OPTIONAL_LIST_INT = "int[]?";
 export const LIST_CONVERSATION_RO = "ConversationRO[]";
 export const LIST_CHATROOM_RO = "ChatroomRO[]";
 export const OPTIONAL_LIST_CHATROOM_RO = "ChatroomRO[]?";

@@ -1,6 +1,8 @@
-import { convertToAppConfigRO } from "../ROConverter";
+import { NumberRO } from "src/localDb/models/NumberRO";
+import { convertToAppConfigRO, convertToNumberRO } from "../ROConverter";
 import Db from "../db";
 import { AppConfigRO } from "src/localDb/models/AppConfigRO";
+import { ConversationState } from "src/enums";
 
 // Method to set isGroupFeedChatroomsSynced or isDmFeedChatroomsSynced based on isDm param
 export async function setAppConfig(isDm: boolean) {
@@ -15,6 +17,41 @@ export async function setAppConfig(isDm: boolean) {
   } finally {
     realm.close();
   }
+}
+
+// Method to set filterStateConversations
+export async function setFilterStateConversations(
+  filterStateConversations?: number[]
+) {
+  const realm = new Realm(Db.getInstance());
+
+  try {
+    const filterStateConversationsLength = filterStateConversations?.length;
+    let convertedFilterStateConversations: NumberRO[] = [];
+    if (filterStateConversationsLength === 0)
+      return convertedFilterStateConversations;
+    for (let i = 0; i < filterStateConversationsLength; i++) {
+      const roNumber = convertToNumberRO(filterStateConversations[i]);
+      convertedFilterStateConversations = [
+        ...convertedFilterStateConversations,
+        roNumber,
+      ];
+    }
+
+    const appConfigRO = convertToAppConfigRO(convertedFilterStateConversations);
+
+    realm.write(() => {
+      realm.create(AppConfigRO.schema.name, appConfigRO, Realm.UpdateMode.All);
+    });
+  } finally {
+    realm.close();
+  }
+}
+// Method to set filterStateConversations
+export async function getFilterStateConversations(realm: Realm) {
+  const appConfig = realm.objects<AppConfigRO>(AppConfigRO.schema.name);
+  const serializedData = JSON.parse(JSON.stringify(appConfig));
+  return serializedData[0];
 }
 
 // Method to get app config
