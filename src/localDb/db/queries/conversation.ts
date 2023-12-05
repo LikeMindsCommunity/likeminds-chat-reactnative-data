@@ -110,39 +110,17 @@ export async function saveConversationData(
         }
 
         if (chatDbUtil.isNull(conversation?.replyId)) {
-          const repliedConversation =
-            data?.conversationMeta[conversation?.replyId];
-
-          const stringifiedConversation = JSON.parse(
-            JSON.stringify(repliedConversation)
+          const conversations = realm.objects(ConversationRO.schema.name);
+          const savedRepliedConversation = conversations.filtered(
+            `id = "${conversation?.replyId}"`
           );
 
-          if (repliedConversation) {
-            conversation.replyConversationObject = stringifiedConversation;
+          const stringifiedRepliedConversation = JSON.parse(
+            JSON.stringify(savedRepliedConversation)
+          );
 
-            const conversations = realm.objects(ConversationRO.schema.name);
-            const savedRepliedConversation = conversations.filtered(
-              `id = "${conversation?.replyId}"`
-            );
-
-            const stringifiedRepliedConversation = JSON.parse(
-              JSON.stringify(savedRepliedConversation)
-            );
-
-            conversation.replyConversationObject.createdEpoch =
-              stringifiedRepliedConversation[0]?.createdEpoch;
-
-            if (repliedConversation?.state == 10) {
-              conversation.replyConversationObject.polls =
-                stringifiedRepliedConversation[0]?.polls;
-            } else if (repliedConversation?.hasFiles == true) {
-              conversation.replyConversationObject.attachments =
-                stringifiedRepliedConversation[0]?.attachments;
-            } else if (repliedConversation?.ogTags != null) {
-              conversation.replyConversationObject.ogTags =
-                stringifiedRepliedConversation[0]?.ogTags;
-            }
-          }
+          conversation.replyConversationObject =
+            stringifiedRepliedConversation[0];
         }
 
         if (!conversationCreatorRO) return;
@@ -240,6 +218,7 @@ export async function updateConversation(
     realm.write(() => {
       conversation[0].answer = data?.answer;
       conversation[0].createdAt = data?.createdAt;
+      conversation[0].isEdited = data?.isEdited;
     });
   } finally {
     realm.close();
