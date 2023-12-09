@@ -56,3 +56,4 @@ export const COMMUNITY = "community";
 export const COMMUNITIES = "communities";
 export const CONVERSATIONS = "conversations";
 export const CHATROOMS = "chatrooms";
+export const APP_CONFIG = "APP_CONFIG";

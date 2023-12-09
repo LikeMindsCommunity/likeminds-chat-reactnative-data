@@ -25,20 +25,17 @@ import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 import { NumberRO } from "../models/NumberRO";
-import { ConversationState } from "src/enums";
+import { APP_CONFIG } from "../constants";
 
 // convertToAppConfigRO method takes AppConfig and converts it to TimeStampRO
 export const convertToAppConfigRO = (
-  convertedFilterStateConversations?: NumberRO[]
+  convertedFilterStateConversations?: number[]
 ): AppConfigRO => {
-  const realmList: Realm.List<NumberRO> = new Realm.List();
-  convertedFilterStateConversations.forEach((item) => {
-    realmList.push(item);
-  });
   const appConfigRO: AppConfigRO = {
+    id: APP_CONFIG,
     isGroupFeedChatroomsSynced: false,
     isDmFeedChatroomsSynced: false,
-    filterStateConversations: realmList,
+    filterStateConversations: convertedFilterStateConversations,
     ...dummyKeys(AppConfigRO),
   };
   return appConfigRO;

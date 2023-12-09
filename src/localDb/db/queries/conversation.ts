@@ -417,9 +417,9 @@ export async function getConversations(
       ConversationRO.schema.name
     );
     const filterStateQuery = getFilterStateMessages?.filterStateConversations
-      .map((state) => `(state != "${state?.value}")`)
+      .map((state) => `(state != ${state})`)
       .join(" && ");
-      
+
     const filteredConversations = conversations
       .filtered(
         `(chatroomId = "${getConversationsRequest?.medianConversation?.chatroomId}") && ${filterStateQuery}`

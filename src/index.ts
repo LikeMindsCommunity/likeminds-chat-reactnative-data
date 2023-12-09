@@ -185,7 +185,7 @@ class LMChatConfig {
 
     LMChatConfig.lmChatClient = LMChatClient.setApiKey(this.apiKey)
       .setPlatformCode("rn")
-      .setVersionCode(parseInt("20"))
+      .setVersionCode(parseInt("23"))
       .build();
 
     setFilterStateConversations(this.filterStateConversation);
