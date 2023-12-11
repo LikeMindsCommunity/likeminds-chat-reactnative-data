@@ -158,11 +158,11 @@ import {
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
-import { setFilterStateConversations } from "./localDb/db/queries/filterStateConversation";
+import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
 
 class LMChatConfig {
   private static apiKey: string | null = null;
-  private static filterStateConversation: number[] | null = null;
+  private static filterConversationState: number[] | null = null;
   private static lmChatClient: LMChatClient;
 
   static setApiKey(apiKey: string) {
@@ -170,8 +170,8 @@ class LMChatConfig {
     return this;
   }
 
-  static setfilterStateConversation(filterStateConversation: ConversationState[]) {
-    this.filterStateConversation = filterStateConversation;
+  static setfilterStateConversation(filterConversationState: ConversationState[]) {
+    this.filterConversationState = filterConversationState;
     return this;
   }
 
@@ -188,7 +188,7 @@ class LMChatConfig {
       .setVersionCode(parseInt("23"))
       .build();
 
-    setFilterStateConversations(this.filterStateConversation);
+    setFilterConversationState(this.filterConversationState);
 
     const lmChatConfig = new LMChatConfig();
 

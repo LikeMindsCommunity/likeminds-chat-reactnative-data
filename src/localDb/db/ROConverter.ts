@@ -25,7 +25,7 @@ import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 import { APP_CONFIG, FILTER_STATE_CONVERSATIONS } from "../constants";
-import { FilterStateConversationsRO } from "../models/FilterStateConversationsRO";
+import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { ConversationState } from "src/enums";
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
@@ -39,16 +39,16 @@ export const convertToAppConfigRO = (): AppConfigRO => {
   return appConfigRO;
 };
 
-// convertToFilterStateConversationsRO method takes convertedFilterStateConversations and converts it to FilterStateConversationsRO
-export const convertToFilterStateConversationsRO = (
-  convertedFilterStateConversations?: ConversationState[]
-): FilterStateConversationsRO => {
-  const filterStateConversationsRO: FilterStateConversationsRO = {
+// convertToFilterConversationStateRO method takes convertedFilterConversationState and converts it to FilterConversationStateRO
+export const convertToFilterConversationStateRO = (
+  convertedFilterConversationState?: ConversationState[]
+): FilterConversationStateRO => {
+  const filterConversationStateRO: FilterConversationStateRO = {
     id: FILTER_STATE_CONVERSATIONS,
-    filterStateConversations: convertedFilterStateConversations,
-    ...dummyKeys(FilterStateConversationsRO),
+    filterConversationState: convertedFilterConversationState,
+    ...dummyKeys(FilterConversationStateRO),
   };
-  return filterStateConversationsRO;
+  return filterConversationStateRO;
 };
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO

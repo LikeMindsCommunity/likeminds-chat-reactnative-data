@@ -23,7 +23,7 @@ export const OPTINAL_SDK_CLIENT_INFO_RO = "SDKClientInfoRO?";
 export const USER_RO = "UserRO";
 export const ATTACHMENT_UPLOAD_CONVERSATIONS =
   "AttachmentUploadConversationsRO";
-export const FILTER_STATE_CONVERSATIONS_RO = "FilterStateConversationsRO";
+export const FILTER_CONVERSATION_STATE_RO = "FilterConversationStateRO";
 
 // schema types
 export const STRING = "string";

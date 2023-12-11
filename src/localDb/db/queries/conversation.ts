@@ -19,7 +19,7 @@ import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 import { GetConversationsRequest } from "src/localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 import { deleteChatroomTopic } from "./chatroom";
-import { getFilterStateConversations } from "./filterStateConversation";
+import { getFilterConversationState } from "./filterConversationState";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -411,12 +411,12 @@ export async function getConversations(
   getConversationsRequest: GetConversationsRequest
 ) {
   const realm = new Realm(Db.getInstance());
-  const getFilterStateMessages = await getFilterStateConversations(realm);
+  const getFilterStateMessages = await getFilterConversationState(realm);
   try {
     const conversations = realm.objects<ConversationRO>(
       ConversationRO.schema.name
     );
-    const filterStateQuery = getFilterStateMessages?.filterStateConversations
+    const filterStateQuery = getFilterStateMessages?.filterConversationState
       .map((state) => `(state != ${state})`)
       .join(" && ");
 
