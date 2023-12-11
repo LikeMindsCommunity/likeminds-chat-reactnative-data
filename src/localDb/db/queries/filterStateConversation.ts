@@ -1,10 +1,11 @@
 import { FilterStateConversationsRO } from "src/localDb/models/FilterStateConversationsRO";
 import { convertToFilterStateConversationsRO } from "../ROConverter";
 import Db from "../db";
+import { ConversationState } from "src/enums";
 
 // Method to set filterStateConversations
 export async function setFilterStateConversations(
-  filterStateConversations?: number[]
+  filterStateConversations?: ConversationState[]
 ) {
   const realm = new Realm(Db.getInstance());
 

@@ -6,10 +6,11 @@ import {
   LIST,
   STRING,
 } from "../constants";
+import { ConversationState } from "src/enums";
 
 export class FilterStateConversationsRO extends Realm.Object<FilterStateConversationsRO> {
   id!: string;
-  filterStateConversations?: number[];
+  filterStateConversations?: ConversationState[];
 
   static schema: Realm.ObjectSchema = {
     name: FILTER_STATE_CONVERSATIONS_RO,

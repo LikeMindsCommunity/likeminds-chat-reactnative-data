@@ -24,9 +24,9 @@ import { TimeStampRO } from "../models/TimeStampRO";
 import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
-import { NumberRO } from "../models/NumberRO";
 import { APP_CONFIG, FILTER_STATE_CONVERSATIONS } from "../constants";
 import { FilterStateConversationsRO } from "../models/FilterStateConversationsRO";
+import { ConversationState } from "src/enums";
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
 export const convertToAppConfigRO = (): AppConfigRO => {
@@ -41,7 +41,7 @@ export const convertToAppConfigRO = (): AppConfigRO => {
 
 // convertToFilterStateConversationsRO method takes convertedFilterStateConversations and converts it to FilterStateConversationsRO
 export const convertToFilterStateConversationsRO = (
-  convertedFilterStateConversations?: number[]
+  convertedFilterStateConversations?: ConversationState[]
 ): FilterStateConversationsRO => {
   const filterStateConversationsRO: FilterStateConversationsRO = {
     id: FILTER_STATE_CONVERSATIONS,
@@ -502,14 +502,4 @@ export const convertToChatroomRO = (
   };
 
   return chatroomRO;
-};
-
-// convertToNumberRO method takes number data and converts it to NumberRO
-export const convertToNumberRO = (value: number): NumberRO => {
-  const numberRO: NumberRO = {
-    value: value,
-    ...dummyKeys(NumberRO),
-  };
-
-  return numberRO;
 };

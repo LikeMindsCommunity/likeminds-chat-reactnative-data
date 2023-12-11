@@ -170,7 +170,7 @@ class LMChatConfig {
     return this;
   }
 
-  static setfilterStateConversation(filterStateConversation: number[]) {
+  static setfilterStateConversation(filterStateConversation: ConversationState[]) {
     this.filterStateConversation = filterStateConversation;
     return this;
   }
