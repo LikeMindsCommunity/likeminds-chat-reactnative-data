@@ -156,9 +156,9 @@ import {
   getAppConfig,
   initiateAppConfig,
   setAppConfig,
-  setFilterStateConversations,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
+import { setFilterStateConversations } from "./localDb/db/queries/filterStateConversation";
 
 class LMChatConfig {
   private static apiKey: string | null = null;

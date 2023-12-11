@@ -5,7 +5,6 @@ export class AppConfigRO extends Realm.Object<AppConfigRO> {
   id!: string;
   isGroupFeedChatroomsSynced!: boolean;
   isDmFeedChatroomsSynced!: boolean;
-  filterStateConversations?: number[];
 
   static schema: Realm.ObjectSchema = {
     name: APP_CONFIG_RO,
@@ -13,7 +12,6 @@ export class AppConfigRO extends Realm.Object<AppConfigRO> {
       id: STRING,
       isGroupFeedChatroomsSynced: BOOLEAN,
       isDmFeedChatroomsSynced: BOOLEAN,
-      filterStateConversations: {type: 'list', objectType: 'int'},
     },
     primaryKey: ID,
   };

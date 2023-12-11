@@ -25,20 +25,30 @@ import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 import { NumberRO } from "../models/NumberRO";
-import { APP_CONFIG } from "../constants";
+import { APP_CONFIG, FILTER_STATE_CONVERSATIONS } from "../constants";
+import { FilterStateConversationsRO } from "../models/FilterStateConversationsRO";
 
-// convertToAppConfigRO method takes AppConfig and converts it to TimeStampRO
-export const convertToAppConfigRO = (
-  convertedFilterStateConversations?: number[]
-): AppConfigRO => {
+// convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
+export const convertToAppConfigRO = (): AppConfigRO => {
   const appConfigRO: AppConfigRO = {
     id: APP_CONFIG,
     isGroupFeedChatroomsSynced: false,
     isDmFeedChatroomsSynced: false,
-    filterStateConversations: convertedFilterStateConversations,
     ...dummyKeys(AppConfigRO),
   };
   return appConfigRO;
+};
+
+// convertToFilterStateConversationsRO method takes convertedFilterStateConversations and converts it to FilterStateConversationsRO
+export const convertToFilterStateConversationsRO = (
+  convertedFilterStateConversations?: number[]
+): FilterStateConversationsRO => {
+  const filterStateConversationsRO: FilterStateConversationsRO = {
+    id: FILTER_STATE_CONVERSATIONS,
+    filterStateConversations: convertedFilterStateConversations,
+    ...dummyKeys(FilterStateConversationsRO),
+  };
+  return filterStateConversationsRO;
 };
 
 // convertToTimeStampRO method takes TimeStamp and converts it to TimeStampRO

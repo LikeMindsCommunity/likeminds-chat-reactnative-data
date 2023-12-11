@@ -17,30 +17,6 @@ export async function setAppConfig(isDm: boolean) {
   }
 }
 
-// Method to set filterStateConversations
-export async function setFilterStateConversations(
-  filterStateConversations?: number[]
-) {
-  const realm = new Realm(Db.getInstance());
-
-  try {
-
-    const appConfigRO = convertToAppConfigRO(filterStateConversations);
-
-    realm.write(() => {
-      realm.create(AppConfigRO.schema.name, appConfigRO, Realm.UpdateMode.All);
-    });
-  } finally {
-    realm.close();
-  }
-}
-// Method to get filterStateConversations
-export async function getFilterStateConversations(realm: Realm) {
-  const appConfig = realm.objects<AppConfigRO>(AppConfigRO.schema.name);
-  const serializedData = JSON.parse(JSON.stringify(appConfig));
-  return serializedData[0];
-}
-
 // Method to get app config
 export async function getAppConfig() {
   const realm = new Realm(Db.getInstance());

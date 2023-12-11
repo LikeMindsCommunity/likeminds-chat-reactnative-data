@@ -19,7 +19,7 @@ import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 import { GetConversationsRequest } from "src/localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 import { deleteChatroomTopic } from "./chatroom";
-import { getFilterStateConversations } from "./appConfig";
+import { getFilterStateConversations } from "./filterStateConversation";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
