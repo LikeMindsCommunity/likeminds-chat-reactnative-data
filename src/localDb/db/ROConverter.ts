@@ -24,7 +24,7 @@ import { TimeStampRO } from "../models/TimeStampRO";
 import { AppConfigRO } from "../models/AppConfigRO";
 import { LinkOGTags } from "src/shared/responseModels/LinkOGTags";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
-import { APP_CONFIG, FILTER_STATE_CONVERSATIONS } from "../constants";
+import { APP_CONFIG, FILTER_CONVERSATION_STATE } from "../constants";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { ConversationState } from "src/enums";
 
@@ -44,7 +44,7 @@ export const convertToFilterConversationStateRO = (
   convertedFilterConversationState?: ConversationState[]
 ): FilterConversationStateRO => {
   const filterConversationStateRO: FilterConversationStateRO = {
-    id: FILTER_STATE_CONVERSATIONS,
+    id: FILTER_CONVERSATION_STATE,
     filterConversationState: convertedFilterConversationState,
     ...dummyKeys(FilterConversationStateRO),
   };
