@@ -326,11 +326,11 @@ export async function getFilteredChatrooms(isDm: boolean) {
     const filteredAndSortedChatroom = isDm
       ? items
           .filtered(
-            `(type = 10) && (followStatus=true) && (totalResponseCount>0)`
+            `(type = 10) && (followStatus=true) && (totalResponseCount>0) && (deletedBy == null)`
           )
           .sorted("updatedAt", true)
       : items
-          .filtered(`(type = 0 || type=7) && (followStatus=true)`)
+          .filtered(`(type = 0 || type=7) && (followStatus=true) && (deletedBy == null)`)
           .sorted("updatedAt", true);
     const stringifiedChatroom = JSON.parse(
       JSON.stringify(filteredAndSortedChatroom)
