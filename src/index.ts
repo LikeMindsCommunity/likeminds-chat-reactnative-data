@@ -159,6 +159,7 @@ import {
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
+import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -803,9 +804,19 @@ class LMChatClient {
   async getConversations(getConversationsRequest: GetConversationsRequest) {
     return getConversations(getConversationsRequest);
   }
-
+  // Method to delete conversations from realm
   async deleteConversationFromRealm(conversationId: string) {
     return deleteConversationFromRealm(conversationId);
+  }
+
+  // Method to get user schema
+  async getUserSchema() {
+    return getUserSchema();
+  }
+
+  // Method to set user schema
+  async setUserSchema(userUniqueID: string, userName: string) {
+    return setUserSchema(userUniqueID, userName);
   }
 }
 
