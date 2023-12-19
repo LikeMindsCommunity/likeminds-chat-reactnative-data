@@ -7,24 +7,26 @@ import { ConversationState } from "src/enums";
 export async function setFilterConversationState(
   filterConversationState?: ConversationState[]
 ) {
-  const realm = new Realm(Db.getInstance());
-
-  try {
-    const filterConversationStateRO = convertToFilterConversationStateRO(
-      filterConversationState
-    );
-
-    realm.write(() => {
-      realm.create(
-        FilterConversationStateRO.schema.name,
-        filterConversationStateRO,
-        Realm.UpdateMode.All
+  if (filterConversationState?.length > 0) {
+    const realm = new Realm(Db.getInstance());
+    try {
+      const filterConversationStateRO = convertToFilterConversationStateRO(
+        filterConversationState
       );
-    });
-  } finally {
-    realm.close();
+
+      realm.write(() => {
+        realm.create(
+          FilterConversationStateRO.schema.name,
+          filterConversationStateRO,
+          Realm.UpdateMode.All
+        );
+      });
+    } finally {
+      realm.close();
+    }
   }
 }
+
 // Method to get filterConversationState
 export async function getFilterConversationState(realm: Realm) {
   const filterConversationState = realm.objects<FilterConversationStateRO>(

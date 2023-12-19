@@ -1,6 +1,5 @@
 //Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
-import LMChatClient from "./LMChatClient";
 import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
@@ -159,23 +158,26 @@ import {
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
+import DLClient from "@likeminds.community/chat-js";
 
-class LMChatConfig {
+class LMChatClient {
   private static apiKey: string | null = null;
   private static filterConversationState: number[] | null = null;
-  private static lmChatClient: LMChatClient;
+  public static dlClient: DLClient;
 
   static setApiKey(apiKey: string) {
     this.apiKey = apiKey;
     return this;
   }
 
-  static setfilterStateConversation(filterConversationState: ConversationState[]) {
+  static setfilterStateConversation(
+    filterConversationState: ConversationState[]
+  ) {
     this.filterConversationState = filterConversationState;
     return this;
   }
 
-  public static build(): LMChatConfig {
+  public static build(): LMChatClient {
     // Perform any necessary validation or configuration checks
     if (!this.apiKey) {
       throw new Error(
@@ -183,16 +185,18 @@ class LMChatConfig {
       );
     }
 
-    LMChatConfig.lmChatClient = LMChatClient.setApiKey(this.apiKey)
-      .setPlatformCode("rn")
-      .setVersionCode(parseInt("23"))
-      .build();
+    LMChatClient.dlClient = new DLClient({
+      xApiKey: this.apiKey!,
+      xPlatformCode: "rn",
+      xVersionCode: 23,
+      xSdkSource: "chat",
+    });
 
     setFilterConversationState(this.filterConversationState);
 
-    const lmChatConfig = new LMChatConfig();
+    const lmChatClient = new LMChatClient();
 
-    return lmChatConfig;
+    return lmChatClient;
   }
 
   chatroomClient = new ChatroomClient();
@@ -799,6 +803,5 @@ export {
   SyncChatroomRequest,
   SyncConversationRequest,
   GetConversationsRequestBuilder,
-  LMChatConfig,
   ConversationState,
 };
