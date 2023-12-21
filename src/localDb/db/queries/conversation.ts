@@ -19,6 +19,7 @@ import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 import { GetConversationsRequest } from "src/localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 import { deleteChatroomTopic } from "./chatroom";
+import { getFilterConversationState } from "./filterConversationState";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -410,13 +411,18 @@ export async function getConversations(
   getConversationsRequest: GetConversationsRequest
 ) {
   const realm = new Realm(Db.getInstance());
+  const getFilterStateMessages = await getFilterConversationState(realm);
   try {
     const conversations = realm.objects<ConversationRO>(
       ConversationRO.schema.name
     );
+    const filterStateQuery = getFilterStateMessages?.filterConversationState
+      .map((state) => `(state != ${state})`)
+      .join(" && ");
+
     const filteredConversations = conversations
       .filtered(
-        `chatroomId = "${getConversationsRequest?.medianConversation?.chatroomId}"`
+        `(chatroomId = "${getConversationsRequest?.medianConversation?.chatroomId}") && ${filterStateQuery}`
       )
       .sorted("createdEpoch", false);
 
@@ -459,7 +465,7 @@ export async function getConversations(
       }
       return [];
     } else {
-      if (!!getConversationsRequest.medianConversation?.createdEpoch)
+      if (getConversationsRequest.medianConversation?.createdEpoch)
         return paginateUp(
           realm,
           getConversationsRequest.chatroomId,
@@ -468,7 +474,9 @@ export async function getConversations(
         );
       const conversations = realm.objects(ConversationRO.schema.name);
       const filteredConversations = conversations
-        .filtered(`chatroomId = "${getConversationsRequest.chatroomId}"`)
+        .filtered(
+          `chatroomId = "${getConversationsRequest.chatroomId}" && ${filterStateQuery}`
+        )
         .sorted("createdEpoch", true)
         .slice(0, getConversationsRequest.limit);
       const conversationObject = filteredConversations.map((conversation) => {
@@ -491,13 +499,15 @@ export async function paginateDown(
   conversation: Conversation,
   pageSize: number
 ) {
-  const conversations = realm.objects(ConversationRO.schema.name);
+  const conversations = realm.objects<ConversationRO>(
+    ConversationRO.schema.name
+  );
   const allConversations = conversations
     .filtered(`chatroomId = "${chatroomId}"`)
     .sorted("createdEpoch", true);
 
   const index = allConversations.findIndex(
-    (val: any) => val?.id == conversation?.id
+    (val: ConversationRO) => val?.id == conversation?.id
   );
 
   let filteredConversation = allConversations.slice(0, index);
