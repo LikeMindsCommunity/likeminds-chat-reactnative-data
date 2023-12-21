@@ -157,6 +157,8 @@ import {
   setAppConfig,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
+import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
+import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
 import DLClient from "@likeminds.community/chat-js";
 
@@ -386,6 +388,15 @@ class LMChatClient {
   ): Promise<LMResponse<Nothing>> {
     return this.chatroomClient.chatroomSeen(
       chatroomSeen,
+      LMChatClient.dlClient
+    );
+  }
+
+  // Method to get unread conversation notification
+  async getUnreadConversationNotification(): Promise<
+    LMResponse<GetConversationNotificationUnreadResponse>
+  > {
+    return this.chatroomClient.getUnreadConversationNotification(
       LMChatClient.dlClient
     );
   }
@@ -792,9 +803,19 @@ class LMChatClient {
   async getConversations(getConversationsRequest: GetConversationsRequest) {
     return getConversations(getConversationsRequest);
   }
-
+  // Method to delete conversations from realm
   async deleteConversationFromRealm(conversationId: string) {
     return deleteConversationFromRealm(conversationId);
+  }
+
+  // Method to get user schema
+  async getUserSchema() {
+    return getUserSchema();
+  }
+
+  // Method to set user schema
+  async setUserSchema(userUniqueID: string, userName: string) {
+    return setUserSchema(userUniqueID, userName);
   }
 }
 

@@ -1,6 +1,8 @@
+import { USER_SCHEMA_RO } from "../constants";
+import { ConversationRO } from "../models/ConversationRO";
+import { UserSchemaRO } from "../models/UserSchemaRO";
 import { APP_CONFIG, FILTER_CONVERSATION_STATE_RO } from "../constants";
 import { AppConfigRO } from "../models/AppConfigRO";
-import { ConversationRO } from "../models/ConversationRO";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
@@ -35,6 +37,7 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
       FILTER_CONVERSATION_STATE_RO,
       FilterConversationStateRO.schema.properties
     );
+    newVersion.create(USER_SCHEMA_RO, UserSchemaRO.schema.properties);
     oldVersion._updateSchema(newVersion.schema);
 
     // Increment schema version

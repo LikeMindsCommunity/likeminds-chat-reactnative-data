@@ -57,5 +57,6 @@ export const COMMUNITY = "community";
 export const COMMUNITIES = "communities";
 export const CONVERSATIONS = "conversations";
 export const CHATROOMS = "chatrooms";
+export const USER_SCHEMA_ID = 'UserSchema'
 export const APP_CONFIG = "APP_CONFIG";
 export const FILTER_CONVERSATION_STATE = "FILTER_CONVERSATION_STATE";

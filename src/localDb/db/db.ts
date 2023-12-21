@@ -20,6 +20,7 @@ import {
   realmDbMigration,
 } from "./realmDbMigration";
 import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
+import { UserSchemaRO } from "../models/UserSchemaRO";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 
 export default class Db {
@@ -44,6 +45,7 @@ export default class Db {
       TimeStampRO,
       AttachmentUploadConversationsRO,
       LinkOGTagsRO,
+      UserSchemaRO,
       FilterConversationStateRO,
     ], // Update with your actual models
     schemaVersion: DB_SCHEMA_VERSION, // Increment when you change the schema
