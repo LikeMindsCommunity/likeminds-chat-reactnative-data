@@ -1,5 +1,4 @@
 import {
-  FollowChatroom,
   MuteChatroom,
   MarkRead,
   Chatroom as ChatroomRequest,

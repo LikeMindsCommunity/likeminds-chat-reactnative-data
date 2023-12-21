@@ -1,5 +1,3 @@
-import DLClient from "@likeminds.community/chat-js";
-
 //Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
 import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
@@ -74,6 +72,7 @@ import {
 import { HomeFeedResponse } from "./pages/homeFeed/responseModels/HomeFeedResponse";
 import HomeFeedClient from "./pages/homeFeed/homeFeedClient";
 import { GetInvitesResponse } from "./pages/homeFeed/responseModels/GetInvitesResponse";
+import { ConversationState } from "./enums/ConversationState";
 
 //Poll
 import {
@@ -160,42 +159,42 @@ import {
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
+import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
+import DLClient from "@likeminds.community/chat-js";
 
 class LMChatClient {
   private static apiKey: string | null = null;
-  private static platformCode: string | null = null;
-  private static versionCode: number | null = null;
-  private static dlClient: DLClient;
+  private static filterConversationState: number[] | null = null;
+  public static dlClient: DLClient;
 
   static setApiKey(apiKey: string) {
     this.apiKey = apiKey;
     return this;
   }
 
-  static setPlatformCode(platformCode: string) {
-    this.platformCode = platformCode;
-    return this;
-  }
-
-  static setVersionCode(versionCode: number) {
-    this.versionCode = versionCode;
+  static setfilterStateConversation(
+    filterConversationState: ConversationState[]
+  ) {
+    this.filterConversationState = filterConversationState;
     return this;
   }
 
   public static build(): LMChatClient {
     // Perform any necessary validation or configuration checks
-    if (!this.apiKey || !this.platformCode || !this.versionCode) {
+    if (!this.apiKey) {
       throw new Error(
-        "Please provide apiKey, platformCode, and versionCode before building the LMChatClient."
+        "Please provide apiKey before building the LMChatClient."
       );
     }
 
     LMChatClient.dlClient = new DLClient({
       xApiKey: this.apiKey!,
-      xPlatformCode: this.platformCode!,
-      xVersionCode: this.versionCode!,
+      xPlatformCode: "rn",
+      xVersionCode: 23,
       xSdkSource: "chat",
     });
+
+    setFilterConversationState(this.filterConversationState);
 
     const lmChatClient = new LMChatClient();
 
@@ -825,4 +824,5 @@ export {
   SyncChatroomRequest,
   SyncConversationRequest,
   GetConversationsRequestBuilder,
+  ConversationState,
 };
