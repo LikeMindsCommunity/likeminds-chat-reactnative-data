@@ -1,4 +1,6 @@
+import { USER_SCHEMA_RO } from "../constants";
 import { ConversationRO } from "../models/ConversationRO";
+import { UserSchemaRO } from "../models/UserSchemaRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
   let oldSchemaVersion = oldVersion.schemaVersion;
@@ -15,7 +17,15 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
     }
     oldSchemaVersion++;
   }
+  if (oldSchemaVersion == 2) {
+    // Initialise new schema
+    newVersion.create(USER_SCHEMA_RO, UserSchemaRO.schema.properties);
+    oldVersion._updateSchema(newVersion.schema);
+
+    // Increment schema version
+    oldSchemaVersion++;
+  }
 };
 
 export const DB_SCHEMA_NAME = "likeminds-chat-sdk-rn";
-export const DB_SCHEMA_VERSION = 2;
+export const DB_SCHEMA_VERSION = 3;
