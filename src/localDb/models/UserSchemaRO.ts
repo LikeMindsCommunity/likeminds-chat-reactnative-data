@@ -1,4 +1,4 @@
-import { STRING, USER_SCHEMA_RO } from "../constants";
+import { ID, STRING, USER_SCHEMA_RO } from "../constants";
 
 export class UserSchemaRO extends Realm.Object<UserSchemaRO> {
   id!: string;
@@ -12,5 +12,6 @@ export class UserSchemaRO extends Realm.Object<UserSchemaRO> {
       userUniqueID: STRING,
       userName: STRING,
     },
+    primaryKey: ID,
   };
 }
