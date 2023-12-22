@@ -5,4 +5,5 @@ export const API = {
   CONVERSATION_SYNC: `${environment.apiUrl}/conversation/sync`, // (GET)
   GET_EXPLORE_TAB_COUNT: `${environment.apiUrl}/community/member/home/meta`, // (GET)
   CHATROOM: `${environment.apiUrl}/chatroom`, // (GET)
+  GET_UNREAD_CONVERSATION_NOTIFICATION: `${environment.apiUrl}/conversation/notification/unread`, // (GET)
 };

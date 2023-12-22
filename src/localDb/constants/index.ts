@@ -23,6 +23,8 @@ export const OPTINAL_SDK_CLIENT_INFO_RO = "SDKClientInfoRO?";
 export const USER_RO = "UserRO";
 export const ATTACHMENT_UPLOAD_CONVERSATIONS =
   "AttachmentUploadConversationsRO";
+export const USER_SCHEMA_RO = "UserSchemaRO";
+export const FILTER_CONVERSATION_STATE_RO = "FilterConversationStateRO";
 
 // schema types
 export const STRING = "string";
@@ -33,11 +35,13 @@ export const INT = "int";
 export const OPTIONAL_INT = "int?";
 export const FLOAT = "float";
 export const OPTIONAL_FLOAT = "float?";
+export const LIST = "list";
 
 // schema list
 export const LIST_STRING = "string[]";
 export const OPTIONAL_LIST_STRING = "string[]?";
 export const LIST_INT = "int[]";
+export const OPTIONAL_LIST_INT = "int[]?";
 export const LIST_CONVERSATION_RO = "ConversationRO[]";
 export const LIST_CHATROOM_RO = "ChatroomRO[]";
 export const OPTIONAL_LIST_CHATROOM_RO = "ChatroomRO[]?";
@@ -54,3 +58,6 @@ export const COMMUNITY = "community";
 export const COMMUNITIES = "communities";
 export const CONVERSATIONS = "conversations";
 export const CHATROOMS = "chatrooms";
+export const USER_SCHEMA_ID = 'UserSchema'
+export const APP_CONFIG = "APP_CONFIG";
+export const FILTER_CONVERSATION_STATE = "FILTER_CONVERSATION_STATE";
