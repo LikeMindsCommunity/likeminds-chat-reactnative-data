@@ -1,15 +1,19 @@
-import { USER_SCHEMA_ID, USER_SCHEMA_RO } from "src/localDb/constants";
+import { USER_SCHEMA_ID } from "src/localDb/constants";
 import Db from "../db";
 import { UserSchemaRO } from "src/localDb/models/UserSchemaRO";
 
 export const setUserSchema = (userUniqueID: string, userName: string) => {
   const realm = new Realm(Db.getInstance());
   realm.write(() => {
-    realm.create(USER_SCHEMA_RO, {
-      id: USER_SCHEMA_ID,
-      userUniqueID: userUniqueID,
-      userName: userName,
-    });
+    realm.create(
+      UserSchemaRO.schema.name,
+      {
+        id: USER_SCHEMA_ID,
+        userUniqueID: userUniqueID,
+        userName: userName,
+      },
+      Realm.UpdateMode.All
+    );
   });
 };
 
