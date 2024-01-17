@@ -101,6 +101,7 @@ import {
   Logout,
   Search,
   InitUserWithUuid,
+  EditProfile,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./pages/user/responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberStateResponse";
@@ -588,6 +589,11 @@ class LMChatClient {
   // Method to logout an user
   async logout(logout: Logout): Promise<LMResponse<Nothing>> {
     return this.userClient.logout(logout, LMChatClient.dlClient);
+  }
+
+  // Method to edit profile of an user
+  async editProfile(editProfile: EditProfile): Promise<LMResponse<Nothing>> {
+    return this.userClient.editProfile(editProfile, LMChatClient.dlClient);
   }
 
   // Method to get member state of an user

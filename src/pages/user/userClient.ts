@@ -6,6 +6,7 @@ import {
   Logout,
   Search,
   InitUserWithUuid,
+  EditProfile,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
@@ -113,6 +114,23 @@ class UserClient {
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<GetAllMembersResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async editProfile(
+    editProfile: EditProfile,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.editProfile(editProfile);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false
