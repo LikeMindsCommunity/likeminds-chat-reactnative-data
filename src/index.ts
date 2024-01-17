@@ -161,6 +161,7 @@ import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/resp
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
 import DLClient from "@likeminds.community/chat-js";
+import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 
 class LMChatClient {
   private static apiKey: string | null = null;
@@ -513,15 +514,6 @@ class LMChatClient {
     return this.homeFeedClient.firebaseInstance(LMChatClient.dlClient);
   }
 
-  // Method for homeFeedListener
-  homeFeedListener(callback: any, route: any) {
-    return this.homeFeedClient.homeFeedListener(
-      callback,
-      route,
-      LMChatClient.dlClient
-    );
-  }
-
   // Method to post a poll conversation
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest
@@ -581,6 +573,16 @@ class LMChatClient {
     initUser: InitUserWithUuid
   ): Promise<LMResponse<InitiateUserResponse>> {
     return this.userClient.initiateUser(initUser, LMChatClient.dlClient);
+  }
+
+  // Method to add an user to a cohort
+  addMemberToCohort(
+    addMemberToCohort: AddMemberToCohort
+  ): Promise<LMResponse<Nothing>> {
+    return this.userClient.addMemberToCohort(
+      addMemberToCohort,
+      LMChatClient.dlClient
+    );
   }
 
   // Method to logout an user

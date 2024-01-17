@@ -12,6 +12,8 @@ import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse"
 import { SearchMembersResponse } from "./responseModels/SearchMembersResponse";
 import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
+import { API } from "src/shared/constants/api.constant";
+import { AddMemberToCohort } from "./responseModels/AddMemberToCohort";
 
 class UserClient {
   async initiateUser(
@@ -36,6 +38,30 @@ class UserClient {
         false
       );
     }
+  }
+
+  async addMemberToCohort(
+    addMemberToCohort: AddMemberToCohort,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    const params = ModelConverter.requestBodyGenerator(addMemberToCohort);
+    return dlClient
+      .makeAuthenticatedRequest(`${API.PUT_MEMBER_TO_COHORT}`, {
+        params: params,
+      })
+      .then((response) => {
+        // Handle the response and return the LMResponse object
+        const responseData: Nothing =
+          ModelConverter.responseBodyParser(response);
+        return new LMResponse<Nothing>(responseData, null, true);
+      })
+      .catch((error) => {
+        return new LMResponse<Nothing>(
+          null,
+          error.message || "An error occurred",
+          false
+        );
+      });
   }
 
   async getMemberState(
