@@ -41,3 +41,15 @@ export async function initiateAppConfig() {
     realm.close();
   }
 }
+
+// Method to clear local db
+export async function clearDb() {
+  const realm = new Realm(Db.getInstance());
+  try {
+    realm.write(() => {
+      realm.deleteAll();
+    });
+  } finally {
+    realm.close();
+  }
+}

@@ -14,6 +14,7 @@ import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
 import { API } from "src/shared/constants/api.constant";
 import { AddMemberToCohort } from "./responseModels/AddMemberToCohort";
+import { clearDb } from "src/localDb/db/queries/appConfig";
 
 class UserClient {
   async initiateUser(
@@ -30,6 +31,8 @@ class UserClient {
     try {
       const resp = await dlClient.logout(logout);
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      // to clear localDb
+      await clearDb();
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<Nothing>(
