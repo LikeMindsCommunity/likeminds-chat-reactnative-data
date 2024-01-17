@@ -231,7 +231,7 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  async getChatroom(chatroomId: string) {
+  async getChatroom(chatroomId: string): Promise<LMResponse<ChatroomModel>> {
     return getChatroom(chatroomId);
   }
 

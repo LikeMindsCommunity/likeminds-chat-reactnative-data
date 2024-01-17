@@ -16,6 +16,7 @@ import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
 import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { ConversationRO } from "src/localDb/models/ConversationRO";
 import { Conversation } from "src/shared/responseModels/Conversation";
+import LMResponse from "src/core/services/lmresponse";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -330,7 +331,9 @@ export async function getFilteredChatrooms(isDm: boolean) {
           )
           .sorted("updatedAt", true)
       : items
-          .filtered(`(type = 0 || type=7) && (followStatus=true) && (deletedBy == null)`)
+          .filtered(
+            `(type = 0 || type=7) && (followStatus=true) && (deletedBy == null)`
+          )
           .sorted("updatedAt", true);
     const stringifiedChatroom = JSON.parse(
       JSON.stringify(filteredAndSortedChatroom)
@@ -365,7 +368,7 @@ export async function getChatroom(chatroomId: string) {
     const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
     const chatroom = items.filtered(`id = "${chatroomId}"`);
     const stringifiedChatroom = JSON.parse(JSON.stringify(chatroom));
-    return stringifiedChatroom[0];
+    return new LMResponse<Chatroom>(stringifiedChatroom[0], null, true);
   } finally {
     realm.close();
   }
