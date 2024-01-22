@@ -6,13 +6,18 @@ import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
 import DLClient from "@likeminds.community/chat-js";
 import SyncConversationRequest from "../model/syncConversationRequest";
 import { SyncConversationResponse } from "../model/syncConversationResponse";
+import { removeUndefinedKeys } from "src/utils/syncChatroomUtil";
 
 class SyncClient {
   async syncChatroom(
     request: SyncChatroomRequest,
     dlClient: DLClient
   ): Promise<LMResponse<SyncChatroomResponse>> {
-    const params = ModelConverter.requestBodyGenerator(request);
+    let filteredRequest = request;
+    if (filteredRequest.chatroomId === undefined) {
+      filteredRequest = removeUndefinedKeys(filteredRequest);
+    }
+    const params = ModelConverter.requestBodyGenerator(filteredRequest);
     const customParamsSerializer = (params) => {
       const serializedParams = [];
       for (const key in params) {
