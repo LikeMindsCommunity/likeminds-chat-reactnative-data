@@ -7,6 +7,7 @@ import {
   Search,
   InitUserWithUuid,
   EditProfile,
+  LeaveCommunity,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
@@ -34,6 +35,23 @@ class UserClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       // to clear localDb
       await clearDb();
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async leaveCommunity(
+    leaveCommunity: LeaveCommunity,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.leaveCommunity(leaveCommunity);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<Nothing>(
