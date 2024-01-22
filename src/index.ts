@@ -513,15 +513,6 @@ class LMChatClient {
     return this.homeFeedClient.firebaseInstance(LMChatClient.dlClient);
   }
 
-  // Method for homeFeedListener
-  homeFeedListener(callback: any, route: any) {
-    return this.homeFeedClient.homeFeedListener(
-      callback,
-      route,
-      LMChatClient.dlClient
-    );
-  }
-
   // Method to post a poll conversation
   async postPollConversation(
     postPollConversationRequest: PostPollConversationRequest
