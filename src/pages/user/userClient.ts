@@ -6,6 +6,8 @@ import {
   Logout,
   Search,
   InitUserWithUuid,
+  EditProfile,
+  LeaveCommunity,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
@@ -14,6 +16,7 @@ import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
 import { API } from "src/shared/constants/api.constant";
 import { AddMemberToCohort } from "./responseModels/AddMemberToCohort";
+import { clearDb } from "src/localDb/db/queries/appConfig";
 
 class UserClient {
   async initiateUser(
@@ -29,6 +32,25 @@ class UserClient {
   ): Promise<LMResponse<Nothing>> {
     try {
       const resp = await dlClient.logout(logout);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      // to clear localDb
+      await clearDb();
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async leaveCommunity(
+    leaveCommunity: LeaveCommunity,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.leaveCommunity(leaveCommunity);
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
@@ -110,6 +132,23 @@ class UserClient {
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<GetAllMembersResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async editProfile(
+    editProfile: EditProfile,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.editProfile(editProfile);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false

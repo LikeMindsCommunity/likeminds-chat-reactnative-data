@@ -5,6 +5,7 @@ class SyncChatroomRequest {
   chatroomTypes: number[];
   maxTimestamp: number;
   minTimestamp: number;
+  chatroomId?: number;
 
   // Public constructor to create the request object
   constructor(
@@ -12,13 +13,15 @@ class SyncChatroomRequest {
     pageSize: number,
     chatroomTypes: number[],
     maxTimestamp: number,
-    minTimestamp: number
+    minTimestamp: number,
+    chatroomId?: number
   ) {
     this.page = page;
     this.pageSize = pageSize;
     this.chatroomTypes = chatroomTypes;
     this.maxTimestamp = maxTimestamp;
     this.minTimestamp = minTimestamp;
+    this.chatroomId = chatroomId;
   }
 
   // Static builder method to create the request object
@@ -33,6 +36,7 @@ export class SyncChatroomRequestBuilder {
   private chatroomTypes: number[];
   private maxTimestamp: number;
   private minTimestamp: number;
+  private chatroomId?: number;
 
   public setPage(page: number): SyncChatroomRequestBuilder {
     this.page = page;
@@ -59,13 +63,19 @@ export class SyncChatroomRequestBuilder {
     return this;
   }
 
+  public setChatroomId(chatroomId: number): SyncChatroomRequestBuilder {
+    this.chatroomId = chatroomId;
+    return this;
+  }
+
   public build(): SyncChatroomRequest {
     return new SyncChatroomRequest(
       this.page,
       this.pageSize,
       this.chatroomTypes,
       this.maxTimestamp,
-      this.minTimestamp
+      this.minTimestamp,
+      this.chatroomId
     );
   }
 }
