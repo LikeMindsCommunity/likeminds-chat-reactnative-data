@@ -484,7 +484,7 @@ export const convertToChatroomRO = (
     secretChatRoomLeft: chatroom.secretChatroomLeft || null,
     topicId: chatroom.topicId?.toString() || null,
     autoFollowDone: chatroom.autoFollowDone || null,
-    memberCanMessage: chatroom.memberCanMessage || null,
+    memberCanMessage: chatroom.memberCanMessage,
     isEdited: chatroom.isEdited || null,
     unreadConversationsCount: chatroom.unreadConversationCount || null,
     accessWithoutSubscription: chatroom.accessWithoutSubscription || false,

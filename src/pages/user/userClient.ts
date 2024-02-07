@@ -6,12 +6,17 @@ import {
   Logout,
   Search,
   InitUserWithUuid,
+  EditProfile,
+  LeaveCommunity,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
 import { SearchMembersResponse } from "./responseModels/SearchMembersResponse";
 import { GetAllMembersResponse } from "./responseModels/GetAllMemberResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
+import { API } from "src/shared/constants/api.constant";
+import { AddMemberToCohort } from "./responseModels/AddMemberToCohort";
+import { clearDb } from "src/localDb/db/queries/appConfig";
 
 class UserClient {
   async initiateUser(
@@ -28,6 +33,8 @@ class UserClient {
     try {
       const resp = await dlClient.logout(logout);
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      // to clear localDb
+      await clearDb();
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<Nothing>(
@@ -36,6 +43,47 @@ class UserClient {
         false
       );
     }
+  }
+
+  async leaveCommunity(
+    leaveCommunity: LeaveCommunity,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.leaveCommunity(leaveCommunity);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async addMemberToCohort(
+    addMemberToCohort: AddMemberToCohort,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    const params = ModelConverter.requestBodyGenerator(addMemberToCohort);
+    return dlClient
+      .makeAuthenticatedRequest(`${API.PUT_MEMBER_TO_COHORT}`, {
+        params: params,
+      })
+      .then((response) => {
+        // Handle the response and return the LMResponse object
+        const responseData: Nothing =
+          ModelConverter.responseBodyParser(response);
+        return new LMResponse<Nothing>(responseData, null, true);
+      })
+      .catch((error) => {
+        return new LMResponse<Nothing>(
+          null,
+          error.message || "An error occurred",
+          false
+        );
+      });
   }
 
   async getMemberState(
@@ -84,6 +132,23 @@ class UserClient {
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<GetAllMembersResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async editProfile(
+    editProfile: EditProfile,
+    dlClient: DLClient
+  ): Promise<LMResponse<Nothing>> {
+    try {
+      const resp = await dlClient.editProfile(editProfile);
+      const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
+      return new LMResponse<Nothing>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
         false

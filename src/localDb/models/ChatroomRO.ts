@@ -59,7 +59,7 @@ export class ChatroomRO extends Realm.Object<ChatroomRO> {
   topicId?: string | null;
   topic?: ConversationRO | null;
   autoFollowDone?: boolean | null;
-  memberCanMessage?: boolean | null;
+  memberCanMessage?: boolean;
   isEdited?: boolean | null;
   unreadConversationsCount?: number | null;
   accessWithoutSubscription!: boolean;

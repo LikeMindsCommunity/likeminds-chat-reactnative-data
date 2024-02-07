@@ -6,4 +6,5 @@ export const API = {
   GET_EXPLORE_TAB_COUNT: `${environment.apiUrl}/community/member/home/meta`, // (GET)
   CHATROOM: `${environment.apiUrl}/chatroom`, // (GET)
   GET_UNREAD_CONVERSATION_NOTIFICATION: `${environment.apiUrl}/conversation/notification/unread`, // (GET)
+  PUT_MEMBER_TO_COHORT: `${environment.apiUrl}/community/cohort`, // (PUT)
 };
