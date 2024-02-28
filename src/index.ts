@@ -193,7 +193,7 @@ class LMChatClient {
     LMChatClient.dlClient = new DLClient({
       xApiKey: this.apiKey!,
       xPlatformCode: "rn",
-      xVersionCode: 26,
+      xVersionCode: 27,
       xSdkSource: "chat",
     });
 
