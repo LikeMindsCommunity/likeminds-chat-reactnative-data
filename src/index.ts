@@ -167,11 +167,17 @@ import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort
 
 class LMChatClient {
   private static apiKey: string | null = null;
+  private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;
   public static dlClient: DLClient;
 
   static setApiKey(apiKey: string) {
     this.apiKey = apiKey;
+    return this;
+  }
+
+  static setVersionCode(versionCode: number) {
+    this.versionCode = versionCode;
     return this;
   }
 
@@ -193,7 +199,7 @@ class LMChatClient {
     LMChatClient.dlClient = new DLClient({
       xApiKey: this.apiKey!,
       xPlatformCode: "rn",
-      xVersionCode: 31,
+      xVersionCode: this.versionCode,
       xSdkSource: "chat",
     });
 
