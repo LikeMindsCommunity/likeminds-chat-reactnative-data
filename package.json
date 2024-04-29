@@ -1,7 +1,7 @@
 {
   "name": "@likeminds.community/chat-rn",
-  "versionCode": "13",
-  "version": "1.5.6",
+  "versionCode": "14",
+  "version": "1.5.7",
   "description": "LikeMinds ReactNative SDK for chat APIs",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
