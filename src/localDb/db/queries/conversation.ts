@@ -121,7 +121,7 @@ export async function saveConversationData(
           );
 
           conversation.replyConversationObject =
-            stringifiedRepliedConversation[0];
+            data?.conversationMeta[conversation?.replyId];
         }
 
         if (!conversationCreatorRO) return;
