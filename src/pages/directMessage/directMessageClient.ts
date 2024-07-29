@@ -1,6 +1,6 @@
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
-  FetchDMFeed,
+  FetchDMFeedRequest,
   CheckDMStatus,
   SendDMRequest,
   BlockMember,
@@ -23,7 +23,7 @@ import { CanDMFeedResponse } from "./responseModels/CanDMFeedResponse";
 
 class DirectMessageClient {
   async fetchDMFeed(
-    fetchDMFeed: FetchDMFeed,
+    fetchDMFeed: FetchDMFeedRequest,
     dlClient: DLClient
   ): Promise<LMResponse<FetchDMResponse>> {
     try {

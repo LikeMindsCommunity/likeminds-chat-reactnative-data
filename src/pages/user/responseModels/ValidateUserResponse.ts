@@ -2,7 +2,7 @@ import LMResponse from "src/core/services/lmresponse";
 import { Community } from "src/shared/responseModels/Community";
 import { User } from "src/shared/responseModels/User";
 
-export interface InitiateUserResponse {
+export interface ValidateUserResponse {
   community: Community;
   accessToken: string;
   refreshToken: string;
