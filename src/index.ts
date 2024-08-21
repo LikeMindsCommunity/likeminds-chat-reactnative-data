@@ -410,6 +410,11 @@ class LMChatClient {
     );
   }
 
+  // Method to get unseen count
+  async getUnseenCount() {
+    return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
+  }
+
   // Method to fetch DM feed
   async fetchDMFeed(
     fetchDMFeed: FetchDMFeed

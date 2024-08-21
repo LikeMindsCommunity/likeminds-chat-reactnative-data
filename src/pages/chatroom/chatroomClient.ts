@@ -40,6 +40,8 @@ import { API } from "src/shared/constants/api.constant";
 import { GetChatroomResponse } from "./responseModels/GetChatroomResponse";
 import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
 import { GetConversationNotificationUnreadResponse } from "./responseModels/GetConversationNotificationUnreadResponse";
+import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
+import SyncClient from "src/sync/api";
 
 class ChatroomClient {
   async muteChatroom(
@@ -462,6 +464,49 @@ class ChatroomClient {
           false
         );
       });
+  }
+
+  async syncChatroomAPI(
+    page: number,
+    minTimeStamp: number,
+    maxTimeStamp: number,
+    dlClient: DLClient
+  ) {
+    const syncClient = new SyncClient();
+    const chatroomTypes = [0, 7, 10];
+    const res = await syncClient.syncChatroom(
+      SyncChatroomRequest.builder()
+        .setPage(page)
+        .setPageSize(50)
+        .setChatroomTypes(chatroomTypes)
+        .setMaxTimestamp(maxTimeStamp)
+        .setMinTimestamp(minTimeStamp)
+        .build(),
+      dlClient
+    );
+    return res;
+  }
+
+  async paginatedSyncAPI(page: number, dlClient: DLClient) {
+    const maxTimeStampNow = Math.floor(Date.now() / 1000);
+    const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
+    const DB_RESPONSE = val?.data;
+    return { dbRes: DB_RESPONSE };
+  }
+
+  async getUnseenCount(dlClient: DLClient) {
+    try {
+      const res = await this.paginatedSyncAPI(1, dlClient);
+      let count = 0;
+      if (res?.dbRes?.chatroomsData?.length > 0) {
+        res?.dbRes?.chatroomsData?.map((item) => {
+          if (item?.deletedByUserId == null) count = count + item?.unseenCount;
+        });
+      }
+      return count;
+    } catch (error) {
+      console.log("someAPI err ", error);
+    }
   }
 }
 
