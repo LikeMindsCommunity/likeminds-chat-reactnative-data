@@ -1,7 +1,7 @@
 import { LMSDKCallbacks } from "@likeminds.community/chat-js";
 import axios, { AxiosRequestConfig } from "axios";
 import { environment } from "../../environment";
-import { API } from "@likeminds.community/chat-js/dist/shared/constants/api.constant";
+import { API } from "src/shared/constants/api.constant";
 
 // TokenManager.ts
 class TokenManager {
@@ -56,7 +56,7 @@ class TokenManager {
 
   public async refreshAccessToken(): Promise<void> {
     try {
-      const url = `${environment.apiUrl}${API.REFRESH_TOKEN_API}`;
+      const url = `${API.REFRESH_TOKEN_API}`;
       const config: AxiosRequestConfig = {
         // Request headers or other options
         headers: {

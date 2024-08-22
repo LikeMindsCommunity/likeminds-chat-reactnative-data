@@ -1,5 +1,4 @@
 import { LMSDKCallbacks } from "@likeminds.community/chat-js";
-import { API } from "@likeminds.community/chat-js/dist/shared/constants/api.constant";
 import {
   InitUserWithUuid,
   ValidateUser,
@@ -10,6 +9,7 @@ import { ModelConverter } from "../utils/ModelConverter";
 import DLClient from "@likeminds.community/chat-js";
 import { InitiateUserResponse } from "../pages/user/responseModels/InitUserResponse";
 import { ValidateUserResponse } from "../pages/user/responseModels/ValidateUserResponse";
+import { API } from "src/shared/constants/api.constant";
 
 class RNInitiateUserClient {
   private rnNetworkLibrary: RNNetworkLibrary;

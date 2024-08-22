@@ -1,12 +1,12 @@
 // NetworkLibrary
 import { LMSDKCallbacks } from "@likeminds.community/chat-js";
-import { TokenValues } from "@likeminds.community/chat-js/dist/shared/tokens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LMResponse from "./lmresponse";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { environment } from "../../environment";
 import DLClient from "@likeminds.community/chat-js";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
+import { TokenValues } from "src/enums/Tokens";
 
 class RNNetworkLibrary {
   private xApiKey: string | null;
@@ -98,16 +98,12 @@ class RNNetworkLibrary {
 
     // Add the apiKey in initiate api to the request headers
     if (initApi) {
-      if (this.platformCode === "rn") {
         const xApiKey = await AsyncStorage.getItem(TokenValues.LOCAL_API_KEY);
         if (xApiKey && xApiKey?.length) {
           requestConfig.headers["x-api-key"] = xApiKey;
         } else {
           throw "Please provide the Api Key";
         }
-      } else {
-        requestConfig.headers["x-api-key"] = this.xApiKey;
-      }
     }
     try {
       const response = await this.makeRequest<{ data: T }>(url, requestConfig);
