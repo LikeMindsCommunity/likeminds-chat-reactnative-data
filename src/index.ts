@@ -266,17 +266,11 @@ class LMChatClient {
     this.dbLibrary.setTokens(accessToken, refreshToken);
   }
 
-  public setApiKeyInLocalStorage(apiKey: string) {
-    this.dbLibrary.setApiKeyInLocalStorage(apiKey);
-  }
   public setUserInLocalStorage(user: string) {
     this.dbLibrary.setUserInLocalStorage(user);
   }
   public async getUserFromLocalStorage() {
     return this.dbLibrary.getUserFromRNLocalStorage();
-  }
-  public async getApiKeyFromLocalStorage() {
-    return this.dbLibrary.getApiKeyFromRNLocalStorage();
   }
 
   public async getTokens() {
@@ -920,8 +914,8 @@ class LMChatClient {
   }
 
   // Method to set user schema
-  async setUserSchema(userUniqueID: string, userName: string) {
-    return setUserSchema(userUniqueID, userName);
+  async setUserSchema(userUniqueID: string, userName: string, apiKey:string) {
+    return setUserSchema(userUniqueID, userName, apiKey);
   }
 }
 

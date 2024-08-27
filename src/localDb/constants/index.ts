@@ -24,6 +24,7 @@ export const USER_RO = "UserRO";
 export const ATTACHMENT_UPLOAD_CONVERSATIONS =
   "AttachmentUploadConversationsRO";
 export const USER_SCHEMA_RO = "UserSchemaRO";
+export const TOKEN_SCHEMA_RO = "TokenSchemaRO";
 export const FILTER_CONVERSATION_STATE_RO = "FilterConversationStateRO";
 
 // schema types
@@ -59,5 +60,6 @@ export const COMMUNITIES = "communities";
 export const CONVERSATIONS = "conversations";
 export const CHATROOMS = "chatrooms";
 export const USER_SCHEMA_ID = 'UserSchema'
+export const TOKENS_ID = "TOKENS"
 export const APP_CONFIG = "APP_CONFIG";
 export const FILTER_CONVERSATION_STATE = "FILTER_CONVERSATION_STATE";

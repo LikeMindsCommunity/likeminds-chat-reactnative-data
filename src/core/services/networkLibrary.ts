@@ -1,12 +1,19 @@
 // NetworkLibrary
 import { LMSDKCallbacks } from "@likeminds.community/chat-js";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import LMResponse from "./lmresponse";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { environment } from "../../environment";
 import DLClient from "@likeminds.community/chat-js";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import { TokenValues } from "src/enums/Tokens";
+import {
+  getTokensFromRealm,
+  setTokensInRealm,
+} from "src/localDb/db/queries/token";
+import {
+  getUserSchema,
+  setUserSchema,
+} from "src/localDb/db/queries/userSchema";
 
 class RNNetworkLibrary {
   private xApiKey: string | null;
@@ -28,32 +35,22 @@ class RNNetworkLibrary {
   }
 
   public setUserInLocalStorage(user: string) {
-    AsyncStorage.setItem(TokenValues.LOCAL_USER, user);
-  }
-  public setApiKeyInLocalStorage(apiKey: string) {
-    AsyncStorage.setItem(TokenValues.LOCAL_API_KEY, apiKey);
+    const userData = JSON.parse(user);
+    setUserSchema(userData?.userUniqueId, userData?.userName, userData?.apiKey);
   }
 
   public setTokens(accessToken: string, refreshToken: string) {
-    AsyncStorage.setItem(TokenValues.LOCAL_ACCESS_TOKEN, accessToken);
-    AsyncStorage.setItem(TokenValues.LOCAL_REFRESH_TOKEN, refreshToken);
+    setTokensInRealm(accessToken, refreshToken);
   }
 
   public async getTokens() {
-    const accessToken = await AsyncStorage.getItem(
-      TokenValues.LOCAL_ACCESS_TOKEN
-    );
-    const refreshToken = await AsyncStorage.getItem(
-      TokenValues.LOCAL_REFRESH_TOKEN
-    );
-    return { accessToken, refreshToken };
+    const response = getTokensFromRealm();
+    return { accessToken: response?.accessToken, refreshToken: response?.refreshToken };
   }
 
-  public async getApiKeyFromRNLocalStorage() {
-    return await AsyncStorage.getItem(TokenValues.LOCAL_API_KEY);
-  }
   public async getUserFromRNLocalStorage() {
-    return await AsyncStorage.getItem(TokenValues.LOCAL_USER);
+    const user = getUserSchema();
+    return JSON.stringify(user);
   }
   private async makeRequest<T>(
     url: string,
@@ -98,12 +95,14 @@ class RNNetworkLibrary {
 
     // Add the apiKey in initiate api to the request headers
     if (initApi) {
-        const xApiKey = await AsyncStorage.getItem(TokenValues.LOCAL_API_KEY);
-        if (xApiKey && xApiKey?.length) {
-          requestConfig.headers["x-api-key"] = xApiKey;
-        } else {
-          throw "Please provide the Api Key";
-        }
+      const user = await getUserSchema();
+      const xApiKey = user?.apiKey;
+
+      if (xApiKey && xApiKey?.length) {
+        requestConfig.headers["x-api-key"] = xApiKey;
+      } else {
+        throw "Please provide the Api Key";
+      }
     }
     try {
       const response = await this.makeRequest<{ data: T }>(url, requestConfig);
