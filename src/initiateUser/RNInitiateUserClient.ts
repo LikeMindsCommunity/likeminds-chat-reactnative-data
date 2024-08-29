@@ -58,7 +58,6 @@ class RNInitiateUserClient {
   public async initiateUser(
     request: InitUserWithUuid
   ): Promise<InitiateUserResponse> {
-    this.rnNetworkLibrary.setApiKeyInLocalStorage(request?.apiKey);
     this.rnNetworkLibrary.setUserInLocalStorage(
       JSON.stringify({
         apiKey: request?.apiKey,

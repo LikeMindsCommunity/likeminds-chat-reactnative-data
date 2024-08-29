@@ -45,7 +45,10 @@ class RNNetworkLibrary {
 
   public async getTokens() {
     const response = getTokensFromRealm();
-    return { accessToken: response?.accessToken, refreshToken: response?.refreshToken };
+    return {
+      accessToken: response?.accessToken,
+      refreshToken: response?.refreshToken,
+    };
   }
 
   public async getUserFromRNLocalStorage() {
@@ -94,7 +97,7 @@ class RNNetworkLibrary {
     }
 
     // Add the apiKey in initiate api to the request headers
-    if (initApi) {
+    if (initApi && config && config?.method === "POST") {
       const user = await getUserSchema();
       const xApiKey = user?.apiKey;
 
