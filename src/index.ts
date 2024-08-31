@@ -668,6 +668,16 @@ class LMChatClient {
     );
   }
 
+  // Method to add an user to a cohort
+  addMemberToCohort(
+    addMemberToCohort: AddMemberToCohort
+  ): Promise<LMResponse<Nothing>> {
+    return this.userClient.addMemberToCohort(
+      addMemberToCohort,
+      LMChatClient.dlClient
+    );
+  }
+
   // Method to logout an user
   async logout(logout: Logout): Promise<LMResponse<Nothing>> {
     return this.userClient.logout(logout, LMChatClient.dlClient);
