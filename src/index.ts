@@ -38,7 +38,7 @@ import { FetchConversationResponse } from "./pages/chatroom/responseModels/Fetch
 
 //DM
 import {
-  FetchDMFeed,
+  FetchDMFeedRequest,
   CheckDMStatus,
   SendDMRequest,
   BlockMember,
@@ -63,7 +63,7 @@ import ExploreFeedClient from "./pages/exploreFeed/exploreFeedClient";
 
 //HomeFeed
 import {
-  HomeFeed,
+  GetHomeFeedRequest,
   INVITE,
   IaType,
   Device,
@@ -100,9 +100,10 @@ import {
   GetAllMembers,
   Logout,
   Search,
-  InitUserWithUuid,
   EditProfile,
   LeaveCommunity,
+  InitUserWithUuid,
+  ValidateUser,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./pages/user/responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberStateResponse";
@@ -162,19 +163,59 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSDKCallbacks } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
+import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
+import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
+import DBLibrary from "./core/services/networkLibrary";
 
 class LMChatClient {
-  private static apiKey: string | null = null;
   private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;
+  // private static apiKey: string | null = null;
   public static dlClient: DLClient;
+  private networkLibrary: NetworkLibrary;
+  private chatroomClient: ChatroomClient;
+  private directMessageClient: DirectMessageClient;
+  private exploreFeedClient: ExploreFeedClient;
+  private homeFeedClient: HomeFeedClient;
+  private pollClient: PollClient;
+  private searchClient: SearchClient;
+  private userClient: UserClient;
+  private syncClient: SyncClient;
+  private rnInitiateUserClient: RNInitiateUserClient;
+  private lmSdkCallbacks: LMSDKCallbacks;
+  private dbLibrary: DBLibrary;
 
-  static setApiKey(apiKey: string) {
-    this.apiKey = apiKey;
-    return this;
+  constructor() {
+    this.networkLibrary = LMChatClient.dlClient.getNetworkLibrary();
+    this.chatroomClient = new ChatroomClient();
+    this.directMessageClient = new DirectMessageClient();
+    this.exploreFeedClient = new ExploreFeedClient();
+    this.homeFeedClient = new HomeFeedClient();
+    this.pollClient = new PollClient();
+    this.searchClient = new SearchClient();
+    this.userClient = new UserClient();
+    this.syncClient = new SyncClient();
+    this.rnInitiateUserClient = new RNInitiateUserClient(
+      this.networkLibrary,
+      LMChatClient.dlClient,
+      LMChatClient.versionCode,
+      "rn",
+      this.lmSdkCallbacks
+    );
+    this.dbLibrary = new DBLibrary(
+      LMChatClient.dlClient,
+      LMChatClient.versionCode,
+      "rn",
+      this.lmSdkCallbacks
+    );
   }
+
+  // static setApiKey(apiKey: string) {
+  //   this.apiKey = apiKey;
+  //   return this;
+  // }
 
   static setVersionCode(versionCode: number) {
     this.versionCode = versionCode;
@@ -190,14 +231,19 @@ class LMChatClient {
 
   public static build(): LMChatClient {
     // Perform any necessary validation or configuration checks
-    if (!this.apiKey) {
+    if (!this.versionCode) {
       throw new Error(
-        "Please provide apiKey before building the LMChatClient."
+        "Please provide versionCode before building the LMFeedClient."
       );
     }
+    // if (!this.apiKey) {
+    //   throw new Error(
+    //     "Please provide apiKey before building the LMChatClient."
+    //   );
+    // }
 
     LMChatClient.dlClient = new DLClient({
-      xApiKey: this.apiKey!,
+      // xApiKey: this.apiKey!,
       xPlatformCode: "rn",
       xVersionCode: this.versionCode,
       xSdkSource: "chat",
@@ -207,17 +253,61 @@ class LMChatClient {
 
     const lmChatClient = new LMChatClient();
 
+    console.log("lmChatClient", lmChatClient);
+
     return lmChatClient;
   }
 
-  chatroomClient = new ChatroomClient();
-  directMessageClient = new DirectMessageClient();
-  exploreFeedClient = new ExploreFeedClient();
-  homeFeedClient = new HomeFeedClient();
-  pollClient = new PollClient();
-  searchClient = new SearchClient();
-  userClient = new UserClient();
-  syncClient = new SyncClient();
+  public setLMSDKCallbacks(lmSdkCallbacks: LMSDKCallbacks) {
+    this.lmSdkCallbacks = lmSdkCallbacks;
+    this.networkLibrary.setLMSDKCallbacks(lmSdkCallbacks);
+  }
+  public setTokens(accessToken: string, refreshToken: string) {
+    this.dbLibrary.setTokens(accessToken, refreshToken);
+  }
+
+  public setUserInLocalStorage(user: string) {
+    this.dbLibrary.setUserInLocalStorage(user);
+  }
+  public async getUserFromLocalStorage() {
+    return this.dbLibrary.getUserFromRNLocalStorage();
+  }
+
+  public async getTokens() {
+    return this.dbLibrary.getTokens();
+  }
+
+  public async getAccessToken() {
+    return this.networkLibrary.getAccessToken();
+  }
+
+  public async getRefreshToken() {
+    return this.networkLibrary.getRefreshToken();
+  }
+
+  async validateUser(validateUserRequest: ValidateUser) {
+    try {
+      const initiateUserResponse =
+        await this.rnInitiateUserClient.validateUser(validateUserRequest);
+
+      return initiateUserResponse;
+    } catch (error) {
+      console.error("Error while validating the user:", error);
+      throw error;
+    }
+  }
+
+  async initiateUser(initiateUserRequest: InitUserWithUuid) {
+    try {
+      const initiateUserResponse =
+        await this.rnInitiateUserClient.initiateUser(initiateUserRequest);
+
+      return initiateUserResponse;
+    } catch (error) {
+      console.error("Error while initiating the user:", error);
+      throw error;
+    }
+  }
 
   // Method to mute a chatroom
   async muteChatroom(muteChatroom: MuteChatroom): Promise<LMResponse<Nothing>> {
@@ -410,9 +500,14 @@ class LMChatClient {
     );
   }
 
+  // Method to get unseen count
+  async getUnseenCount() {
+    return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
+  }
+
   // Method to fetch DM feed
   async fetchDMFeed(
-    fetchDMFeed: FetchDMFeed
+    fetchDMFeed: FetchDMFeedRequest
   ): Promise<LMResponse<FetchDMResponse>> {
     return this.directMessageClient.fetchDMFeed(
       fetchDMFeed,
@@ -493,7 +588,9 @@ class LMChatClient {
   }
 
   // Method to get homefeed
-  async getHomeFeed(homeFeed: HomeFeed): Promise<LMResponse<HomeFeedResponse>> {
+  async getHomeFeed(
+    homeFeed: GetHomeFeedRequest
+  ): Promise<LMResponse<HomeFeedResponse>> {
     return this.homeFeedClient.getHomeFeed(homeFeed, LMChatClient.dlClient);
   }
 
@@ -574,13 +671,6 @@ class LMChatClient {
       searchConversation,
       LMChatClient.dlClient
     );
-  }
-
-  // Method to initiate an user
-  initiateUser(
-    initUser: InitUserWithUuid
-  ): Promise<LMResponse<InitiateUserResponse>> {
-    return this.userClient.initiateUser(initUser, LMChatClient.dlClient);
   }
 
   // Method to add an user to a cohort
@@ -839,8 +929,8 @@ class LMChatClient {
   }
 
   // Method to set user schema
-  async setUserSchema(userUniqueID: string, userName: string) {
-    return setUserSchema(userUniqueID, userName);
+  async setUserSchema(userUniqueID: string, userName: string, apiKey:string) {
+    return setUserSchema(userUniqueID, userName, apiKey);
   }
 }
 
@@ -850,4 +940,7 @@ export {
   SyncConversationRequest,
   GetConversationsRequestBuilder,
   ConversationState,
+  LMSDKCallbacks,
+  InitUserWithUuid,
+  ValidateUser,
 };
