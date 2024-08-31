@@ -72,7 +72,7 @@ class RNNetworkLibrary {
       ...config,
       headers: {
         ...config?.headers,
-        "x-sdk-source": "feed",
+        "x-sdk-source": "chat",
       },
     };
     const initApi = url.includes("initiate");
