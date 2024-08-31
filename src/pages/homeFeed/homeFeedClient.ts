@@ -3,7 +3,7 @@ import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import { HomeFeedResponse } from "./responseModels/HomeFeedResponse";
 import {
-  HomeFeed,
+  GetHomeFeedRequest,
   INVITE,
   IaType,
   Device,
@@ -41,7 +41,7 @@ class HomeFeedClient {
   }
 
   async getHomeFeed(
-    homeFeed: HomeFeed,
+    homeFeed: GetHomeFeedRequest,
     dlClient: DLClient
   ): Promise<LMResponse<HomeFeedResponse>> {
     try {

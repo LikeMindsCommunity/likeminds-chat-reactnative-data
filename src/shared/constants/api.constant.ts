@@ -7,4 +7,6 @@ export const API = {
   CHATROOM: `${environment.apiUrl}/chatroom`, // (GET)
   GET_UNREAD_CONVERSATION_NOTIFICATION: `${environment.apiUrl}/conversation/notification/unread`, // (GET)
   PUT_MEMBER_TO_COHORT: `${environment.apiUrl}/community/cohort`, // (PUT)
+  SDK_INITIATE: `/sdk/initiate`,
+  REFRESH_TOKEN_API: `/user/refresh`,
 };
