@@ -3,10 +3,22 @@ pipeline {
     tools {nodejs "nodejs"}
 
     options {
-        buildDiscarder logRotator(daysToKeepStr: '1', numToKeepStr: '1' )
+        buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
+    }
+
+    parameters {
+        stashedFile 'chat_js_data_package'
     }
 
     stages {
+
+        stage('file upload'){
+            steps{
+                unstash 'chat_js_data_package'
+                sh 'mv chat_js_data_package $chat_js_data_package_FILENAME'
+                sh 'ls'
+            }
+        }
         
         
         stage('Install Dependencies') {
