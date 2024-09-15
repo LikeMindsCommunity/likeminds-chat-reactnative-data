@@ -5,7 +5,6 @@ pipeline {
     options {
         buildDiscarder logRotator(daysToKeepStr: '7', numToKeepStr: '1')
     }
-
     
     parameters {
         stashedFile 'chat_js_data_package'
