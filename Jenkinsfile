@@ -7,7 +7,6 @@ pipeline {
     }
 
 
-    
 
     parameters {
         stashedFile 'chat_js_data_package'
