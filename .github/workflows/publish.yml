@@ -9,7 +9,7 @@ jobs:
   publish:
     name: Publish to npm  
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'  # Only run for master branch
+    if: github.ref == 'refs/heads/master'  # Only run for master branch.
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
