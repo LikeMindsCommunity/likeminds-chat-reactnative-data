@@ -10,6 +10,10 @@ pipeline {
         stashedFile 'chat_js_data_package'
     }
 
+    environment {
+        NODE_OPTIONS = "--max-old-space-size=8192"  // Setting the memory limit for Node.js
+    }
+
     stages {
 
         stage('file upload'){
@@ -29,7 +33,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                sh 'export NODE_OPTIONS="--max-old-space-size=8192" && npm run build'
             }
         }
 
