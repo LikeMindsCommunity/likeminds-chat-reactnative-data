@@ -28,6 +28,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
+                sh 'npm uninstall @likeminds.community/chat-js'
+                sh 'npm install $chat_js_data_package_FILENAME'
             }
         }
 
