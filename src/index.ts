@@ -247,6 +247,7 @@ class LMChatClient {
       xPlatformCode: "rn",
       xVersionCode: this.versionCode,
       xSdkSource: "chat",
+      excludedConversationStates:[]
     });
 
     setFilterConversationState(this.filterConversationState);
@@ -500,10 +501,10 @@ class LMChatClient {
     );
   }
 
-  // Method to get unseen count
-  async getUnseenCount() {
-    return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
-  }
+  // Method to get unseen count Reverting these changes as these changes are untested and there are compile errors
+  // async getUnseenCount() {
+  //   return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
+  // }
 
   // Method to fetch DM feed
   async fetchDMFeed(

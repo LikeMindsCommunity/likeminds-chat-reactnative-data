@@ -466,48 +466,50 @@ class ChatroomClient {
       });
   }
 
-  async syncChatroomAPI(
-    page: number,
-    minTimeStamp: number,
-    maxTimeStamp: number,
-    dlClient: DLClient
-  ) {
-    const syncClient = new SyncClient();
-    const chatroomTypes = [0, 7, 10];
-    const res = await syncClient.syncChatroom(
-      SyncChatroomRequest.builder()
-        .setPage(page)
-        .setPageSize(50)
-        .setChatroomTypes(chatroomTypes)
-        .setMaxTimestamp(maxTimeStamp)
-        .setMinTimestamp(minTimeStamp)
-        .build(),
-      dlClient
-    );
-    return res;
-  }
+  //Reverting these changes as these changes are untested and there are compile errors
 
-  async paginatedSyncAPI(page: number, dlClient: DLClient) {
-    const maxTimeStampNow = Math.floor(Date.now() / 1000);
-    const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
-    const DB_RESPONSE = val?.data;
-    return { dbRes: DB_RESPONSE };
-  }
+  // async syncChatroomAPI(
+  //   page: number,
+  //   minTimeStamp: number,
+  //   maxTimeStamp: number,
+  //   dlClient: DLClient
+  // ) {
+  //   const syncClient = new SyncClient();
+  //   const chatroomTypes = [0, 7, 10];
+  //   const res = await syncClient.syncChatroom(
+  //     SyncChatroomRequest.builder()
+  //       .setPage(page)
+  //       .setPageSize(50)
+  //       .setChatroomTypes(chatroomTypes)
+  //       .setMaxTimestamp(maxTimeStamp)
+  //       .setMinTimestamp(minTimeStamp)
+  //       .build(),
+  //     dlClient
+  //   );
+  //   return res;
+  // }
 
-  async getUnseenCount(dlClient: DLClient) {
-    try {
-      const res = await this.paginatedSyncAPI(1, dlClient);
-      let count = 0;
-      if (res?.dbRes?.chatroomsData?.length > 0) {
-        res?.dbRes?.chatroomsData?.map((item) => {
-          if (item?.deletedByUserId == null) count = count + item?.unseenCount;
-        });
-      }
-      return count;
-    } catch (error) {
-      console.log("someAPI err ", error);
-    }
-  }
+  // async paginatedSyncAPI(page: number, dlClient: DLClient) {
+  //   const maxTimeStampNow = Math.floor(Date.now() / 1000);
+  //   const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
+  //   const DB_RESPONSE = val?.data;
+  //   return { dbRes: DB_RESPONSE };
+  // }
+
+  // async getUnseenCount(dlClient: DLClient) {
+  //   try {
+  //     const res = await this.paginatedSyncAPI(1, dlClient);
+  //     let count = 0;
+  //     if (res?.dbRes?.chatroomsData?.length > 0) {
+  //       res?.dbRes?.chatroomsData?.map((item) => {
+  //         if (item?.deletedByUserId == null) count = count + item?.unseenCount;
+  //       });
+  //     }
+  //     return count;
+  //   } catch (error) {
+  //     console.log("someAPI err ", error);
+  //   }
+  // }
 }
 
 export { ChatroomClient as default };
