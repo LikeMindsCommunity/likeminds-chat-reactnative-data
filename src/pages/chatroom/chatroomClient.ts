@@ -42,6 +42,12 @@ import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
 import { GetConversationNotificationUnreadResponse } from "./responseModels/GetConversationNotificationUnreadResponse";
 import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
 import SyncClient from "src/sync/api";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
+import { ChatroomRO } from "src/localDb/models/ChatroomRO";
+import Db from "src/localDb/db/db";
+import { convertToConversationRO, convertToLastConversationRO, convertToMemberRO } from "src/localDb/db/ROConverter";
+import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
+
 
 class ChatroomClient {
   async muteChatroom(
@@ -466,50 +472,84 @@ class ChatroomClient {
       });
   }
 
+  async getUnreadChatrooms(
+    chatroom: Chatroom,
+    lastConversation: ConversationModel
+  ): Promise<LMResponse<ChatroomRO[]>> {
+    const realm = new Realm(Db.getInstance());
+    try {
+      console.log("received =>",chatroom,lastConversation)
+      const convertedMemberRO = convertToMemberRO(chatroom.member,chatroom.communityId)
+      const convertedLastConversationRO = convertToLastConversationRO(lastConversation,convertedMemberRO,chatroom.id,[],null)
+      const convertedConversationRO = convertToConversationRO(realm,lastConversation,convertedMemberRO,chatroom.id)
+      const chatroomWithID = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroom.id}"`);
+      realm.write(() => {
+        chatroomWithID[0].lastConversation = convertedConversationRO;
+        chatroomWithID[0].lastConversationRO = convertedLastConversationRO;
+        chatroomWithID[0].unseenCount = chatroomWithID[0].unseenCount + 1;
+      });
+      const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
+        .filtered(
+          'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
+        )
+        .sorted('lastConversationRO.createdAt', true) // Sort in descending order
+        .slice(0, 7); // Limit the result to 7 chatrooms
+
+      // Example of finding a specific chatroom by id
+      const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms));
+      console.log("sending this data =====>",stringifiedChatroom)
+      return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+    } finally {
+      realm.close();
+    }
+  }
+
   //Reverting these changes as these changes are untested and there are compile errors
 
-  // async syncChatroomAPI(
-  //   page: number,
-  //   minTimeStamp: number,
-  //   maxTimeStamp: number,
-  //   dlClient: DLClient
-  // ) {
-  //   const syncClient = new SyncClient();
-  //   const chatroomTypes = [0, 7, 10];
-  //   const res = await syncClient.syncChatroom(
-  //     SyncChatroomRequest.builder()
-  //       .setPage(page)
-  //       .setPageSize(50)
-  //       .setChatroomTypes(chatroomTypes)
-  //       .setMaxTimestamp(maxTimeStamp)
-  //       .setMinTimestamp(minTimeStamp)
-  //       .build(),
-  //     dlClient
-  //   );
-  //   return res;
-  // }
+  async syncChatroomAPI(
+    page: number,
+    minTimeStamp: number,
+    maxTimeStamp: number,
+    dlClient: DLClient
+  ) {
+    const syncClient = new SyncClient();
+    const chatroomTypes = [0, 7, 10];
+    const res = await syncClient.syncChatroom(
+      SyncChatroomRequest.builder()
+        .setPage(page)
+        .setPageSize(50)
+        .setChatroomTypes(chatroomTypes)
+        .setMaxTimestamp(maxTimeStamp)
+        .setMinTimestamp(minTimeStamp)
+        .build(),
+      dlClient
+    );
+    return res;
+  }
 
-  // async paginatedSyncAPI(page: number, dlClient: DLClient) {
-  //   const maxTimeStampNow = Math.floor(Date.now() / 1000);
-  //   const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
-  //   const DB_RESPONSE = val?.data;
-  //   return { dbRes: DB_RESPONSE };
-  // }
+  async paginatedSyncAPI(page: number, dlClient: DLClient) {
+    const maxTimeStampNow = Math.floor(Date.now() / 1000);
+    const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
+    const DB_RESPONSE = val?.getData();
+    return { dbRes: DB_RESPONSE };
+  }
 
-  // async getUnseenCount(dlClient: DLClient) {
-  //   try {
-  //     const res = await this.paginatedSyncAPI(1, dlClient);
-  //     let count = 0;
-  //     if (res?.dbRes?.chatroomsData?.length > 0) {
-  //       res?.dbRes?.chatroomsData?.map((item) => {
-  //         if (item?.deletedByUserId == null) count = count + item?.unseenCount;
-  //       });
-  //     }
-  //     return count;
-  //   } catch (error) {
-  //     console.log("someAPI err ", error);
-  //   }
-  // }
+  async getUnseenCount(dlClient: DLClient) {
+    try {
+      const res = await this.paginatedSyncAPI(1, dlClient);
+      let count = 0;
+      if ((res?.dbRes?.chatroomsData as unknown as Chatroom[])?.length > 0) {
+       ( res?.dbRes?.chatroomsData as unknown as Chatroom[])?.map((item) => {
+          if (item?.deletedByUserId == null) count = count + item?.unseenCount;
+        });
+      }
+      return count;
+    } catch (error) {
+      console.log("someAPI err ", error);
+    }
+  }
 }
 
 export { ChatroomClient as default };
