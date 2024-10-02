@@ -45,8 +45,11 @@ import SyncClient from "src/sync/api";
 import { Chatroom } from "src/shared/responseModels/Chatroom";
 import { ChatroomRO } from "src/localDb/models/ChatroomRO";
 import Db from "src/localDb/db/db";
-import { convertToConversationRO, convertToLastConversationRO, convertToMemberRO } from "src/localDb/db/ROConverter";
+import { convertToChatroomRO, convertToCommunity, convertToConversationRO, convertToLastConversationRO, convertToMemberRO } from "src/localDb/db/ROConverter";
 import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
+import { MemberRO } from "src/localDb/models/MemberRO";
+import { ConversationRO } from "src/localDb/models/ConversationRO";
+import { LastConversationRO } from "src/localDb/models/LastConversationRO";
 
 
 class ChatroomClient {
@@ -478,76 +481,123 @@ class ChatroomClient {
   ): Promise<LMResponse<ChatroomRO[]>> {
     const realm = new Realm(Db.getInstance());
     try {
-      console.log("received =>",chatroom,lastConversation)
-      const convertedMemberRO = convertToMemberRO(chatroom.member,chatroom.communityId)
-      const convertedLastConversationRO = convertToLastConversationRO(lastConversation,convertedMemberRO,chatroom.id,[],null)
-      const convertedConversationRO = convertToConversationRO(realm,lastConversation,convertedMemberRO,chatroom.id)
-      const chatroomWithID = realm
-      .objects<ChatroomRO>(ChatroomRO.schema.name)
-      .filtered(`id = "${chatroom.id}"`);
-      realm.write(() => {
-        chatroomWithID[0].lastConversation = convertedConversationRO;
-        chatroomWithID[0].lastConversationRO = convertedLastConversationRO;
-        chatroomWithID[0].unseenCount = chatroomWithID[0].unseenCount + 1;
-      });
-      const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
-        .filtered(
-          'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
-        )
-        .sorted('lastConversationRO.createdAt', true) // Sort in descending order
-        .slice(0, 7); // Limit the result to 7 chatrooms
 
-      // Example of finding a specific chatroom by id
-      const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms));
-      console.log("sending this data =====>",stringifiedChatroom)
-      return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+      const chatroomWithID = realm
+        .objects<ChatroomRO>(ChatroomRO.schema.name)
+        .filtered(`id = "${chatroom.id}"`);
+
+      if (chatroomWithID?.length > 0) {
+
+        const convertedMemberRO = convertToMemberRO(chatroom.member, chatroom.communityId)
+        const convertedLastConversationRO = convertToLastConversationRO(lastConversation, convertedMemberRO, chatroom.id, lastConversation.attachments, null)
+        const convertedConversationRO = convertToConversationRO(realm, lastConversation, convertedMemberRO, chatroom.id, lastConversation.attachments)
+
+        realm.write(() => {
+          chatroomWithID[0].lastConversation = convertedConversationRO;
+          chatroomWithID[0].lastConversationRO = convertedLastConversationRO;
+          chatroomWithID[0].unseenCount = chatroomWithID[0].unseenCount + 1;
+          chatroomWithID[0].unreadConversationsCount = chatroomWithID[0].unreadConversationsCount + 1;
+          chatroomWithID[0].lastConversationId = lastConversation.id;
+        });
+
+        const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
+          .filtered(
+            'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
+          )
+          .sorted('lastConversationRO.createdAt', true) // Sort in descending order
+          .slice(0, 7); // Limit the result to 7 chatrooms
+
+        const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms));
+        return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+
+      } else {
+
+        // Chatroom doesn't exist in DB
+        const chatroomCreatorRO = convertToMemberRO(chatroom.member, chatroom.communityId);
+
+        // insert or update chatroomCreatorRO
+        realm.create(
+          MemberRO.schema.name,
+          chatroomCreatorRO,
+          Realm.UpdateMode.All
+        );
+        const chatRequestedById = lastConversation?.member?.id;
+        let chatRequestedByRO;
+        if (chatRequestedById !== null) {
+          chatRequestedByRO = convertToMemberRO(lastConversation.member, chatroom.communityId);
+          if (chatRequestedByRO) {
+            realm.create(
+              MemberRO.schema.name,
+              chatRequestedByRO,
+              Realm.UpdateMode.All
+            );
+          }
+        }
+
+        const conversationRO = convertToConversationRO(
+          realm,
+          lastConversation,
+          chatroomCreatorRO,
+          chatroom?.id,
+          lastConversation.attachments
+        );
+
+        realm.create(
+          ConversationRO.schema.name,
+          conversationRO,
+          Realm.UpdateMode.All
+        );
+
+        const lastConversationRO = convertToLastConversationRO(
+          lastConversation,
+          chatroomCreatorRO,
+          chatroom?.id,
+          lastConversation.attachments,
+          null
+        );
+
+
+        realm.create(
+          LastConversationRO.schema.name,
+          lastConversationRO,
+          Realm.UpdateMode.All
+        );
+
+        const chatroomRO = convertToChatroomRO(
+          realm,
+          chatroom,
+          chatroomCreatorRO,
+          chatroomCreatorRO,
+          chatRequestedByRO,
+          lastConversationRO
+        );
+
+        chatroomRO.unreadConversationsCount = 1;
+        chatroomRO.unseenCount = 1;
+
+        // save to local DB
+        if (chatroomRO) {
+          chatroomRO.relationshipNeeded = true;
+          realm.create(
+            ChatroomRO.schema.name,
+            chatroomRO,
+            Realm.UpdateMode.All
+          );
+        }
+
+        const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
+          .filtered(
+            'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
+          )
+          .sorted('lastConversationRO.createdAt', true) // Sort in descending order
+          .slice(0, 7); // Limit the result to 7 chatrooms
+
+        const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms ?? []));
+        return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+        
+      }
     } finally {
       realm.close();
-    }
-  }
-
-  //Reverting these changes as these changes are untested and there are compile errors
-
-  async syncChatroomAPI(
-    page: number,
-    minTimeStamp: number,
-    maxTimeStamp: number,
-    dlClient: DLClient
-  ) {
-    const syncClient = new SyncClient();
-    const chatroomTypes = [0, 7, 10];
-    const res = await syncClient.syncChatroom(
-      SyncChatroomRequest.builder()
-        .setPage(page)
-        .setPageSize(50)
-        .setChatroomTypes(chatroomTypes)
-        .setMaxTimestamp(maxTimeStamp)
-        .setMinTimestamp(minTimeStamp)
-        .build(),
-      dlClient
-    );
-    return res;
-  }
-
-  async paginatedSyncAPI(page: number, dlClient: DLClient) {
-    const maxTimeStampNow = Math.floor(Date.now() / 1000);
-    const val = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
-    const DB_RESPONSE = val?.getData();
-    return { dbRes: DB_RESPONSE };
-  }
-
-  async getUnseenCount(dlClient: DLClient) {
-    try {
-      const res = await this.paginatedSyncAPI(1, dlClient);
-      let count = 0;
-      if ((res?.dbRes?.chatroomsData as unknown as Chatroom[])?.length > 0) {
-       ( res?.dbRes?.chatroomsData as unknown as Chatroom[])?.map((item) => {
-          if (item?.deletedByUserId == null) count = count + item?.unseenCount;
-        });
-      }
-      return count;
-    } catch (error) {
-      console.log("someAPI err ", error);
     }
   }
 }
