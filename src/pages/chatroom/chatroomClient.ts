@@ -521,18 +521,21 @@ class ChatroomClient {
           chatroomCreatorRO,
           Realm.UpdateMode.All
         );
-        const chatRequestedById = lastConversation?.member?.id;
-        let chatRequestedByRO;
-        if (chatRequestedById !== null) {
-          chatRequestedByRO = convertToMemberRO(lastConversation.member, chatroom.communityId);
-          if (chatRequestedByRO) {
-            realm.create(
-              MemberRO.schema.name,
-              chatRequestedByRO,
-              Realm.UpdateMode.All
-            );
-          }
-        }
+        
+
+        const chatRequestedByRO = convertToMemberRO(lastConversation.member, chatroom.communityId);
+        realm.create(
+           MemberRO.schema.name,
+           chatRequestedByRO,
+           Realm.UpdateMode.All
+        );
+
+        const chatroomWithUserRO = convertToMemberRO(chatroom.chatroomWithUser, chatroom.communityId);
+        realm.create(
+          MemberRO.schema.name,
+          chatroomWithUserRO,
+          Realm.UpdateMode.All
+        );
 
         const conversationRO = convertToConversationRO(
           realm,
@@ -567,7 +570,7 @@ class ChatroomClient {
           realm,
           chatroom,
           chatroomCreatorRO,
-          chatroomCreatorRO,
+          chatroomWithUserRO,
           chatRequestedByRO,
           lastConversationRO
         );
@@ -594,7 +597,7 @@ class ChatroomClient {
 
         const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms ?? []));
         return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
-        
+
       }
     } finally {
       realm.close();
