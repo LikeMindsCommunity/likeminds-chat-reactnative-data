@@ -1,6 +1,6 @@
 //Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
-import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
+import { Chatroom, Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
   MuteChatroom,
@@ -168,6 +168,7 @@ import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import DBLibrary from "./core/services/networkLibrary";
+import { ChatroomRO } from "./localDb/models/ChatroomRO";
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -498,6 +499,15 @@ class LMChatClient {
   > {
     return this.chatroomClient.getUnreadConversationNotification(
       LMChatClient.dlClient
+    );
+  }
+
+  async getUnreadChatrooms(chatroom: Chatroom, lastConversation: ConversationModel): Promise<
+  LMResponse<ChatroomRO[]>
+  > {
+    return this.chatroomClient.getUnreadChatrooms(
+      chatroom,
+      lastConversation
     );
   }
 
