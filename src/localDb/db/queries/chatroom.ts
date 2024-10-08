@@ -653,7 +653,6 @@ export async function getUnreadChatrooms(
 
     }
   } finally {
-    console.log("closing")
     realm.close();
     }
 }

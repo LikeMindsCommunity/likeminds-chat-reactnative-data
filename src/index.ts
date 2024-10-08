@@ -148,6 +148,7 @@ import {
   updateChatroomFollowStatus,
   updateUnseenCount,
   updateMuteStatus,
+  getUnreadChatrooms,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -493,23 +494,6 @@ class LMChatClient {
     );
   }
 
-  // Method to get unread conversation notification
-  async getUnreadConversationNotification(): Promise<
-    LMResponse<GetConversationNotificationUnreadResponse>
-  > {
-    return this.chatroomClient.getUnreadConversationNotification(
-      LMChatClient.dlClient
-    );
-  }
-
-  async getUnreadChatrooms(chatroom: Chatroom, lastConversation: ConversationModel): Promise<
-  LMResponse<ChatroomRO[]>
-  > {
-    return this.chatroomClient.getUnreadChatrooms(
-      chatroom,
-      lastConversation
-    );
-  }
 
   async getUnseenCount() {
     return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
@@ -845,6 +829,14 @@ class LMChatClient {
       isChatroomTopic,
       chatroomId
     );
+  }
+
+  // Method to get notification through localDB
+  async getUnreadChatrooms(
+    chatroom: Chatroom,
+    lastConversation: ConversationModel
+  ): Promise<LMResponse<ChatroomRO[]>> {
+    return getUnreadChatrooms(chatroom,lastConversation);
   }
 
   // Method to get a particular convesation from localDB
