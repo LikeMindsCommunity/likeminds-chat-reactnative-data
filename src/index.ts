@@ -1,6 +1,6 @@
 //Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
-import { Chatroom, Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
+import { Chatroom } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
   MuteChatroom,
@@ -331,7 +331,7 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  async getChatroom(chatroomId: string): Promise<LMResponse<ChatroomModel>> {
+  async getChatroom(chatroomId: string): Promise<LMResponse<Chatroom>> {
     return getChatroom(chatroomId);
   }
 
@@ -743,7 +743,7 @@ class LMChatClient {
   // Method to save chatroom in localDB
   async saveChatroomResponse(
     data: SyncChatroomResponse,
-    chatrooms: ChatroomModel[],
+    chatrooms: Chatroom[],
     communityId: string
   ) {
     return saveChatroomResponse(data, chatrooms, communityId);
@@ -792,7 +792,7 @@ class LMChatClient {
   // Method to save conversation in localDB
   async saveConversationData(
     data: SyncConversationResponse,
-    chatroomData: ChatroomModel[],
+    chatroomData: Chatroom[],
     conversationData: ConversationModel[],
     communityId: string
   ) {
