@@ -42,6 +42,15 @@ import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
 import { GetConversationNotificationUnreadResponse } from "./responseModels/GetConversationNotificationUnreadResponse";
 import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
 import SyncClient from "src/sync/api";
+import { Chatroom } from "src/shared/responseModels/Chatroom";
+import { ChatroomRO } from "src/localDb/models/ChatroomRO";
+import Db from "src/localDb/db/db";
+import { convertToChatroomRO, convertToCommunity, convertToConversationRO, convertToLastConversationRO, convertToMemberRO } from "src/localDb/db/ROConverter";
+import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
+import { MemberRO } from "src/localDb/models/MemberRO";
+import { ConversationRO } from "src/localDb/models/ConversationRO";
+import { LastConversationRO } from "src/localDb/models/LastConversationRO";
+
 
 class ChatroomClient {
   async muteChatroom(
@@ -439,31 +448,6 @@ class ChatroomClient {
     dlClient: DLClient
   ): Promise<LMResponse<Nothing>> {
     return await dlClient.chatroomSeenWithUuid(chatroomSeen);
-  }
-
-  async getUnreadConversationNotification(
-    dlClient: DLClient
-  ): Promise<LMResponse<GetConversationNotificationUnreadResponse>> {
-    return dlClient
-      .makeAuthenticatedRequest(`${API.GET_UNREAD_CONVERSATION_NOTIFICATION}`)
-      .then((resData) => {
-        // Handle the response and return the LMResponse object
-        const responseData: GetConversationNotificationUnreadResponse =
-          ModelConverter.responseBodyParser(resData);
-
-        return new LMResponse<GetConversationNotificationUnreadResponse>(
-          responseData,
-          null,
-          true
-        );
-      })
-      .catch((error) => {
-        return new LMResponse<GetConversationNotificationUnreadResponse>(
-          null,
-          error.message || "An error occurred",
-          false
-        );
-      });
   }
 
 
