@@ -17,6 +17,7 @@ import ChatDBUtil from "src/localDb/utils/chatDbUtils";
 import { ConversationRO } from "src/localDb/models/ConversationRO";
 import { Conversation } from "src/shared/responseModels/Conversation";
 import LMResponse from "src/core/services/lmresponse";
+import { Conversation as ConversationModel } from "src/shared/responseModels/Conversation";
 
 // method to save chatroom data in realm
 export async function saveChatroomResponse(
@@ -493,4 +494,165 @@ export async function deleteChatroomTopic(chatroomId: string) {
   } finally {
     realm.close();
   }
+}
+
+export async function getUnreadChatrooms(
+  chatroom: Chatroom,
+  lastConversation: ConversationModel
+): Promise<LMResponse<ChatroomRO[]>> {
+  const realm = new Realm(Db.getInstance());
+  try {
+
+    const chatroomWithID = realm
+      .objects<ChatroomRO>(ChatroomRO.schema.name)
+      .filtered(`id = "${chatroom.id}"`);
+
+    if (chatroomWithID?.length > 0) {
+      realm.write(() => {
+        const convertedMemberRO = convertToMemberRO(lastConversation.member, chatroom.communityId)
+        const convertedLastConversationRO = convertToLastConversationRO(lastConversation, convertedMemberRO, chatroom.id, lastConversation.attachments, null)
+        const convertedConversationRO = convertToConversationRO(realm, lastConversation, convertedMemberRO, chatroom.id, lastConversation.attachments)
+
+        realm.create(
+          MemberRO.schema.name,
+          convertedMemberRO,
+          Realm.UpdateMode.All
+        );
+        
+        realm.create(
+          ConversationRO.schema.name,
+          convertedConversationRO,
+          Realm.UpdateMode.All
+        );
+
+
+        realm.create(
+          LastConversationRO.schema.name,
+          convertedLastConversationRO,
+          Realm.UpdateMode.All
+        );
+
+
+          chatroomWithID[0].lastConversation = convertedConversationRO;
+          chatroomWithID[0].lastConversationRO = convertedLastConversationRO;
+          chatroomWithID[0].unseenCount = chatroomWithID[0].unseenCount + 1;
+          chatroomWithID[0].unreadConversationsCount = chatroomWithID[0].unreadConversationsCount + 1;
+          chatroomWithID[0].lastConversationId = lastConversation.id;
+      })
+
+      const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
+        .filtered(
+          'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
+        )
+        .sorted('lastConversationRO.createdEpoch', true) // Sort in descending order
+        .slice(0, 7); // Limit the result to 7 chatrooms
+
+      const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms));
+      return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+
+    } else {
+
+      realm.write(() => {
+
+        // Chatroom doesn't exist in DB
+        const chatroomCreatorRO = convertToMemberRO(chatroom.member, chatroom.communityId);
+
+        const chatRequestedByRO = convertToMemberRO(lastConversation.member, chatroom.communityId);
+
+        const chatroomWithUserRO = convertToMemberRO(chatroom.chatroomWithUser, chatroom.communityId);
+
+        const conversationRO = convertToConversationRO(
+          realm,
+          lastConversation,
+          chatRequestedByRO,
+          chatroom?.id,
+          lastConversation.attachments
+        );
+
+        const lastConversationRO = convertToLastConversationRO(
+          lastConversation,
+          chatRequestedByRO,
+          chatroom?.id,
+          lastConversation.attachments,
+          null
+        );
+
+        const chatroomRO = convertToChatroomRO(
+          realm,
+          chatroom,
+          chatroomCreatorRO,
+          chatroomWithUserRO,
+          chatRequestedByRO,
+          lastConversationRO
+        );
+
+        // insert or update chatroomCreatorRO
+        realm.create(
+          MemberRO.schema.name,
+          chatroomCreatorRO,
+          Realm.UpdateMode.All
+        );
+        
+
+
+        realm.create(
+           MemberRO.schema.name,
+           chatRequestedByRO,
+           Realm.UpdateMode.All
+        );
+
+        
+        realm.create(
+          MemberRO.schema.name,
+          chatroomWithUserRO,
+          Realm.UpdateMode.All
+        );
+
+
+        realm.create(
+          ConversationRO.schema.name,
+          conversationRO,
+          Realm.UpdateMode.All
+        );
+
+        
+        realm.create(
+          LastConversationRO.schema.name,
+          lastConversationRO,
+          Realm.UpdateMode.All
+        );
+
+
+          chatroomRO.lastConversation = conversationRO;
+          chatroomRO.lastConversationRO = lastConversationRO;
+          chatroomRO.unseenCount = 1;
+          chatroomRO.unreadConversationsCount = 1;
+          chatroomRO.lastConversationId = lastConversation.id;
+
+        // save to local DB
+        if (chatroomRO) {
+          chatroomRO.relationshipNeeded = true;
+          realm.create(
+            ChatroomRO.schema.name,
+            chatroomRO,
+            Realm.UpdateMode.All
+          );
+        }
+      })
+
+
+      const chatrooms = realm.objects<ChatroomRO>(ChatroomRO.schema.name) // Get all chatroom objects
+        .filtered(
+          'followStatus == true AND muteStatus == false AND unseenCount > 0' // Apply filters
+        )
+        .sorted('lastConversationRO.createdEpoch', true) // Sort in descending order
+        .slice(0, 7); // Limit the result to 7 chatrooms
+
+      const stringifiedChatroom: ChatroomRO[] = JSON.parse(JSON.stringify(chatrooms ?? []));
+      return new LMResponse<ChatroomRO[]>(stringifiedChatroom, null, true);
+
+    }
+  } finally {
+    realm.close();
+    }
 }

@@ -1,6 +1,6 @@
 //Chatroom & Conversation
 import ChatroomClient from "./pages/chatroom/chatroomClient";
-import { Chatroom as ChatroomModel } from "./shared/responseModels/Chatroom";
+import { Chatroom } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
   MuteChatroom,
@@ -148,6 +148,7 @@ import {
   updateChatroomFollowStatus,
   updateUnseenCount,
   updateMuteStatus,
+  getUnreadChatrooms,
 } from "./localDb/db/queries/chatroom";
 import { saveCommunity, getCommunity } from "./localDb/db/queries/community";
 import Db from "./localDb/db/db";
@@ -168,6 +169,7 @@ import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import DBLibrary from "./core/services/networkLibrary";
+import { ChatroomRO } from "./localDb/models/ChatroomRO";
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -329,7 +331,7 @@ class LMChatClient {
   }
 
   // Method to get a chatroom
-  async getChatroom(chatroomId: string): Promise<LMResponse<ChatroomModel>> {
+  async getChatroom(chatroomId: string): Promise<LMResponse<Chatroom>> {
     return getChatroom(chatroomId);
   }
 
@@ -492,14 +494,6 @@ class LMChatClient {
     );
   }
 
-  // Method to get unread conversation notification
-  async getUnreadConversationNotification(): Promise<
-    LMResponse<GetConversationNotificationUnreadResponse>
-  > {
-    return this.chatroomClient.getUnreadConversationNotification(
-      LMChatClient.dlClient
-    );
-  }
 
   async getUnseenCount() {
     return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
@@ -749,7 +743,7 @@ class LMChatClient {
   // Method to save chatroom in localDB
   async saveChatroomResponse(
     data: SyncChatroomResponse,
-    chatrooms: ChatroomModel[],
+    chatrooms: Chatroom[],
     communityId: string
   ) {
     return saveChatroomResponse(data, chatrooms, communityId);
@@ -798,7 +792,7 @@ class LMChatClient {
   // Method to save conversation in localDB
   async saveConversationData(
     data: SyncConversationResponse,
-    chatroomData: ChatroomModel[],
+    chatroomData: Chatroom[],
     conversationData: ConversationModel[],
     communityId: string
   ) {
@@ -835,6 +829,14 @@ class LMChatClient {
       isChatroomTopic,
       chatroomId
     );
+  }
+
+  // Method to get notification through localDB
+  async getUnreadChatrooms(
+    chatroom: Chatroom,
+    lastConversation: ConversationModel
+  ): Promise<LMResponse<ChatroomRO[]>> {
+    return getUnreadChatrooms(chatroom,lastConversation);
   }
 
   // Method to get a particular convesation from localDB
