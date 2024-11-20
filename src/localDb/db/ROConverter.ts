@@ -27,6 +27,7 @@ import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 import { APP_CONFIG, FILTER_CONVERSATION_STATE } from "../constants";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { ConversationState } from "src/enums";
+import { WidgetRO } from "../models/WidgetRO";
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
 export const convertToAppConfigRO = (): AppConfigRO => {
@@ -241,6 +242,37 @@ const convertToAttachment = (
   return convertedAttachments;
 };
 
+export const convertToWidgetRO = (
+  widgetId: string,
+  widget: any
+): Record<string, any> => {
+  const widgetRO = {
+    widgetId: {
+      id: widgetId.toString(),
+      parentEntityId: widget?.parentEntityId,
+      parentEntityType: widget?.parentEntityType,
+      metadata: widget?.metadata,
+      _lm_meta: widget?._lm_meta,
+      createdAt: widget?.createdAt,
+      updatedAt: widget?.updatedAt,
+      ...dummyKeys(AttachmentRO),
+    },
+  };
+  return widgetRO;
+};
+
+export const convertToWidget = (
+  widgetId: string,
+  widget: any
+): Record<string, any> => {
+  let convertedWidget: any = {};
+  if (widgetId == "") return convertedWidget;
+  const roAttachment = convertToWidgetRO(widgetId, widget);
+  convertedWidget = roAttachment;
+
+  return convertedWidget;
+};
+
 // convertToReaction method takes Reaction[] data and converts it to Realm.List<ReactionRO>
 const convertToReaction = (
   reactions: Reaction[],
@@ -303,10 +335,12 @@ export const convertToConversationRO = (
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
   chatroomId: string,
+  widgetRO: any,
   attachment?: Attachment[],
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
+  const widget: any = {};
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -364,6 +398,7 @@ export const convertToConversationRO = (
               conversation?.replyConversationObject?.communityId
             ),
             chatroomId?.toString(),
+            widgetRO,
             conversation?.replyConversationObject?.attachments,
             conversation?.replyConversationObject?.polls,
             conversation?.replyConversationObject?.reactions
@@ -379,6 +414,8 @@ export const convertToConversationRO = (
       conversation?.communityId?.toString()
     ),
     polls: convertToPoll(polls, conversation?.communityId?.toString()),
+    widgetId: conversation?.widgetId,
+    widget: widgetRO,
     ...dummyKeys(ConversationRO),
   };
   return conversationRO;

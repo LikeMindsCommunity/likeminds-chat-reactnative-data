@@ -52,4 +52,6 @@ export interface Conversation {
   userId?: string;
   cardId?: string;
   isInProgress?: string;
+  widgetId: string;
+  widgets: Record<string, any> | {};
 }

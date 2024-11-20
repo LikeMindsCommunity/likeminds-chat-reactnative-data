@@ -8,6 +8,7 @@ import {
   convertToConversationRO,
   convertToChatroomRO,
   convertToPoll,
+  convertToWidget,
 } from "../ROConverter";
 import Db from "../db";
 import Realm from "realm";
@@ -101,7 +102,19 @@ export async function saveConversationData(
         const creatorId = conversation?.userId;
         const creator = data?.userMeta[creatorId?.toString()];
         if (!creator) return;
+
+        // save conversation widget
         const conversationCreatorRO = convertToMemberRO(creator, communityId);
+        const conversationWidget = conversation.widgetId
+          ? data.widgets[conversation.widgetId]
+          : null;
+        let conversationWidgetRO = {};
+        if (conversationWidget) {
+          conversationWidgetRO = convertToWidget(
+            conversation.widgetId,
+            conversationWidget
+          );
+        }
 
         if (chatDbUtil.isNull(conversation?.deletedByUserId)) {
           conversation.deletedBy =
@@ -175,6 +188,7 @@ export async function saveConversationData(
           conversation,
           conversationCreatorRO,
           conversation?.cardId?.toString(),
+          conversationWidgetRO,
           conversationAttachment,
           conversationPolls,
           conversationReaction
@@ -329,12 +343,23 @@ export async function replaceSavedConversation(data: Conversation) {
       );
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
+      const conversationWidget = data.widgetId
+        ? data.widgets[data.widgetId]
+        : null;
+      let conversationWidgetRO = {};
+      if (conversationWidget) {
+        conversationWidgetRO = convertToWidget(
+          data.widgetId,
+          conversationWidget
+        );
+      }
 
       const convertedConversation = convertToConversationRO(
         realm,
         data,
         memberRO,
         data?.chatroomId,
+        conversationWidgetRO,
         filteredConversation[0]?.attachments,
         filteredConversation[0]?.polls,
         filteredConversation[0]?.reactions
@@ -386,11 +411,23 @@ export async function saveNewConversation(
     realm.write(() => {
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
+      const conversationWidget = data.widgetId
+        ? data.widgets[data.widgetId]
+        : null;
+      let conversationWidgetRO = {};
+      if (conversationWidget) {
+        conversationWidgetRO = convertToWidget(
+          data.widgetId,
+          conversationWidget
+        );
+      }
+
       const conversationRO = convertToConversationRO(
         realm,
         data,
         memberRO,
         chatroomId,
+        conversationWidgetRO,
         data?.attachments,
         data?.polls,
         data?.reactions

@@ -23,6 +23,7 @@ import { LinkOGTagsRO } from "../models/LinkOGTagsRO";
 import { UserSchemaRO } from "../models/UserSchemaRO";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { TokenSchemaRO } from "../models/TokenSchemaRO";
+import { WidgetRO } from "../models/WidgetRO";
 
 export default class Db {
   private static instance: Realm;
@@ -49,6 +50,7 @@ export default class Db {
       UserSchemaRO,
       TokenSchemaRO,
       FilterConversationStateRO,
+      WidgetRO,
     ], // Update with your actual models
     schemaVersion: DB_SCHEMA_VERSION, // Increment when you change the schema
     onMigration: realmDbMigration,

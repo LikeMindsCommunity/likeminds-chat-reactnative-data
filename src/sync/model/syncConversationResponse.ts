@@ -16,4 +16,5 @@ export interface SyncConversationResponse {
   convReactionsMeta: { [key: string]: ReactionMeta[] };
   convAttachmentsMeta: { [key: string]: Attachment[] };
   convPollsMeta: { [key: string]: Poll[] };
+  widgets: { [key: string]: any };
 }

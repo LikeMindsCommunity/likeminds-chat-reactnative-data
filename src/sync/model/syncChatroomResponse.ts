@@ -12,4 +12,5 @@ export interface SyncChatroomResponse {
   chatroomsData: { [key: string]: Chatroom[] };
   convAttachmentsMeta: { [key: string]: Attachment[] };
   convPollsMeta: { [key: string]: Poll[] };
+  widgets: { [key: string]: any };
 }
