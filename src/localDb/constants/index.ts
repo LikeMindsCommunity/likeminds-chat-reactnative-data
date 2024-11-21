@@ -11,6 +11,7 @@ export const OPTIONAL_CONVERSATION_RO = "ConversationRO?";
 export const OPTONAL_CONVERSATION_RO = "ConversationRO?";
 export const LAST_CONVERSATION_RO = "LastConversationRO";
 export const OPTONAL_LAST_CONVERSATION_RO = "LastConversationRO?";
+export const OPTIONAL_WIDGET_RO = "WidgetRO?";
 export const LINK_RO = "LinkRO";
 export const LINK_OG_TAGS_RO = "LinkOGTagsRO";
 export const OPTIONAL_LINK_RO = "LinkRO?";

@@ -242,29 +242,21 @@ const convertToAttachment = (
   return convertedAttachments;
 };
 
-export const convertToWidgetRO = (
-  widgetId: string,
-  widget: any
-): Record<string, any> => {
+export const convertToWidgetRO = (widgetId: string, widget: any): WidgetRO => {
   const widgetRO = {
-    widgetId: {
-      id: widgetId.toString(),
-      parentEntityId: widget?.parentEntityId,
-      parentEntityType: widget?.parentEntityType,
-      metadata: widget?.metadata,
-      _lm_meta: widget?._lm_meta,
-      createdAt: widget?.createdAt,
-      updatedAt: widget?.updatedAt,
-      ...dummyKeys(AttachmentRO),
-    },
+    id: widgetId.toString(),
+    parentEntityId: widget?.parentEntityId,
+    parentEntityType: widget?.parentEntityType,
+    metadata: widget?.metadata,
+    _lm_meta: widget?.LmMeta,
+    createdAt: widget?.createdAt,
+    updatedAt: widget?.updatedAt,
+    ...dummyKeys(WidgetRO),
   };
   return widgetRO;
 };
 
-export const convertToWidget = (
-  widgetId: string,
-  widget: any
-): Record<string, any> => {
+export const convertToWidget = (widgetId: string, widget: any): WidgetRO => {
   let convertedWidget: any = {};
   if (widgetId == "") return convertedWidget;
   const roAttachment = convertToWidgetRO(widgetId, widget);
@@ -335,12 +327,12 @@ export const convertToConversationRO = (
   conversation: Conversation,
   chatroomCreatorRO: MemberRO,
   chatroomId: string,
-  widgetRO: any,
+  widgetRO: WidgetRO,
   attachment?: Attachment[],
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
-  const widget: any = {};
+  console.log("11 ==>>", widgetRO, conversation?.widgetId);
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
@@ -415,7 +407,7 @@ export const convertToConversationRO = (
     ),
     polls: convertToPoll(polls, conversation?.communityId?.toString()),
     widgetId: conversation?.widgetId,
-    widget: widgetRO,
+    widget: conversation?.widgetId ? widgetRO : null,
     ...dummyKeys(ConversationRO),
   };
   return conversationRO;

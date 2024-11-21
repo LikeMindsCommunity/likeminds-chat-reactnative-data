@@ -21,6 +21,7 @@ import { GetConversationsRequest } from "src/localDb/models/requestModels/GetCon
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 import { deleteChatroomTopic } from "./chatroom";
 import { getFilterConversationState } from "./filterConversationState";
+import { WidgetRO } from "../../models/WidgetRO";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -108,12 +109,13 @@ export async function saveConversationData(
         const conversationWidget = conversation.widgetId
           ? data.widgets[conversation.widgetId]
           : null;
-        let conversationWidgetRO = {};
-        if (conversationWidget) {
+        let conversationWidgetRO ;
+        if (Object.keys(conversationWidget).length > 0) {
           conversationWidgetRO = convertToWidget(
             conversation.widgetId,
             conversationWidget
           );
+          realm.create(WidgetRO.schema.name, conversationWidgetRO, Realm.UpdateMode.All);
         }
 
         if (chatDbUtil.isNull(conversation?.deletedByUserId)) {
@@ -181,6 +183,8 @@ export async function saveConversationData(
           conversation?.attachmentCount > 0
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
+
+        console.log("6 ==", conversationWidgetRO, conversation.widgets);
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -346,14 +350,15 @@ export async function replaceSavedConversation(data: Conversation) {
       const conversationWidget = data.widgetId
         ? data.widgets[data.widgetId]
         : null;
-      let conversationWidgetRO = {};
-      if (conversationWidget) {
+      let conversationWidgetRO;
+      if (Object.keys(conversationWidget).length > 0) {
         conversationWidgetRO = convertToWidget(
           data.widgetId,
           conversationWidget
         );
       }
 
+      console.log("7 ==", conversationWidgetRO, data.widgets);
       const convertedConversation = convertToConversationRO(
         realm,
         data,
@@ -414,14 +419,15 @@ export async function saveNewConversation(
       const conversationWidget = data.widgetId
         ? data.widgets[data.widgetId]
         : null;
-      let conversationWidgetRO = {};
-      if (conversationWidget) {
+      let conversationWidgetRO;
+      if (Object.keys(conversationWidget).length > 0) {
         conversationWidgetRO = convertToWidget(
           data.widgetId,
           conversationWidget
         );
       }
 
+      console.log("8 ==", conversationWidgetRO, data.widgets);
       const conversationRO = convertToConversationRO(
         realm,
         data,
