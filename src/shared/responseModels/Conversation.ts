@@ -53,5 +53,5 @@ export interface Conversation {
   cardId?: string;
   isInProgress?: string;
   widgetId: string;
-  widgets: Record<string, any> | {};
+  widget: any;
 }

@@ -125,8 +125,8 @@ export async function saveChatroomResponse(
           ? data.widgets[lastConversation.widgetId]
           : null;
         let widgetRO;
-        console.log("1 ==", lastConversationWidget, lastConversation.widgetId);
-        if (Object.keys(lastConversationWidget).length > 0) {
+        console.log("1 ==>>>", lastConversationWidget, lastConversation.widgetId);
+        if (lastConversationWidget && Object.keys(lastConversationWidget).length > 0) {
           widgetRO = convertToWidget(
             lastConversation.widgetId,
             lastConversationWidget
@@ -150,7 +150,7 @@ export async function saveChatroomResponse(
           lastConversation,
           lastConversationCreatorRO,
           chatroom?.id,
-          null,
+          widgetRO,
           lastConversationAttachment,
           lastConversationPolls
         );
@@ -516,7 +516,7 @@ export async function updateChatroomTopic(
     const items = realm.objects<ChatroomRO>(ChatroomRO.schema.name);
     const chatroom = items.filtered(`id = "${chatroomId}"`);
     const memberRO = convertToMemberRO(topic?.member, topic?.communityId);
-    const topicWidget = topic.widgetId ? topic.widgets[topic.widgetId] : null;
+    const topicWidget = topic.widgetId ? topic.widget[topic.widgetId] : null;
     let widgetRO;
     console.log("3 ==", topicWidget, topic.widgetId);
     if (Object.keys(topicWidget).length > 0) {
@@ -580,7 +580,7 @@ export async function getUnreadChatrooms(
         );
 
         const lastConversationWidget = lastConversation.widgetId
-          ? lastConversation.widgets[lastConversation.widgetId]
+          ? lastConversation.widget[lastConversation.widgetId]
           : null;
         let widgetRO;
         console.log("4 ==", lastConversationWidget, lastConversation.widgetId);
@@ -658,7 +658,7 @@ export async function getUnreadChatrooms(
         );
 
         const lastConversationWidget = lastConversation.widgetId
-          ? lastConversation.widgets[lastConversation.widgetId]
+          ? lastConversation.widget[lastConversation.widgetId]
           : null;
         let widgetRO;
         console.log("r ==", lastConversationWidget, lastConversation.widgetId);

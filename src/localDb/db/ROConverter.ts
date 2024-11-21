@@ -390,7 +390,7 @@ export const convertToConversationRO = (
               conversation?.replyConversationObject?.communityId
             ),
             chatroomId?.toString(),
-            widgetRO,
+            convertToWidget(conversation?.widgetId, conversation.widget),
             conversation?.replyConversationObject?.attachments,
             conversation?.replyConversationObject?.polls,
             conversation?.replyConversationObject?.reactions
