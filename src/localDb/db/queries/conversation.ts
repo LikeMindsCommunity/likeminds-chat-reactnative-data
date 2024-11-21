@@ -184,7 +184,7 @@ export async function saveConversationData(
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
 
-        console.log("6 ==", conversationWidgetRO, conversation.widgets);
+        console.log("6 ==", conversationWidgetRO, conversation.widget);
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -348,7 +348,7 @@ export async function replaceSavedConversation(data: Conversation) {
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
       const conversationWidget = data.widgetId
-        ? data.widgets[data.widgetId]
+        ? data.widget[data.widgetId]
         : null;
       let conversationWidgetRO;
       if (Object.keys(conversationWidget).length > 0) {
@@ -358,7 +358,7 @@ export async function replaceSavedConversation(data: Conversation) {
         );
       }
 
-      console.log("7 ==", conversationWidgetRO, data.widgets);
+      console.log("7 ==", conversationWidgetRO, data.widget);
       const convertedConversation = convertToConversationRO(
         realm,
         data,
@@ -417,7 +417,7 @@ export async function saveNewConversation(
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
       const conversationWidget = data.widgetId
-        ? data.widgets[data.widgetId]
+        ? data.widget[data.widgetId]
         : null;
       let conversationWidgetRO;
       if (Object.keys(conversationWidget).length > 0) {
@@ -427,7 +427,7 @@ export async function saveNewConversation(
         );
       }
 
-      console.log("8 ==", conversationWidgetRO, data.widgets);
+      console.log("8 ==", conversationWidgetRO, data.widget);
       const conversationRO = convertToConversationRO(
         realm,
         data,

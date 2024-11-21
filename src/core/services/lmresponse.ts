@@ -1,15 +1,15 @@
 class LMResponse<T> {
-  private data: T | null;
+  private data;
   private errorMessage: string | null;
   private success: boolean;
 
-  constructor(data: T | null, errorMessage: string | null, success: boolean) {
+  constructor(data, errorMessage: string | null, success: boolean) {
     this.data = data;
     this.errorMessage = errorMessage;
     this.success = success;
   }
 
-  public getData(): T | null {
+  public getData(): T {
     return this.data;
   }
 
