@@ -1,9 +1,9 @@
 class LMResponse<T> {
-  public data;
+  public data: T;
   public errorMessage: string | null;
   public success: boolean;
 
-  constructor(data, errorMessage: string | null, success: boolean) {
+  constructor(data: T, errorMessage: string | null, success: boolean) {
     this.data = data;
     this.errorMessage = errorMessage;
     this.success = success;
