@@ -12,8 +12,8 @@ export class WidgetRO extends Realm.Object<WidgetRO> {
   id!: string;
   parentEntityId!: string;
   parentEntityType!: string;
-  metadata!: Record<string, any>;
-  _lm_meta?: Record<string, any> | null;
+  metadata!: string;
+  _lm_meta?: string| null;
   createdAt!: number;
   updatedAt!: number;
 
