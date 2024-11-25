@@ -1,25 +1,25 @@
 import {
-  MuteChatroom,
-  MarkRead,
-  Chatroom as ChatroomRequest,
-  ShareChatroom,
-  SetChatroom,
-  TaggingList,
+  MuteChatroomRequest as MuteChatroom,
+  MarkReadRequest as MarkRead,
+  GetChatroomRequest as ChatroomRequest,
+  ShareChatroomRequest as ShareChatroom,
+  SetChatroomRequest as SetChatroom,
+  GetTaggingListRequest as TaggingList,
   Conversation,
-  PostConversation,
-  EditConversation,
-  DeleteConversation,
-  PutReaction,
-  DeleteReaction,
+  PostConversationRequest as PostConversation,
+  EditConversationRequest as EditConversation,
+  DeleteConversationRequest as DeleteConversation,
+  PutReactionRequest as PutReaction,
+  DeleteReactionRequest as DeleteReaction,
   PutMultimedia,
-  DecodeUrl,
-  GetReportTags,
-  PushReport,
-  LeaveSecretChatroom,
-  ParticipantsType,
+  GetDecodeUrlRequest as DecodeUrl,
+  GetReportTagsRequest as GetReportTags,
+  PushReportRequest as PushReport,
+  LeaveSecretChatroomRequest as LeaveSecretChatroom,
+  ViewParticipantsRequest as ParticipantsType,
   CmetaType,
   ChatroomSeenWithUuid,
-  FollowChatroomWithUuid,
+  FollowChatroomWithUuidRequest as FollowChatroomWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import { Conversation as ConversationModel } from "src/shared/responseModels/Conversation";
 import LMResponse from "../../core/services/lmresponse";
@@ -39,17 +39,8 @@ import { FetchConversationResponse } from "./responseModels/FetchConversationRes
 import { API } from "src/shared/constants/api.constant";
 import { GetChatroomResponse } from "./responseModels/GetChatroomResponse";
 import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
-import { GetConversationNotificationUnreadResponse } from "./responseModels/GetConversationNotificationUnreadResponse";
 import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
 import SyncClient from "src/sync/api";
-import { Chatroom } from "src/shared/responseModels/Chatroom";
-import { ChatroomRO } from "src/localDb/models/ChatroomRO";
-import Db from "src/localDb/db/db";
-import { convertToChatroomRO, convertToCommunity, convertToConversationRO, convertToLastConversationRO, convertToMemberRO } from "src/localDb/db/ROConverter";
-import { SyncChatroomResponse } from "src/sync/model/syncChatroomResponse";
-import { MemberRO } from "src/localDb/models/MemberRO";
-import { ConversationRO } from "src/localDb/models/ConversationRO";
-import { LastConversationRO } from "src/localDb/models/LastConversationRO";
 
 
 class ChatroomClient {
@@ -316,23 +307,23 @@ class ChatroomClient {
     }
   }
 
-  async putMultimedia(
-    putMultimedia: PutMultimedia,
-    dlClient: DLClient
-  ): Promise<LMResponse<PutMultimediaResponse>> {
-    try {
-      const resp = await dlClient.putMultimedia(putMultimedia);
-      const convertedResp: PutMultimediaResponse =
-        ModelConverter.responseBodyParser(resp);
-      return new LMResponse<PutMultimediaResponse>(convertedResp, null, true);
-    } catch (error) {
-      return new LMResponse<PutMultimediaResponse>(
-        null,
-        error.message || "An error occured",
-        false
-      );
-    }
-  }
+  // async putMultimedia(
+  //   putMultimedia: PutMultimedia,
+  //   dlClient: DLClient
+  // ): Promise<LMResponse<PutMultimediaResponse>> {
+  //   try {
+  //     const resp = await dlClient.putMultimedia(putMultimedia);
+  //     const convertedResp: PutMultimediaResponse =
+  //       ModelConverter.responseBodyParser(resp);
+  //     return new LMResponse<PutMultimediaResponse>(convertedResp, null, true);
+  //   } catch (error) {
+  //     return new LMResponse<PutMultimediaResponse>(
+  //       null,
+  //       error.message || "An error occured",
+  //       false
+  //     );
+  //   }
+  // }
 
   async decodeUrl(
     decodeUrl: DecodeUrl,

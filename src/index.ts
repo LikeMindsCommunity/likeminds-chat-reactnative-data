@@ -3,25 +3,25 @@ import ChatroomClient from "./pages/chatroom/chatroomClient";
 import { Chatroom } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
-  MuteChatroom,
-  Chatroom as ChatroomRequest,
-  MarkRead,
-  ShareChatroom,
-  SetChatroom,
-  TaggingList,
-  PostConversation,
-  EditConversation,
-  DeleteConversation,
-  PutReaction,
-  DeleteReaction,
+  MuteChatroomRequest as MuteChatroom,
+  GetChatroomRequest as ChatroomRequest,
+  MarkReadRequest as MarkRead,
+  ShareChatroomRequest as ShareChatroom,
+  SetChatroomRequest as SetChatroom,
+  GetTaggingListRequest as TaggingList,
+  PostConversationRequest as PostConversation,
+  EditConversationRequest as EditConversation,
+  DeleteConversationRequest as DeleteConversation,
+  PutReactionRequest as PutReaction,
+  DeleteReactionRequest as DeleteReaction,
   PutMultimedia,
-  DecodeUrl,
-  GetReportTags,
-  PushReport,
-  LeaveSecretChatroom,
-  ParticipantsType,
+  GetDecodeUrlRequest as DecodeUrl,
+  GetReportTagsRequest as GetReportTags,
+  PushReportRequest as PushReport,
+  LeaveSecretChatroomRequest as LeaveSecretChatroom,
+  ViewParticipantsRequest as ParticipantsType,
   CmetaType,
-  FollowChatroomWithUuid,
+  FollowChatroomWithUuidRequest as FollowChatroomWithUuid,
   ChatroomSeenWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../src/core/services/lmresponse";
@@ -39,11 +39,11 @@ import { FetchConversationResponse } from "./pages/chatroom/responseModels/Fetch
 //DM
 import {
   FetchDMFeedRequest,
-  CheckDMStatus,
-  SendDMRequest,
-  BlockMember,
-  CreateDMChatroomWithUuid,
-  CheckDMLimitWithUuid,
+  CheckDMStatusRequest as CheckDMStatus,
+  SendDMRequestRequest as SendDMRequest,
+  BlockMemberRequest as BlockMember,
+  CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
+  CheckDMLimitWithUuidRequest as CheckDMLimitWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
 import { DMStatusResponse } from "./pages/directMessage/responseModels/DMStatusResponse";
@@ -423,14 +423,14 @@ class LMChatClient {
   }
 
   // Method to upload multimedia
-  async putMultimedia(
-    putMultimedia: PutMultimedia
-  ): Promise<LMResponse<PutMultimediaResponse>> {
-    return this.chatroomClient.putMultimedia(
-      putMultimedia,
-      LMChatClient.dlClient
-    );
-  }
+  // async putMultimedia(
+  //   putMultimedia: PutMultimedia
+  // ): Promise<LMResponse<PutMultimediaResponse>> {
+  //   return this.chatroomClient.putMultimedia(
+  //     putMultimedia,
+  //     LMChatClient.dlClient
+  //   );
+  // }
 
   // Method to decode an url
   async decodeUrl(

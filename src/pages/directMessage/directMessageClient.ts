@@ -1,12 +1,12 @@
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
   FetchDMFeedRequest,
-  CheckDMStatus,
-  SendDMRequest,
-  BlockMember,
+  CheckDMStatusRequest as CheckDMStatus,
+  SendDMRequestRequest as SendDMRequest,
+  BlockMemberRequest as BlockMember,
   CID,
-  CheckDMLimitWithUuid,
-  CreateDMChatroomWithUuid,
+  CheckDMLimitWithUuidRequest as CheckDMLimitWithUuid,
+  CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
 import { DMLimitResponse } from "./responseModels/DMLimitResponse";
@@ -69,6 +69,7 @@ class DirectMessageClient {
     createDMChatroom: CreateDMChatroomWithUuid,
     dlClient: DLClient
   ): Promise<LMResponse<CreateDMChatroomResponse>> {
+    // @ts-ignore
     return await dlClient.createDMChatroomWithUuid(createDMChatroom);
   }
 
