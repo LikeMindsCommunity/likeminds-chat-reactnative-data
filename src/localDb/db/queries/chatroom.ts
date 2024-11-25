@@ -125,23 +125,15 @@ export async function saveChatroomResponse(
           ? data.widgets[lastConversation.widgetId]
           : null;
         let widgetRO;
-        console.log("1 ==>>>", lastConversationWidget, lastConversation.widgetId);
-        if (lastConversationWidget && Object.keys(lastConversationWidget).length > 0) {
+        if (
+          lastConversationWidget &&
+          Object.keys(lastConversationWidget).length > 0
+        ) {
           widgetRO = convertToWidget(
             lastConversation.widgetId,
             lastConversationWidget
           );
         }
-
-        console.log(
-          "12 ==",
-          widgetRO.id,
-          widgetRO.parentEntityId,
-          widgetRO.metadata,
-          widgetRO._lm_meta,
-          widgetRO.createdAt,
-          widgetRO.updatedAt
-        );
 
         if (!lastConversationCreatorRO) return;
 
@@ -155,16 +147,11 @@ export async function saveChatroomResponse(
           lastConversationPolls
         );
 
-        console.log("13 ==>>>", conversationRO);
-        console.log("13 ==", conversationRO);
-
         realm.create(
           ConversationRO.schema.name,
           conversationRO,
           Realm.UpdateMode.All
         );
-
-        console.log("21 ==");
 
         const lastConversationRO = convertToLastConversationRO(
           lastConversation,
@@ -175,8 +162,6 @@ export async function saveChatroomResponse(
         );
 
         if (!lastConversationRO) return;
-
-        console.log("22 ==");
 
         realm.create(
           LastConversationRO.schema.name,
@@ -190,7 +175,7 @@ export async function saveChatroomResponse(
           Realm.UpdateMode.All
         );
 
-        if (Object.keys({}).length > 0) {
+        if (Object.keys(lastConversationWidget || {}).length > 0) {
           realm.create(WidgetRO.schema.name, widgetRO, Realm.UpdateMode.All);
         }
 
@@ -343,8 +328,7 @@ export async function saveChatroomResponse(
             ? data.widgets[chatroomTopic.widgetId]
             : null;
           let widgetRO;
-          console.log("2 ==", chatroomTopicWidget, chatroomTopic.widgetId);
-          if (Object.keys(chatroomTopicWidget).length > 0) {
+          if (Object.keys(chatroomTopicWidget || {}).length > 0) {
             widgetRO = convertToWidget(
               chatroomTopic.widgetId,
               chatroomTopicWidget
@@ -518,8 +502,7 @@ export async function updateChatroomTopic(
     const memberRO = convertToMemberRO(topic?.member, topic?.communityId);
     const topicWidget = topic.widgetId ? topic.widget[topic.widgetId] : null;
     let widgetRO;
-    console.log("3 ==", topicWidget, topic.widgetId);
-    if (Object.keys(topicWidget).length > 0) {
+    if (Object.keys(topicWidget || {}).length > 0) {
       widgetRO = convertToWidget(topic.widgetId, topicWidget);
     }
 
@@ -583,8 +566,7 @@ export async function getUnreadChatrooms(
           ? lastConversation.widget[lastConversation.widgetId]
           : null;
         let widgetRO;
-        console.log("4 ==", lastConversationWidget, lastConversation.widgetId);
-        if (Object.keys(lastConversationWidget).length > 0) {
+        if (Object.keys(lastConversationWidget || {}).length > 0) {
           widgetRO = convertToWidget(
             lastConversation.widgetId,
             lastConversationWidget
@@ -661,8 +643,7 @@ export async function getUnreadChatrooms(
           ? lastConversation.widget[lastConversation.widgetId]
           : null;
         let widgetRO;
-        console.log("r ==", lastConversationWidget, lastConversation.widgetId);
-        if (Object.keys(lastConversationWidget).length > 0) {
+        if (Object.keys(lastConversationWidget || {}).length > 0) {
           widgetRO = convertToWidget(
             lastConversation.widgetId,
             lastConversationWidget

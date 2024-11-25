@@ -1,8 +1,7 @@
 import {
   ID,
   INT,
-  MIXED,
-  OPTIONAL_MIXED,
+  OPTIONAL_STRING,
   STRING,
   WIDGET_RO,
 } from "../constants";
@@ -23,8 +22,8 @@ export class WidgetRO extends Realm.Object<WidgetRO> {
       id: STRING,
       parentEntityId: STRING,
       parentEntityType: STRING,
-      metadata: MIXED,
-      _lm_meta: OPTIONAL_MIXED,
+      metadata: STRING,
+      _lm_meta: OPTIONAL_STRING,
       createdAt: INT,
       updatedAt: INT,
     },

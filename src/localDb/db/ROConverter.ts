@@ -258,7 +258,7 @@ export const convertToWidgetRO = (widgetId: string, widget: any): WidgetRO => {
 
 export const convertToWidget = (widgetId: string, widget: any): WidgetRO => {
   let convertedWidget: any = {};
-  if (widgetId == "") return convertedWidget;
+  if (widgetId == "" && widget) return convertedWidget;
   const roAttachment = convertToWidgetRO(widgetId, widget);
   convertedWidget = roAttachment;
 
@@ -390,7 +390,10 @@ export const convertToConversationRO = (
               conversation?.replyConversationObject?.communityId
             ),
             chatroomId?.toString(),
-            convertToWidget(conversation?.widgetId, conversation.widget),
+            convertToWidget(
+              conversation?.replyConversationObject.widgetId,
+              conversation.replyConversationObject.widget
+            ),
             conversation?.replyConversationObject?.attachments,
             conversation?.replyConversationObject?.polls,
             conversation?.replyConversationObject?.reactions

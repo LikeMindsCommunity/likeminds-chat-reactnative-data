@@ -41,7 +41,7 @@ export async function saveConversationData(
       realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
       // save chatroom
-      const chatroomId = Object.keys(chatroomData);
+      const chatroomId = Object.keys(chatroomData || {});
       const chatroom = chatroomData[chatroomId[0]];
       const creatorId = chatroom?.userId;
       const creator = data?.userMeta[creatorId?.toString()];
@@ -109,13 +109,17 @@ export async function saveConversationData(
         const conversationWidget = conversation.widgetId
           ? data.widgets[conversation.widgetId]
           : null;
-        let conversationWidgetRO ;
-        if (Object.keys(conversationWidget).length > 0) {
+        let conversationWidgetRO;
+        if (Object.keys(conversationWidget || {}).length > 0) {
           conversationWidgetRO = convertToWidget(
             conversation.widgetId,
             conversationWidget
           );
-          realm.create(WidgetRO.schema.name, conversationWidgetRO, Realm.UpdateMode.All);
+          realm.create(
+            WidgetRO.schema.name,
+            conversationWidgetRO,
+            Realm.UpdateMode.All
+          );
         }
 
         if (chatDbUtil.isNull(conversation?.deletedByUserId)) {
@@ -145,6 +149,24 @@ export async function saveConversationData(
             savedRepliedConversation.length > 0
               ? replyConversationObject[0]
               : data?.conversationMeta[conversation?.replyId];
+
+          const replyConversationWidget = conversation.replyConversationObject
+            .widgetId
+            ? data.widgets[conversation.replyConversationObject.widgetId]
+            : null;
+
+          let replyConversationWidgetRO;
+          if (Object.keys(replyConversationWidget || {}).length > 0) {
+            replyConversationWidgetRO = convertToWidget(
+              conversation.widgetId,
+              replyConversationWidget
+            );
+            realm.create(
+              WidgetRO.schema.name,
+              replyConversationWidgetRO,
+              Realm.UpdateMode.All
+            );
+          }
         }
 
         if (!conversationCreatorRO) return;
@@ -184,7 +206,6 @@ export async function saveConversationData(
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
 
-        console.log("6 ==", conversationWidgetRO, conversation.widget);
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -324,7 +345,7 @@ export async function deleteConversationFromRealm(conversationId: string) {
 }
 
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
-export async function replaceSavedConversation(data: Conversation) {
+export async function replaceSavedConversation(data: Conversation, widgets: Record<string, any>) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
@@ -348,17 +369,16 @@ export async function replaceSavedConversation(data: Conversation) {
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
       const conversationWidget = data.widgetId
-        ? data.widget[data.widgetId]
+        ? widgets[data.widgetId]
         : null;
       let conversationWidgetRO;
-      if (Object.keys(conversationWidget).length > 0) {
+      if (Object.keys(conversationWidget || {}).length > 0) {
         conversationWidgetRO = convertToWidget(
           data.widgetId,
           conversationWidget
         );
       }
-
-      console.log("7 ==", conversationWidgetRO, data.widget);
+      
       const convertedConversation = convertToConversationRO(
         realm,
         data,
@@ -416,18 +436,15 @@ export async function saveNewConversation(
     realm.write(() => {
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
-      const conversationWidget = data.widgetId
-        ? data.widget[data.widgetId]
-        : null;
+      const conversationWidget = data.widget;
       let conversationWidgetRO;
-      if (Object.keys(conversationWidget).length > 0) {
+      if (Object.keys(conversationWidget || {}).length > 0) {
         conversationWidgetRO = convertToWidget(
           data.widgetId,
           conversationWidget
         );
       }
 
-      console.log("8 ==", conversationWidgetRO, data.widget);
       const conversationRO = convertToConversationRO(
         realm,
         data,
