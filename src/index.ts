@@ -23,6 +23,7 @@ import {
   CmetaType,
   FollowChatroomWithUuidRequest as FollowChatroomWithUuid,
   ChatroomSeenWithUuid,
+  GetAIChatbotsRequest,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../src/core/services/lmresponse";
 import { ShareChatroomUrlResponse } from "./pages/chatroom/responseModels/ShareChatroomUrlResponse";
@@ -89,7 +90,7 @@ import PollClient from "./pages/poll/pollClient";
 //Search
 import {
   SearchType,
-  SearchConversation,
+  SearchConversationRequest as SearchConversation,
 } from "@likeminds.community/chat-js/dist/pages/search/types";
 import { SearchChatroomResponse } from "./pages/search/responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./pages/search/responseModels/SearchConversationResponse";
@@ -164,7 +165,7 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { LMSDKCallbacks } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
@@ -463,6 +464,16 @@ class LMChatClient {
       LMChatClient.dlClient
     );
   }
+
+  // Method to get AIChatBots
+  async getAIChatbots(getAIChatbotsRequest: 
+    GetAIChatbotsRequest
+  ): Promise<LMResponse<GetAIChatbotsResponse>> {
+    return this.chatroomClient.getAIChatbots(
+      getAIChatbotsRequest,
+      LMChatClient.dlClient
+    );
+  } 
 
   // Method to get participants
   async getParticipants(
