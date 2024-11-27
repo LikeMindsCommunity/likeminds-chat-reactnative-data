@@ -20,6 +20,7 @@ import {
   CmetaType,
   ChatroomSeenWithUuid,
   FollowChatroomWithUuidRequest as FollowChatroomWithUuid,
+  GetAIChatbotsRequest
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import { Conversation as ConversationModel } from "src/shared/responseModels/Conversation";
 import LMResponse from "../../core/services/lmresponse";
@@ -29,7 +30,7 @@ import { GetConversationsResponse } from "./responseModels/GetConversationsRespo
 import { PutMultimediaResponse } from "./responseModels/PutMultimediaResponse";
 import { DecodeUrlResponse } from "./responseModels/DecodeUrlResponse";
 import { ModelConverter } from "src/utils/ModelConverter";
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse } from "@likeminds.community/chat-js";
 import { Nothing } from "src/shared/responseModels/Nothing";
 import { PostConversationsResponse } from "./responseModels/PostConversationResponse";
 import { EditConversationResponse } from "./responseModels/EditConversationResponse";
@@ -170,6 +171,23 @@ class ChatroomClient {
       return new LMResponse<GetTaggingListResponse>(convertedResp, null, true);
     } catch (error) {
       return new LMResponse<GetTaggingListResponse>(
+        null,
+        error.message || "An error occured",
+        false
+      );
+    }
+  }
+
+  async getAIChatbots(
+    getAIChatbotsRequest: GetAIChatbotsRequest,
+    dlClient: DLClient): Promise<LMResponse<GetAIChatbotsResponse>> {
+    try {
+      const resp = await dlClient?.getAIChatbots(getAIChatbotsRequest);
+      const convertedResp: GetAIChatbotsResponse =
+        ModelConverter.responseBodyParser(resp);
+      return new LMResponse<GetAIChatbotsResponse>(convertedResp, null, true);
+    } catch (error) {
+      return new LMResponse<GetAIChatbotsResponse>(
         null,
         error.message || "An error occured",
         false
