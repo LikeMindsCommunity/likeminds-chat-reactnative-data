@@ -3,7 +3,7 @@ import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
   SearchType,
-  SearchConversation,
+  SearchConversationRequest as SearchConversation,
 } from "@likeminds.community/chat-js/dist/pages/search/types";
 import { SearchChatroomResponse } from "./responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./responseModels/SearchConversationResponse";

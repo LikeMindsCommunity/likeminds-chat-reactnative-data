@@ -14,5 +14,5 @@ export interface User {
   userUniqueId: string;
   uuid: string;
   isOwner?: boolean;
-  roles?: MemberRole;
+  roles?: MemberRole[];
 }

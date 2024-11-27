@@ -26,5 +26,5 @@ export interface Member {
   updatedAt?: number;
   sdkClientInfo?: SDKClientInfo;
   uuid: string;
-  roles?: MemberRole;
+  roles?: MemberRole[];
 }

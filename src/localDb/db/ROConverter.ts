@@ -215,6 +215,7 @@ export const convertToMemberRO = (
     userUniqueId: member.userUniqueId,
     uuid: member.uuid,
     sdkClientInfo: convertedSdkClientInfo,
+    roles: JSON.stringify(member?.roles ?? []),
     ...dummyKeys(MemberRO),
   };
   return memberRO;
