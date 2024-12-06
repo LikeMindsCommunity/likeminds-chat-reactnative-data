@@ -34,6 +34,7 @@ export const convertToAppConfigRO = (): AppConfigRO => {
     id: APP_CONFIG,
     isGroupFeedChatroomsSynced: false,
     isDmFeedChatroomsSynced: false,
+    chatroomIdWithAIChatbot: "",
     ...dummyKeys(AppConfigRO),
   };
   return appConfigRO;
