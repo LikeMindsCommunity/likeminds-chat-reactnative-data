@@ -2,7 +2,7 @@ import { ModelConverter } from "../../utils/ModelConverter";
 import {
   FetchDMFeedRequest,
   CheckDMStatusRequest as CheckDMStatus,
-  SendDMRequestRequest as SendDMRequest,
+  SendDMRequest as SendDMRequest,
   BlockMemberRequest as BlockMember,
   CID,
   CheckDMLimitWithUuidRequest as CheckDMLimitWithUuid,
@@ -61,7 +61,7 @@ class DirectMessageClient {
   async checkDMLimit(
     checkDMLimit: CheckDMLimitWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<DMLimitResponse>> {
+  ) {
     return await dlClient.checkDMLimitWithUuid(checkDMLimit);
   }
 
@@ -147,7 +147,7 @@ class DirectMessageClient {
   async canDmFeed(
     dmCan: CANDMWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<CanDMFeedResponse>> {
+  ) {
     return await dlClient.canDmFeedWithUuid(dmCan);
   }
 }

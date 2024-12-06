@@ -5,7 +5,7 @@ import {
   ShareChatroomRequest as ShareChatroom,
   SetChatroomRequest as SetChatroom,
   GetTaggingListRequest as TaggingList,
-  Conversation,
+  GetConversationRequest as Conversation,
   PostConversationRequest as PostConversation,
   EditConversationRequest as EditConversation,
   DeleteConversationRequest as DeleteConversation,
@@ -65,7 +65,7 @@ class ChatroomClient {
   async followChatroom(
     followChatroom: FollowChatroomWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<Nothing>> {
+  ) {
     return await dlClient.followChatroomWithUuid(followChatroom);
   }
 
@@ -455,7 +455,7 @@ class ChatroomClient {
   async chatroomSeen(
     chatroomSeen: ChatroomSeenWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<Nothing>> {
+  ) {
     return await dlClient.chatroomSeenWithUuid(chatroomSeen);
   }
 
