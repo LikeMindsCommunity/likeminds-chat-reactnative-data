@@ -425,15 +425,7 @@ class LMChatClient {
     );
   }
 
-  // Method to upload multimedia
-  // async putMultimedia(
-  //   putMultimedia: PutMultimedia
-  // ): Promise<LMResponse<PutMultimediaResponse>> {
-  //   return this.chatroomClient.putMultimedia(
-  //     putMultimedia,
-  //     LMChatClient.dlClient
-  //   );
-  // }
+
 
   // Method to decode an url
   async decodeUrl(

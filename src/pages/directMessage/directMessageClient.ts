@@ -9,7 +9,6 @@ import {
   CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
-import { DMLimitResponse } from "./responseModels/DMLimitResponse";
 import DLClient from "@likeminds.community/chat-js";
 import { FetchDMResponse } from "./responseModels/FetchDMResponse";
 import { DMStatusResponse } from "./responseModels/DMStatusResponse";
@@ -68,8 +67,7 @@ class DirectMessageClient {
   async createDMChatroom(
     createDMChatroom: CreateDMChatroomWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<CreateDMChatroomResponse>> {
-    // @ts-ignore
+  ) {
     return await dlClient.createDMChatroomWithUuid(createDMChatroom);
   }
 

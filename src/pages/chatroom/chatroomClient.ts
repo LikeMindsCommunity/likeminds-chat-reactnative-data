@@ -325,23 +325,6 @@ class ChatroomClient {
     }
   }
 
-  // async putMultimedia(
-  //   putMultimedia: PutMultimedia,
-  //   dlClient: DLClient
-  // ): Promise<LMResponse<PutMultimediaResponse>> {
-  //   try {
-  //     const resp = await dlClient.putMultimedia(putMultimedia);
-  //     const convertedResp: PutMultimediaResponse =
-  //       ModelConverter.responseBodyParser(resp);
-  //     return new LMResponse<PutMultimediaResponse>(convertedResp, null, true);
-  //   } catch (error) {
-  //     return new LMResponse<PutMultimediaResponse>(
-  //       null,
-  //       error.message || "An error occured",
-  //       false
-  //     );
-  //   }
-  // }
 
   async decodeUrl(
     decodeUrl: DecodeUrl,
