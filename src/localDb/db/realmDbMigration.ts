@@ -1,10 +1,11 @@
-import { TOKEN_SCHEMA_RO, USER_SCHEMA_RO } from "../constants";
+import { TOKEN_SCHEMA_RO, USER_RO, USER_SCHEMA_RO } from "../constants";
 import { ConversationRO } from "../models/ConversationRO";
 import { UserSchemaRO } from "../models/UserSchemaRO";
 import { APP_CONFIG, FILTER_CONVERSATION_STATE_RO } from "../constants";
 import { AppConfigRO } from "../models/AppConfigRO";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { TokenSchemaRO } from "../models/TokenSchemaRO";
+import { UserRO } from "../models/UserRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
   let oldSchemaVersion = oldVersion.schemaVersion;
@@ -63,21 +64,27 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
     oldSchemaVersion++;
   }
   if (oldSchemaVersion == 4) {
-    const oldObjects = oldVersion.objects<UserSchemaRO>(
-      UserSchemaRO.schema.name
+    const userObjects = oldVersion.objects<UserRO>(UserRO.schema.name);
+    const appConfigObjects = oldVersion.objects<AppConfigRO>(
+      AppConfigRO.schema.name
     );
 
-    for (let i = 0; i < oldObjects.length; i++) {
-      const oldObject = oldObjects[i];
-      // Initialize the new property for existing objects
-      const newObject = { ...oldObject, apiKey: "" };
-      newVersion.create(UserSchemaRO.schema.name, newObject);
+    for (let i = 0; i < userObjects.length; i++) {
+      const oldObject = userObjects[i];
+      const newObject = { ...oldObject, roles: "" };
+      newVersion.create(UserRO.schema.name, newObject);
     }
 
-    newVersion.create(TOKEN_SCHEMA_RO, TokenSchemaRO.schema.properties);
-    oldVersion._updateSchema(newVersion.schema);
+    for (let i = 0; i < appConfigObjects.length; i++) {
+      const oldObject = appConfigObjects[i];
+      const newObject = {
+        ...oldObject,
+        chatroomIdWithAIChatbot: "",
+      };
+      newVersion.create(AppConfigRO.schema.name, newObject);
+    }
 
-    // Increment schema version
+    oldVersion._updateSchema(newVersion.schema);
     oldSchemaVersion++;
   }
 };
