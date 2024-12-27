@@ -34,6 +34,7 @@ export const convertToAppConfigRO = (): AppConfigRO => {
     id: APP_CONFIG,
     isGroupFeedChatroomsSynced: false,
     isDmFeedChatroomsSynced: false,
+    chatroomIdWithAIChatbot: "",
     ...dummyKeys(AppConfigRO),
   };
   return appConfigRO;
@@ -215,6 +216,7 @@ export const convertToMemberRO = (
     userUniqueId: member.userUniqueId,
     uuid: member.uuid,
     sdkClientInfo: convertedSdkClientInfo,
+    roles: JSON.stringify(member?.roles ?? []),
     ...dummyKeys(MemberRO),
   };
   return memberRO;

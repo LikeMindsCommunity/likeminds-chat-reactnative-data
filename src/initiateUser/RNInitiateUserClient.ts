@@ -1,7 +1,8 @@
 import { LMSDKCallbacks } from "@likeminds.community/chat-js";
 import {
+  InitiateUserRequest,
   InitUserWithUuid,
-  ValidateUser,
+  ValidateUserRequest as ValidateUser,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import RNNetworkLibrary from "../core/services/networkLibrary";

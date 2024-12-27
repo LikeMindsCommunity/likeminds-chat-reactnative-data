@@ -23,6 +23,7 @@ export class UserRO extends Realm.Object<UserRO> {
   isDeleted?: boolean | null;
   customTitle?: string | null;
   uuid!: string;
+  roles?: string;
 
   static schema: Realm.ObjectSchema = {
     name: USER_RO,
@@ -38,6 +39,7 @@ export class UserRO extends Realm.Object<UserRO> {
       isDeleted: OPTIONAL_BOOLEAN,
       customTitle: OPTIONAL_STRING,
       uuid: STRING,
+      roles: OPTIONAL_STRING
     },
     primaryKey: ID,
   };
