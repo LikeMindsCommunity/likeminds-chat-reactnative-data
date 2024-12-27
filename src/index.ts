@@ -48,7 +48,6 @@ import {
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
 import { DMStatusResponse } from "./pages/directMessage/responseModels/DMStatusResponse";
-import { DMLimitResponse } from "./pages/directMessage/responseModels/DMLimitResponse";
 import { SendDMRequestResponse } from "./pages/directMessage/responseModels/SendDMRequestResponse";
 import { CheckDMTabResponse } from "./pages/directMessage/responseModels/CheckDMTabResponse";
 import DirectMessageClient from "./pages/directMessage/directMessageClient";

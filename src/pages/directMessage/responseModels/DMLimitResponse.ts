@@ -3,7 +3,7 @@ interface userDmLimit {
   duration: string,
   numberInDuration: number
 }
-export interface CheckDMLimitResponse {
+export interface CheckDMLimit {
   isRequestDmLimitExceeded: boolean;
   newRequestDmTimestamp: number | null;
   userDmLimit: userDmLimit | null
