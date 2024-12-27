@@ -25,6 +25,7 @@ export class MemberRO extends Realm.Object<MemberRO> {
   userUniqueId!: string;
   uuid!: string;
   sdkClientInfo?: SDKClientInfoRO | null;
+  roles?: string;
 
   static schema: Realm.ObjectSchema = {
     name: MEMBER_RO,
@@ -43,6 +44,7 @@ export class MemberRO extends Realm.Object<MemberRO> {
       userUniqueId: STRING,
       uuid: STRING,
       sdkClientInfo: OPTINAL_SDK_CLIENT_INFO_RO,
+      roles: OPTIONAL_STRING
     },
     primaryKey: ID,
   };

@@ -1,4 +1,5 @@
 import { SDKClientInfo } from "./SDKClientInfo";
+import { MemberRole } from "../../enums/roles";
 
 export interface User {
   id: string;
@@ -13,4 +14,5 @@ export interface User {
   userUniqueId: string;
   uuid: string;
   isOwner?: boolean;
+  roles?: MemberRole[];
 }
