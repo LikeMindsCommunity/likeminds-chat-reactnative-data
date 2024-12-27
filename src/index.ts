@@ -536,7 +536,7 @@ class LMChatClient {
   // Method to create a DM Chatroom
   async createDMChatroom(
     createDMChatroom: CreateDMChatroomWithUuid
-  ): Promise<LMResponse<CreateDMChatroomResponse>> {
+  ) {
     return this.directMessageClient.createDMChatroom(
       createDMChatroom,
       LMChatClient.dlClient
