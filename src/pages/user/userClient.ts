@@ -2,12 +2,12 @@ import DLClient from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
-  GetAllMembers,
-  Logout,
+  GetAllMembersRequest as GetAllMembers,
+  LogoutRequest as Logout,
   Search,
   InitUserWithUuid,
   EditProfile,
-  LeaveCommunity,
+  LeaveCommunityRequest as LeaveCommunity,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./responseModels/GetMemberStateResponse";
@@ -22,7 +22,7 @@ class UserClient {
   async initiateUser(
     initUser: InitUserWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<InitiateUserResponse>> {
+  ) {
     return await dlClient.initiateUserWithUuid(initUser);
   }
 

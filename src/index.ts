@@ -3,26 +3,27 @@ import ChatroomClient from "./pages/chatroom/chatroomClient";
 import { Chatroom } from "./shared/responseModels/Chatroom";
 import { Conversation as ConversationModel } from "./shared/responseModels/Conversation";
 import {
-  MuteChatroom,
-  Chatroom as ChatroomRequest,
-  MarkRead,
-  ShareChatroom,
-  SetChatroom,
-  TaggingList,
-  PostConversation,
-  EditConversation,
-  DeleteConversation,
-  PutReaction,
-  DeleteReaction,
+  MuteChatroomRequest as MuteChatroom,
+  GetChatroomRequest as ChatroomRequest,
+  MarkReadRequest as MarkRead,
+  ShareChatroomRequest as ShareChatroom,
+  SetChatroomRequest as SetChatroom,
+  GetTaggingListRequest as TaggingList,
+  PostConversationRequest as PostConversation,
+  EditConversationRequest as EditConversation,
+  DeleteConversationRequest as DeleteConversation,
+  PutReactionRequest as PutReaction,
+  DeleteReactionRequest as DeleteReaction,
   PutMultimedia,
-  DecodeUrl,
-  GetReportTags,
-  PushReport,
-  LeaveSecretChatroom,
-  ParticipantsType,
+  GetDecodeUrlRequest as DecodeUrl,
+  GetReportTagsRequest as GetReportTags,
+  PushReportRequest as PushReport,
+  LeaveSecretChatroomRequest as LeaveSecretChatroom,
+  ViewParticipantsRequest as ParticipantsType,
   CmetaType,
-  FollowChatroomWithUuid,
+  FollowChatroomWithUuidRequest as FollowChatroomWithUuid,
   ChatroomSeenWithUuid,
+  GetAIChatbotsRequest,
 } from "@likeminds.community/chat-js/dist/pages/chatroom/types";
 import LMResponse from "../src/core/services/lmresponse";
 import { ShareChatroomUrlResponse } from "./pages/chatroom/responseModels/ShareChatroomUrlResponse";
@@ -39,15 +40,14 @@ import { FetchConversationResponse } from "./pages/chatroom/responseModels/Fetch
 //DM
 import {
   FetchDMFeedRequest,
-  CheckDMStatus,
-  SendDMRequest,
-  BlockMember,
-  CreateDMChatroomWithUuid,
-  CheckDMLimitWithUuid,
+  CheckDMStatusRequest as CheckDMStatus,
+  SendDMRequest as SendDMRequest,
+  BlockMemberRequest as BlockMember,
+  CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
+  CheckDMLimitWithUuidRequest as CheckDMLimitWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
 import { DMStatusResponse } from "./pages/directMessage/responseModels/DMStatusResponse";
-import { DMLimitResponse } from "./pages/directMessage/responseModels/DMLimitResponse";
 import { SendDMRequestResponse } from "./pages/directMessage/responseModels/SendDMRequestResponse";
 import { CheckDMTabResponse } from "./pages/directMessage/responseModels/CheckDMTabResponse";
 import DirectMessageClient from "./pages/directMessage/directMessageClient";
@@ -57,7 +57,7 @@ import { BlockDMRequestResponse } from "./pages/directMessage/responseModels/Blo
 import { CanDMFeedResponse } from "./pages/directMessage/responseModels/CanDMFeedResponse";
 
 //Explore Feed
-import { ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
+import { GetExploreFeedRequest as ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
 import { ExploreFeedResponse } from "./pages/exploreFeed/responseModels/ExploreFeedResponse";
 import ExploreFeedClient from "./pages/exploreFeed/exploreFeedClient";
 
@@ -89,7 +89,7 @@ import PollClient from "./pages/poll/pollClient";
 //Search
 import {
   SearchType,
-  SearchConversation,
+  SearchConversationRequest as SearchConversation,
 } from "@likeminds.community/chat-js/dist/pages/search/types";
 import { SearchChatroomResponse } from "./pages/search/responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./pages/search/responseModels/SearchConversationResponse";
@@ -97,13 +97,14 @@ import SearchClient from "./pages/search/searchClient";
 
 //User
 import {
-  GetAllMembers,
-  Logout,
+  GetAllMembersRequest as GetAllMembers,
+  LogoutRequest as Logout,
   Search,
   EditProfile,
-  LeaveCommunity,
+  LeaveCommunityRequest as LeaveCommunity,
+  ValidateUserRequest as ValidateUser,
+  InitiateUserRequest,
   InitUserWithUuid,
-  ValidateUser,
 } from "@likeminds.community/chat-js/dist/pages/user/types";
 import { InitiateUserResponse } from "./pages/user/responseModels/InitUserResponse";
 import { GetMemberStateResponse } from "./pages/user/responseModels/GetMemberStateResponse";
@@ -159,12 +160,13 @@ import {
   getAppConfig,
   initiateAppConfig,
   setAppConfig,
+  setChatroomIdWithAIChatbot,
 } from "./localDb/db/queries/appConfig";
 import { GetConversationsRequest } from "./localDb/models/requestModels/GetConversationsRequest";
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { LMSDKCallbacks } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
@@ -321,7 +323,7 @@ class LMChatClient {
   // Method to follow a chatroom
   async followChatroom(
     followChatroom: FollowChatroomWithUuid
-  ): Promise<LMResponse<Nothing>> {
+  ) {
     return this.chatroomClient.followChatroom(
       followChatroom,
       LMChatClient.dlClient
@@ -420,15 +422,7 @@ class LMChatClient {
     );
   }
 
-  // Method to upload multimedia
-  async putMultimedia(
-    putMultimedia: PutMultimedia
-  ): Promise<LMResponse<PutMultimediaResponse>> {
-    return this.chatroomClient.putMultimedia(
-      putMultimedia,
-      LMChatClient.dlClient
-    );
-  }
+
 
   // Method to decode an url
   async decodeUrl(
@@ -462,6 +456,16 @@ class LMChatClient {
     );
   }
 
+  // Method to get AIChatBots
+  async getAIChatbots(getAIChatbotsRequest: 
+    GetAIChatbotsRequest
+  ): Promise<LMResponse<GetAIChatbotsResponse>> {
+    return this.chatroomClient.getAIChatbots(
+      getAIChatbotsRequest,
+      LMChatClient.dlClient
+    );
+  } 
+
   // Method to get participants
   async getParticipants(
     participantsType: ParticipantsType
@@ -485,7 +489,7 @@ class LMChatClient {
   // Method for chatroomSeen
   async chatroomSeen(
     chatroomSeen: ChatroomSeenWithUuid
-  ): Promise<LMResponse<Nothing>> {
+  ) {
     return this.chatroomClient.chatroomSeen(
       chatroomSeen,
       LMChatClient.dlClient
@@ -520,7 +524,7 @@ class LMChatClient {
   // Method to check DM limit
   async checkDMLimit(
     checkDMLimit: CheckDMLimitWithUuid
-  ): Promise<LMResponse<DMLimitResponse>> {
+  ) {
     return this.directMessageClient.checkDMLimit(
       checkDMLimit,
       LMChatClient.dlClient
@@ -530,7 +534,7 @@ class LMChatClient {
   // Method to create a DM Chatroom
   async createDMChatroom(
     createDMChatroom: CreateDMChatroomWithUuid
-  ): Promise<LMResponse<CreateDMChatroomResponse>> {
+  ) {
     return this.directMessageClient.createDMChatroom(
       createDMChatroom,
       LMChatClient.dlClient
@@ -565,7 +569,7 @@ class LMChatClient {
   // Method for canDmFeed
   async canDmFeed(
     dmCan: CANDMWithUuid
-  ): Promise<LMResponse<CanDMFeedResponse>> {
+  ) {
     return this.directMessageClient.canDmFeed(dmCan, LMChatClient.dlClient);
   }
 
@@ -932,7 +936,13 @@ class LMChatClient {
   async setUserSchema(userUniqueID: string, userName: string, apiKey:string) {
     return setUserSchema(userUniqueID, userName, apiKey);
   }
+
+  async setChatroomIdWithAIChatbot(chatroomID: string): Promise<LMResponse<any>> {
+    return setChatroomIdWithAIChatbot(chatroomID);
+  }
+  
 }
+
 
 export {
   LMChatClient,
