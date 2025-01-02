@@ -3,6 +3,7 @@ import { LinkOGTags } from "./LinkOGTags";
 import { Member } from "./Member";
 import { Poll } from "./Poll";
 import { Reaction } from "./Reaction";
+import { Widget } from "./Widget";
 
 export interface Conversation {
   id?: string;
@@ -53,5 +54,5 @@ export interface Conversation {
   cardId?: string;
   isInProgress?: string;
   widgetId: string;
-  widget: any;
+  widget: Widget;
 }

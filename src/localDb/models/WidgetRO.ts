@@ -12,7 +12,7 @@ export class WidgetRO extends Realm.Object<WidgetRO> {
   parentEntityId!: string;
   parentEntityType!: string;
   metadata!: string;
-  _lm_meta?: string| null;
+  lmMeta?: string| null;
   createdAt!: number;
   updatedAt!: number;
 
@@ -23,7 +23,7 @@ export class WidgetRO extends Realm.Object<WidgetRO> {
       parentEntityId: STRING,
       parentEntityType: STRING,
       metadata: STRING,
-      _lm_meta: OPTIONAL_STRING,
+      lmMeta: OPTIONAL_STRING,
       createdAt: INT,
       updatedAt: INT,
     },
