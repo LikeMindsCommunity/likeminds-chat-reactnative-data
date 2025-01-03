@@ -39,6 +39,8 @@ export const OPTIONAL_INT = "int?";
 export const FLOAT = "float";
 export const OPTIONAL_FLOAT = "float?";
 export const LIST = "list";
+export const MIXED = "mixed"
+export const OPTIONAL_MIXED = "mixed?"
 
 // schema list
 export const LIST_STRING = "string[]";

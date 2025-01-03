@@ -206,6 +206,7 @@ export async function saveConversationData(
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
 
+
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
           realm,
