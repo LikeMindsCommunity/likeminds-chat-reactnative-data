@@ -54,5 +54,5 @@ export interface Conversation {
   cardId?: string;
   isInProgress?: string;
   widgetId: string;
-  widget: Widget;
+  widget: Widget | null;
 }

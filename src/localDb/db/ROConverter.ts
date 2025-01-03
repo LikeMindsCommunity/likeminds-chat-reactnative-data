@@ -251,8 +251,15 @@ export const convertToWidgetRO = (widgetId: string, widget: Widget): WidgetRO =>
     id: widgetId.toString(),
     parentEntityId: widget?.parentEntityId,
     parentEntityType: widget?.parentEntityType,
-    metadata: JSON.stringify(widget?.metadata),
-    lmMeta: widget?.LmMeta ? JSON.stringify(widget?.LmMeta) : null,
+    metadata:
+      typeof widget?.metadata === "string"
+        ? widget?.metadata
+        : JSON.stringify(widget?.metadata),
+    lmMeta: widget?.LmMeta
+      ? typeof widget?.LmMeta === "string"
+        ? widget?.LmMeta
+        : JSON.stringify(widget?.LmMeta)
+      : null,
     createdAt: widget?.createdAt,
     updatedAt: widget?.updatedAt,
     ...dummyKeys(WidgetRO),

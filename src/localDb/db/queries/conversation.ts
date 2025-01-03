@@ -158,7 +158,7 @@ export async function saveConversationData(
           let replyConversationWidgetRO;
           if (Object.keys(replyConversationWidget || {}).length > 0) {
             replyConversationWidgetRO = convertToWidget(
-              conversation.widgetId,
+              conversation.replyConversationObject.widgetId,
               replyConversationWidget
             );
             realm.create(
@@ -205,7 +205,6 @@ export async function saveConversationData(
           conversation?.attachmentCount > 0
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
-
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -345,7 +344,10 @@ export async function deleteConversationFromRealm(conversationId: string) {
 }
 
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
-export async function replaceSavedConversation(data: Conversation, widgets: Record<string, any>) {
+export async function replaceSavedConversation(
+  data: Conversation,
+  widgets: Record<string, any>
+) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
@@ -368,9 +370,7 @@ export async function replaceSavedConversation(data: Conversation, widgets: Reco
       );
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
-      const conversationWidget = data.widgetId
-        ? widgets[data.widgetId]
-        : null;
+      const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
       let conversationWidgetRO;
       if (Object.keys(conversationWidget || {}).length > 0) {
         conversationWidgetRO = convertToWidget(
@@ -378,7 +378,7 @@ export async function replaceSavedConversation(data: Conversation, widgets: Reco
           conversationWidget
         );
       }
-      
+
       const convertedConversation = convertToConversationRO(
         realm,
         data,
