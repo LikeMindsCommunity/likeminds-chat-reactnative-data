@@ -258,8 +258,6 @@ class LMChatClient {
 
     const lmChatClient = new LMChatClient();
 
-    console.log("lmChatClient", lmChatClient);
-
     return lmChatClient;
   }
 
@@ -854,8 +852,8 @@ class LMChatClient {
   }
 
   // Method to replace save conversation from localDB
-  async replaceSavedConversation(data: ConversationModel) {
-    return replaceSavedConversation(data);
+  async replaceSavedConversation(data: ConversationModel, widgets: Record<string, any>) {
+    return replaceSavedConversation(data, widgets);
   }
 
   // Method to save a conversation's attachment in localDB

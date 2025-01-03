@@ -8,6 +8,7 @@ import {
   convertToConversationRO,
   convertToChatroomRO,
   convertToPoll,
+  convertToWidget,
 } from "../ROConverter";
 import Db from "../db";
 import Realm from "realm";
@@ -20,6 +21,7 @@ import { GetConversationsRequest } from "src/localDb/models/requestModels/GetCon
 import { GetConversationsType } from "src/localDb/models/requestModels/GetConversationsType";
 import { deleteChatroomTopic } from "./chatroom";
 import { getFilterConversationState } from "./filterConversationState";
+import { WidgetRO } from "../../models/WidgetRO";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -39,7 +41,7 @@ export async function saveConversationData(
       realm.create(CommunityRO.schema.name, communityRO, Realm.UpdateMode.All);
 
       // save chatroom
-      const chatroomId = Object.keys(chatroomData);
+      const chatroomId = Object.keys(chatroomData || {});
       const chatroom = chatroomData[chatroomId[0]];
       const creatorId = chatroom?.userId;
       const creator = data?.userMeta[creatorId?.toString()];
@@ -101,7 +103,24 @@ export async function saveConversationData(
         const creatorId = conversation?.userId;
         const creator = data?.userMeta[creatorId?.toString()];
         if (!creator) return;
+
+        // save conversation widget
         const conversationCreatorRO = convertToMemberRO(creator, communityId);
+        const conversationWidget = conversation.widgetId
+          ? data.widgets[conversation.widgetId]
+          : null;
+        let conversationWidgetRO;
+        if (Object.keys(conversationWidget || {}).length > 0) {
+          conversationWidgetRO = convertToWidget(
+            conversation.widgetId,
+            conversationWidget
+          );
+          realm.create(
+            WidgetRO.schema.name,
+            conversationWidgetRO,
+            Realm.UpdateMode.All
+          );
+        }
 
         if (chatDbUtil.isNull(conversation?.deletedByUserId)) {
           conversation.deletedBy =
@@ -130,6 +149,24 @@ export async function saveConversationData(
             savedRepliedConversation.length > 0
               ? replyConversationObject[0]
               : data?.conversationMeta[conversation?.replyId];
+
+          const replyConversationWidget = conversation.replyConversationObject
+            .widgetId
+            ? data.widgets[conversation.replyConversationObject.widgetId]
+            : null;
+
+          let replyConversationWidgetRO;
+          if (Object.keys(replyConversationWidget || {}).length > 0) {
+            replyConversationWidgetRO = convertToWidget(
+              conversation.replyConversationObject.widgetId,
+              replyConversationWidget
+            );
+            realm.create(
+              WidgetRO.schema.name,
+              replyConversationWidgetRO,
+              Realm.UpdateMode.All
+            );
+          }
         }
 
         if (!conversationCreatorRO) return;
@@ -169,12 +206,14 @@ export async function saveConversationData(
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
 
+
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
           realm,
           conversation,
           conversationCreatorRO,
           conversation?.cardId?.toString(),
+          conversationWidgetRO,
           conversationAttachment,
           conversationPolls,
           conversationReaction
@@ -306,7 +345,10 @@ export async function deleteConversationFromRealm(conversationId: string) {
 }
 
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
-export async function replaceSavedConversation(data: Conversation) {
+export async function replaceSavedConversation(
+  data: Conversation,
+  widgets: Record<string, any>
+) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
@@ -329,12 +371,21 @@ export async function replaceSavedConversation(data: Conversation) {
       );
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
+      const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
+      let conversationWidgetRO;
+      if (Object.keys(conversationWidget || {}).length > 0) {
+        conversationWidgetRO = convertToWidget(
+          data.widgetId,
+          conversationWidget
+        );
+      }
 
       const convertedConversation = convertToConversationRO(
         realm,
         data,
         memberRO,
         data?.chatroomId,
+        conversationWidgetRO,
         filteredConversation[0]?.attachments,
         filteredConversation[0]?.polls,
         filteredConversation[0]?.reactions
@@ -386,11 +437,21 @@ export async function saveNewConversation(
     realm.write(() => {
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
 
+      const conversationWidget = data.widget;
+      let conversationWidgetRO;
+      if (Object.keys(conversationWidget || {}).length > 0) {
+        conversationWidgetRO = convertToWidget(
+          data.widgetId,
+          conversationWidget
+        );
+      }
+
       const conversationRO = convertToConversationRO(
         realm,
         data,
         memberRO,
         chatroomId,
+        conversationWidgetRO,
         data?.attachments,
         data?.polls,
         data?.reactions

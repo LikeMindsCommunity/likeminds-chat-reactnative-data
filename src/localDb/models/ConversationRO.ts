@@ -16,6 +16,7 @@ import {
   OPTIONAL_MEMBER_RO,
   OPTIONAL_REPLY_CONVERSATION_RO,
   OPTIONAL_STRING,
+  OPTIONAL_WIDGET_RO,
   STRING,
 } from "../constants";
 import { AttachmentRO } from "./AttachmentRO";
@@ -26,6 +27,7 @@ import { MemberRO } from "./MemberRO";
 import { PollRO } from "./PollRO";
 import { ReactionRO } from "./ReactionRO";
 import Realm from "realm";
+import { WidgetRO } from "./WidgetRO";
 
 export class ConversationRO extends Realm.Object<ConversationRO> {
   id!: string;
@@ -73,6 +75,8 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   deletedByUserId?: string | null;
   community?: Realm.Results<CommunityRO> | null;
   chatroom?: Realm.Results<ChatroomRO> | null;
+  widgetId: string;
+  widget?: WidgetRO | null;
 
   static schema: Realm.ObjectSchema = {
     name: CONVERSATION_RO,
@@ -130,6 +134,8 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
         objectType: CHATROOM_RO,
         property: CONVERSATIONS,
       },
+      widgetId: STRING,
+      widget: OPTIONAL_WIDGET_RO,
     },
     primaryKey: ID,
   };

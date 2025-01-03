@@ -87,7 +87,21 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
     oldVersion._updateSchema(newVersion.schema);
     oldSchemaVersion++;
   }
+  if (oldSchemaVersion == 5) {
+    const conversationsRO = oldVersion.objects<ConversationRO>(
+      ConversationRO.schema.name
+    );
+
+    for (let i = 0; i < conversationsRO.length; i++) {
+      const oldObject = conversationsRO[i];
+      const newObject = { ...oldObject, widget: null, widgetId: "" };
+      newVersion.create(ConversationRO.schema.name, newObject);
+    }
+
+    oldVersion._updateSchema(newVersion.schema);
+    oldSchemaVersion++;
+  }
 };
 
 export const DB_SCHEMA_NAME = "likeminds-chat-sdk-rn";
-export const DB_SCHEMA_VERSION = 5;
+export const DB_SCHEMA_VERSION = 6;
