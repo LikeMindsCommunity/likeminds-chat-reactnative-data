@@ -28,6 +28,7 @@ import { APP_CONFIG, FILTER_CONVERSATION_STATE } from "../constants";
 import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { ConversationState } from "src/enums";
 import { WidgetRO } from "../models/WidgetRO";
+import { Widget } from "../../shared/responseModels/Widget";
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
 export const convertToAppConfigRO = (): AppConfigRO => {
@@ -244,13 +245,21 @@ const convertToAttachment = (
   return convertedAttachments;
 };
 
-export const convertToWidgetRO = (widgetId: string, widget: any): WidgetRO => {
+// convertToWidgetRO method takes Widget data and converts it to WidgetRO
+export const convertToWidgetRO = (widgetId: string, widget: Widget): WidgetRO => {
   const widgetRO = {
     id: widgetId.toString(),
     parentEntityId: widget?.parentEntityId,
     parentEntityType: widget?.parentEntityType,
-    metadata: JSON.stringify(widget?.metadata),
-    _lm_meta: widget?.LmMeta ? JSON.stringify(widget?.LmMeta) : null,
+    metadata:
+      typeof widget?.metadata === "string"
+        ? widget?.metadata
+        : JSON.stringify(widget?.metadata),
+    lmMeta: widget?.LmMeta
+      ? typeof widget?.LmMeta === "string"
+        ? widget?.LmMeta
+        : JSON.stringify(widget?.LmMeta)
+      : null,
     createdAt: widget?.createdAt,
     updatedAt: widget?.updatedAt,
     ...dummyKeys(WidgetRO),
@@ -258,8 +267,9 @@ export const convertToWidgetRO = (widgetId: string, widget: any): WidgetRO => {
   return widgetRO;
 };
 
-export const convertToWidget = (widgetId: string, widget: any): WidgetRO => {
-  let convertedWidget: any = {};
+// convertToWidget method takes Widget data and converts it to WidgetRO
+export const convertToWidget = (widgetId: string, widget: Widget): WidgetRO => {
+  let convertedWidget = null;
   if (widgetId == "" && widget) return convertedWidget;
   const roAttachment = convertToWidgetRO(widgetId, widget);
   convertedWidget = roAttachment;
