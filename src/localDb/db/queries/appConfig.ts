@@ -53,3 +53,17 @@ export async function clearDb() {
     realm.close();
   }
 }
+
+export async function setChatroomIdWithAIChatbot(chatroomID: string) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const appConfig = realm.objects<AppConfigRO>(AppConfigRO.schema.name);
+    realm.write(() => {
+      appConfig[0].chatroomIdWithAIChatbot = chatroomID;
+    });
+    const serializedData = JSON.parse(JSON.stringify(appConfig));
+    return serializedData[0];
+  } finally {
+    realm.close();
+  }
+}

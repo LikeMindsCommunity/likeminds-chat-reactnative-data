@@ -1,15 +1,14 @@
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
   FetchDMFeedRequest,
-  CheckDMStatus,
-  SendDMRequest,
-  BlockMember,
+  CheckDMStatusRequest as CheckDMStatus,
+  SendDMRequest as SendDMRequest,
+  BlockMemberRequest as BlockMember,
   CID,
-  CheckDMLimitWithUuid,
-  CreateDMChatroomWithUuid,
+  CheckDMLimitWithUuidRequest as CheckDMLimitWithUuid,
+  CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
-import { DMLimitResponse } from "./responseModels/DMLimitResponse";
 import DLClient from "@likeminds.community/chat-js";
 import { FetchDMResponse } from "./responseModels/FetchDMResponse";
 import { DMStatusResponse } from "./responseModels/DMStatusResponse";
@@ -61,14 +60,14 @@ class DirectMessageClient {
   async checkDMLimit(
     checkDMLimit: CheckDMLimitWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<DMLimitResponse>> {
+  ) {
     return await dlClient.checkDMLimitWithUuid(checkDMLimit);
   }
 
   async createDMChatroom(
     createDMChatroom: CreateDMChatroomWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<CreateDMChatroomResponse>> {
+  ) {
     return await dlClient.createDMChatroomWithUuid(createDMChatroom);
   }
 
@@ -146,7 +145,7 @@ class DirectMessageClient {
   async canDmFeed(
     dmCan: CANDMWithUuid,
     dlClient: DLClient
-  ): Promise<LMResponse<CanDMFeedResponse>> {
+  ) {
     return await dlClient.canDmFeedWithUuid(dmCan);
   }
 }

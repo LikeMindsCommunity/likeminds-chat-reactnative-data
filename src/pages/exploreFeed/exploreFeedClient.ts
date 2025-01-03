@@ -1,7 +1,7 @@
 import DLClient from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
-import { ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
+import { GetExploreFeedRequest as ExploreFeedData } from "@likeminds.community/chat-js/dist/pages/explore-feed/types";
 import { ExploreFeedResponse } from "./responseModels/ExploreFeedResponse";
 
 class ExploreFeedClient {
