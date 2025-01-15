@@ -482,7 +482,7 @@ class ChatroomClient {
       }
       return count;
     } catch (error) {
-      console.log("someAPI err ", error);
+      console.log(error);
     }
   }
 }
