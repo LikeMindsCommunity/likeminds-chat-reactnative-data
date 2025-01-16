@@ -344,7 +344,6 @@ export const convertToConversationRO = (
   polls?: Poll[],
   reactions?: Reaction[]
 ): ConversationRO => {
-  console.log("11 ==>>", widgetRO, conversation?.widgetId);
   const conversationRO: ConversationRO = {
     id: conversation.id?.toString(),
     chatroomId: chatroomId?.toString(),
