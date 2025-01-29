@@ -254,7 +254,7 @@ class LMChatClient {
       excludedConversationStates:[]
     });
 
-    setFilterConversationState(this.filterConversationState);
+    setFilterConversationState(this.filterConversationState  ?? [] );
 
     const lmChatClient = new LMChatClient();
 
