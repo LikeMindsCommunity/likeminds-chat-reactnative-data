@@ -166,7 +166,12 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks } from "@likeminds.community/chat-js";
+import DLClient, {
+  GetAIChatbotsResponse,
+  LMChatSubscribeChatroomCallback,
+  LMSDKCallbacks,
+  SubscribeChatroomRequest,
+} from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
@@ -251,7 +256,7 @@ class LMChatClient {
       xPlatformCode: "rn",
       xVersionCode: this.versionCode,
       xSdkSource: "chat",
-      excludedConversationStates:[]
+      excludedConversationStates: [],
     });
 
     setFilterConversationState(this.filterConversationState);
@@ -320,10 +325,22 @@ class LMChatClient {
     );
   }
 
-  // Method to follow a chatroom
-  async followChatroom(
-    followChatroom: FollowChatroomWithUuid
+  subscribeChatroom(
+    subscribeChatroomRequest: SubscribeChatroomRequest,
+    callback: LMChatSubscribeChatroomCallback
   ) {
+    return LMChatClient.dlClient.subscribeChatroom(
+      subscribeChatroomRequest,
+      callback
+    );
+  }
+
+  unSubscribeChatroom() {
+    return LMChatClient.dlClient.unSubscribeChatroom();
+  }
+
+  // Method to follow a chatroom
+  async followChatroom(followChatroom: FollowChatroomWithUuid) {
     return this.chatroomClient.followChatroom(
       followChatroom,
       LMChatClient.dlClient
@@ -422,8 +439,6 @@ class LMChatClient {
     );
   }
 
-
-
   // Method to decode an url
   async decodeUrl(
     decodeUrl: DecodeUrl
@@ -457,14 +472,14 @@ class LMChatClient {
   }
 
   // Method to get AIChatBots
-  async getAIChatbots(getAIChatbotsRequest: 
-    GetAIChatbotsRequest
+  async getAIChatbots(
+    getAIChatbotsRequest: GetAIChatbotsRequest
   ): Promise<LMResponse<GetAIChatbotsResponse>> {
     return this.chatroomClient.getAIChatbots(
       getAIChatbotsRequest,
       LMChatClient.dlClient
     );
-  } 
+  }
 
   // Method to get participants
   async getParticipants(
@@ -487,18 +502,15 @@ class LMChatClient {
   }
 
   // Method for chatroomSeen
-  async chatroomSeen(
-    chatroomSeen: ChatroomSeenWithUuid
-  ) {
+  async chatroomSeen(chatroomSeen: ChatroomSeenWithUuid) {
     return this.chatroomClient.chatroomSeen(
       chatroomSeen,
       LMChatClient.dlClient
     );
   }
 
-
   async getUnseenCount() {
-    return this.chatroomClient.getUnseenCount(LMChatClient.dlClient)
+    return this.chatroomClient.getUnseenCount(LMChatClient.dlClient);
   }
 
   // Method to fetch DM feed
@@ -522,9 +534,7 @@ class LMChatClient {
   }
 
   // Method to check DM limit
-  async checkDMLimit(
-    checkDMLimit: CheckDMLimitWithUuid
-  ) {
+  async checkDMLimit(checkDMLimit: CheckDMLimitWithUuid) {
     return this.directMessageClient.checkDMLimit(
       checkDMLimit,
       LMChatClient.dlClient
@@ -532,9 +542,7 @@ class LMChatClient {
   }
 
   // Method to create a DM Chatroom
-  async createDMChatroom(
-    createDMChatroom: CreateDMChatroomWithUuid
-  ) {
+  async createDMChatroom(createDMChatroom: CreateDMChatroomWithUuid) {
     return this.directMessageClient.createDMChatroom(
       createDMChatroom,
       LMChatClient.dlClient
@@ -567,9 +575,7 @@ class LMChatClient {
   }
 
   // Method for canDmFeed
-  async canDmFeed(
-    dmCan: CANDMWithUuid
-  ) {
+  async canDmFeed(dmCan: CANDMWithUuid) {
     return this.directMessageClient.canDmFeed(dmCan, LMChatClient.dlClient);
   }
 
@@ -838,7 +844,7 @@ class LMChatClient {
     chatroom: Chatroom,
     lastConversation: ConversationModel
   ): Promise<LMResponse<ChatroomRO[]>> {
-    return getUnreadChatrooms(chatroom,lastConversation);
+    return getUnreadChatrooms(chatroom, lastConversation);
   }
 
   // Method to get a particular convesation from localDB
@@ -852,7 +858,10 @@ class LMChatClient {
   }
 
   // Method to replace save conversation from localDB
-  async replaceSavedConversation(data: ConversationModel, widgets: Record<string, any>) {
+  async replaceSavedConversation(
+    data: ConversationModel,
+    widgets: Record<string, any>
+  ) {
     return replaceSavedConversation(data, widgets);
   }
 
@@ -933,16 +942,16 @@ class LMChatClient {
   }
 
   // Method to set user schema
-  async setUserSchema(userUniqueID: string, userName: string, apiKey:string) {
+  async setUserSchema(userUniqueID: string, userName: string, apiKey: string) {
     return setUserSchema(userUniqueID, userName, apiKey);
   }
 
-  async setChatroomIdWithAIChatbot(chatroomID: string): Promise<LMResponse<any>> {
+  async setChatroomIdWithAIChatbot(
+    chatroomID: string
+  ): Promise<LMResponse<any>> {
     return setChatroomIdWithAIChatbot(chatroomID);
   }
-  
 }
-
 
 export {
   LMChatClient,
