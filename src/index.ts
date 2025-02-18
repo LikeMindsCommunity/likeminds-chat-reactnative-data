@@ -172,10 +172,14 @@ import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import DBLibrary from "./core/services/networkLibrary";
 import { ChatroomRO } from "./localDb/models/ChatroomRO";
+import { LMInitiateLoggerRequest } from "./shared/responseModels/InitiateLoggerRequest";
+import { LMChatLogger } from "./core/services/LMChatLogger";
 
 class LMChatClient {
   private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;
+  private static initiateLoggerRequest: LMInitiateLoggerRequest | null = null; 
+
   // private static apiKey: string | null = null;
   public static dlClient: DLClient;
   private networkLibrary: NetworkLibrary;
@@ -232,6 +236,12 @@ class LMChatClient {
     this.filterConversationState = filterConversationState;
     return this;
   }
+  private initiateLoggerRequest: LMInitiateLoggerRequest | null = null;
+
+  static setInitiateLoggerRequest(initiateLoggerRequest: LMInitiateLoggerRequest): typeof LMChatClient {
+    this.initiateLoggerRequest = initiateLoggerRequest;
+    return this;
+  }
 
   public static build(): LMChatClient {
     // Perform any necessary validation or configuration checks
@@ -253,7 +263,13 @@ class LMChatClient {
       xSdkSource: "chat",
       excludedConversationStates:[]
     });
+    if (this.initiateLoggerRequest) {
+      LMChatLogger.initialise(this.initiateLoggerRequest);
 
+      if (this.initiateLoggerRequest) {
+        LMChatLogger.initialise(this.initiateLoggerRequest);
+      }
+  }
     setFilterConversationState(this.filterConversationState  ?? [] );
 
     const lmChatClient = new LMChatClient();
