@@ -138,6 +138,8 @@ import {
   updatePollVotes,
   updateDeletedBy,
   deleteConversationFromRealm,
+  updateConversationData,
+  updateAttachment,
 } from "./localDb/db/queries/conversation";
 import {
   updateChatroomViewed,
@@ -172,6 +174,7 @@ import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import DBLibrary from "./core/services/networkLibrary";
 import { ChatroomRO } from "./localDb/models/ChatroomRO";
+import { Attachment } from "./shared/responseModels/Attachment";
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -891,6 +894,14 @@ class LMChatClient {
   // Method to update isChatroomViewed key
   async updateChatroomViewed(chatroomId: string) {
     return updateChatroomViewed(chatroomId);
+  }
+
+  async updateConversationData(data: ConversationModel) {
+    return updateConversationData(data);
+  }
+
+  async updateAttachment(data: ConversationModel, attachment: Attachment) {
+    return updateAttachment(data, attachment);
   }
 
   // Method to toggle followStatus in localDB

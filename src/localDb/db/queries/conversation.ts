@@ -22,6 +22,8 @@ import { GetConversationsType } from "src/localDb/models/requestModels/GetConver
 import { deleteChatroomTopic } from "./chatroom";
 import { getFilterConversationState } from "./filterConversationState";
 import { WidgetRO } from "../../models/WidgetRO";
+import { Attachment } from "../../../shared/responseModels/Attachment";
+import { AttachmentRO } from "src/localDb/models/AttachmentRO";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -145,14 +147,16 @@ export async function saveConversationData(
               };
             });
 
-          conversation.replyConversationObject =
-            savedRepliedConversation.length > 0
-              ? replyConversationObject[0]
-              : data?.conversationMeta[conversation?.replyId];
+          if (conversation) {
+            conversation.replyConversationObject =
+              savedRepliedConversation.length > 0
+                ? replyConversationObject[0]
+                : data?.conversationMeta[conversation?.replyId];
+          }
 
-          const replyConversationWidget = conversation.replyConversationObject
-            .widgetId
-            ? data.widgets[conversation.replyConversationObject.widgetId]
+          const replyConversationWidget = conversation?.replyConversationObject
+            ?.widgetId
+            ? data.widgets[conversation?.replyConversationObject?.widgetId]
             : null;
 
           let replyConversationWidgetRO;
@@ -185,7 +189,7 @@ export async function saveConversationData(
         for (let i = 0; i < conversationReaction?.length; i++) {
           const reactionCreator =
             conversation?.hasReactions === true &&
-            conversationReaction?.length > 0
+              conversationReaction?.length > 0
               ? data?.userMeta[conversationReaction[i]?.userId]
               : null;
 
@@ -206,6 +210,12 @@ export async function saveConversationData(
             ? data?.convAttachmentsMeta[conversation?.id?.toString()]
             : [];
 
+        const Query = realm.objects<ConversationRO>(ConversationRO.schema.name);
+        const matchingConversations: any = Query.filtered(`temporaryId = "${conversation?.temporaryId}"`);
+
+        console.log("matchingg");
+        console.log(matchingConversations)
+        conversation.localCreatedEpoch = (matchingConversations[0])?.localSavedEpoch
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -367,8 +377,12 @@ export async function replaceSavedConversation(
       );
 
       const filteredConversation: any = allConversations.filtered(
-        `id = "${data?.temporaryId}"`
+        `id = "-${data?.temporaryId}"`
       );
+
+      console.log("[0]0]", filteredConversation[0], JSON.stringify(filteredConversation[0]));
+
+      data.localCreatedEpoch = (filteredConversation[0])?.localSavedEpoch
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
       const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
@@ -398,6 +412,48 @@ export async function replaceSavedConversation(
       );
       realm.delete(filteredConversation);
     });
+  } finally {
+    realm.close();
+  }
+}
+
+export async function updateConversationData(
+  data: Conversation,
+) {
+  const realm = new Realm(Db.getInstance());
+  const chatDbUtil = new ChatDBUtil();
+  try {
+    console.log("CAlledd upDATWE CONVerADAT")
+    realm.write(() => {
+
+      const filteredConversation: any = realm
+        .objects<ConversationRO>(ConversationRO.schema.name)
+        .filtered(`id = "${data.id}"`);
+
+      console.log("BEFORE", filteredConversation);
+
+      const memberRO = convertToMemberRO(data?.member, data?.communityId);
+      let conversationWidgetRO = null;
+
+      const convertedConversation = convertToConversationRO(
+        realm,
+        data,
+        memberRO,
+        data?.chatroomId,
+        conversationWidgetRO,
+        filteredConversation[0]?.attachments,
+        filteredConversation[0]?.polls,
+        filteredConversation[0]?.reactions
+      );
+
+      realm.create(
+        ConversationRO.schema.name,
+        convertedConversation,
+        Realm.UpdateMode.All
+      );
+
+      realm.delete(filteredConversation);
+    })
   } finally {
     realm.close();
   }
@@ -613,4 +669,38 @@ export async function paginateUp(
   });
 
   return conversationObject;
+}
+
+export async function updateAttachment(data: Conversation, attachment: Attachment) {
+  const realm = new Realm(Db.getInstance());
+  const chatDbUtil = new ChatDBUtil();
+  try {
+    console.log("CAlledd upDATWE attachments")
+    realm.write(() => {
+      const filteredConversation: any = realm
+        .objects<ConversationRO>(ConversationRO.schema.name)
+        .filtered(`id = "${data.id}"`);
+
+      console.log("BEFORE updateAttachments", filteredConversation);
+      const filteredAttachmentIndex = filteredConversation[0]?.attachments?.findIndex(
+        attachmentObject => {
+          if (attachmentObject?.index == attachment?.index) {
+            console.log("FOUIND", attachmentObject, attachment)
+            return true;
+          }
+        }
+      )
+
+      if (filteredConversation[0]) {
+        console.log("UPDATINGTHIS TO",
+          JSON.stringify(filteredConversation[0].attachments[filteredAttachmentIndex]),
+          JSON.stringify(attachment)
+          )
+        filteredConversation[0].attachments[filteredAttachmentIndex] = attachment
+      }
+      
+    })
+  } finally {
+    realm.close();
+  }
 }
