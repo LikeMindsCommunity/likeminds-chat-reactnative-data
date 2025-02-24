@@ -8,6 +8,7 @@ export interface Attachment {
   index?: number;
   width?: number;
   height?: number;
+  isUploaded: boolean;
   awsFolderPath: string;
   localFilePath: string;
   thumbnailUrl: string;
