@@ -213,9 +213,8 @@ export async function saveConversationData(
         const Query = realm.objects<ConversationRO>(ConversationRO.schema.name);
         const matchingConversations: any = Query.filtered(`temporaryId = "${conversation?.temporaryId}"`);
 
-        console.log("matchingg");
-        console.log(matchingConversations)
         conversation.localCreatedEpoch = (matchingConversations[0])?.localSavedEpoch
+        conversation.attachmentUploadedEpoch = (matchingConversations[0])?.attachmentUploadedEpoch
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -380,7 +379,6 @@ export async function replaceSavedConversation(
         `id = "-${data?.temporaryId}"`
       );
 
-      console.log("[0]0]", filteredConversation[0], JSON.stringify(filteredConversation[0]));
 
       data.localCreatedEpoch = (filteredConversation[0])?.localSavedEpoch
 
@@ -423,14 +421,12 @@ export async function updateConversationData(
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
-    console.log("CAlledd upDATWE CONVerADAT")
     realm.write(() => {
 
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
         .filtered(`id = "${data.id}"`);
 
-      console.log("BEFORE", filteredConversation);
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
       let conversationWidgetRO = null;
@@ -671,31 +667,24 @@ export async function paginateUp(
   return conversationObject;
 }
 
-export async function updateAttachment(data: Conversation, attachment: Attachment) {
+export async function updateAttachment(ConversationID: string, attachment: Attachment) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
-    console.log("CAlledd upDATWE attachments")
     realm.write(() => {
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
-        .filtered(`id = "${data.id}"`);
+        .filtered(`id = "${ConversationID}"`);
 
-      console.log("BEFORE updateAttachments", filteredConversation);
       const filteredAttachmentIndex = filteredConversation[0]?.attachments?.findIndex(
         attachmentObject => {
           if (attachmentObject?.index == attachment?.index) {
-            console.log("FOUIND", attachmentObject, attachment)
             return true;
           }
         }
       )
 
       if (filteredConversation[0]) {
-        console.log("UPDATINGTHIS TO",
-          JSON.stringify(filteredConversation[0].attachments[filteredAttachmentIndex]),
-          JSON.stringify(attachment)
-          )
         filteredConversation[0].attachments[filteredAttachmentIndex] = attachment
       }
       
