@@ -900,8 +900,8 @@ class LMChatClient {
     return updateConversationData(data);
   }
 
-  async updateAttachment(data: ConversationModel, attachment: Attachment) {
-    return updateAttachment(data, attachment);
+  async updateAttachment(conversationID: string, attachment: Attachment) {
+    return updateAttachment(conversationID, attachment);
   }
 
   // Method to toggle followStatus in localDB
