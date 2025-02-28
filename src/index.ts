@@ -896,8 +896,8 @@ class LMChatClient {
     return updateChatroomViewed(chatroomId);
   }
 
-  async updateConversationData(data: ConversationModel) {
-    return updateConversationData(data);
+  async updateConversationData(data: ConversationModel, widgets: Record<string, any>) {
+    return updateConversationData(data, widgets);
   }
 
   async updateAttachment(conversationID: string, attachment: Attachment) {

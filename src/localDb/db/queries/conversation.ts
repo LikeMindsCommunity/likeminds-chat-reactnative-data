@@ -417,19 +417,35 @@ export async function replaceSavedConversation(
 
 export async function updateConversationData(
   data: Conversation,
+  widgets: Record<string, any>
 ) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
   try {
     realm.write(() => {
 
+      const replyConv = data?.replyConversation;
+      if (chatDbUtil.isNull(replyConv)) {
+        const conversations = realm.objects(ConversationRO.schema.name);
+        const conversation = conversations.filtered(`id = "${replyConv}"`);
+        const stringifiedConversation = JSON.parse(JSON.stringify(conversation));
+        data.replyConversationObject = stringifiedConversation[0];
+      }
+
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
-        .filtered(`id = "${data.id}"`);
+        .filtered(`temporaryId = "${data?.temporaryId}"`);
 
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
-      let conversationWidgetRO = null;
+      const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
+      let conversationWidgetRO;
+      if (Object.keys(conversationWidget || {}).length > 0) {
+        conversationWidgetRO = convertToWidget(
+          data.widgetId,
+          conversationWidget
+        );
+      }
 
       const convertedConversation = convertToConversationRO(
         realm,
