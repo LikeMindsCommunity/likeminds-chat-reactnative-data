@@ -371,7 +371,7 @@ export const convertToConversationRO = (
     attachmentCount: conversation?.attachmentCount || null,
     attachmentsUploaded: conversation?.attachmentUploaded || null,
     uploadWorkerUUID: conversation?.uploadWorkerUUID || null,
-    localSavedEpoch: conversation?.localCreatedEpoch || 0,
+    localSavedEpoch: conversation?.localCreatedEpoch,
     attachmentUploadedEpoch: conversation?.attachmentUploadedEpoch,
     temporaryId: conversation?.temporaryId || null,
     isAnonymous: conversation?.isAnonymous || null,
