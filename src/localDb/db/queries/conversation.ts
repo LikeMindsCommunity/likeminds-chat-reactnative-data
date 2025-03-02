@@ -211,10 +211,20 @@ export async function saveConversationData(
             : [];
 
         const Query = realm.objects<ConversationRO>(ConversationRO.schema.name);
-        const matchingConversations: any = Query.filtered(`temporaryId = "${conversation?.temporaryId}"`);
+        const matchingConversations: any = Query.filtered(`id = "-${conversation?.temporaryId}"`);
 
-        conversation.localCreatedEpoch = (matchingConversations[0])?.localSavedEpoch
-        conversation.attachmentUploadedEpoch = (matchingConversations[0])?.attachmentUploadedEpoch
+        if (matchingConversations?.length) {
+          const existingConversation = matchingConversations[0];
+        
+          if (existingConversation.localSavedEpoch) {
+            conversation.localCreatedEpoch = existingConversation.localSavedEpoch;
+          }
+        
+          if (existingConversation.attachmentUploadedEpoch) {
+            conversation.attachmentUploadedEpoch = existingConversation.attachmentUploadedEpoch;
+          }
+        }
+
 
         // convert to ConversationRO
         const conversationRO = convertToConversationRO(
@@ -235,6 +245,9 @@ export async function saveConversationData(
             conversationRO,
             Realm.UpdateMode.All
           );
+          if (matchingConversations?.length) {
+            realm.delete(matchingConversations)
+          }
         }
       });
     });
@@ -356,7 +369,7 @@ export async function deleteConversationFromRealm(conversationId: string) {
 // To replace a conversation stored in realm to data recevied as response from an API call replacing the temporaryId with id
 export async function replaceSavedConversation(
   data: Conversation,
-  widgets: Record<string, any>
+  widgets?: Record<string, any>
 ) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
@@ -381,6 +394,7 @@ export async function replaceSavedConversation(
 
 
       data.localCreatedEpoch = (filteredConversation[0])?.localSavedEpoch
+      data.attachmentUploadedEpoch = (filteredConversation[0])?.attachmentUploadedEpoch
 
       const memberRO = convertToMemberRO(data?.member, data?.communityId);
       const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
@@ -447,24 +461,20 @@ export async function updateConversationData(
         );
       }
 
-      const convertedConversation = convertToConversationRO(
-        realm,
-        data,
-        memberRO,
-        data?.chatroomId,
-        conversationWidgetRO,
-        filteredConversation[0]?.attachments,
-        filteredConversation[0]?.polls,
-        filteredConversation[0]?.reactions
-      );
-
-      realm.create(
-        ConversationRO.schema.name,
-        convertedConversation,
-        Realm.UpdateMode.All
-      );
-
-      realm.delete(filteredConversation);
+      if (filteredConversation) {
+        const convertedConversation = convertToConversationRO(
+          realm,
+          data,
+          memberRO,
+          data?.chatroomId,
+          conversationWidgetRO,
+          filteredConversation[0]?.attachments,
+          filteredConversation[0]?.polls,
+          filteredConversation[0]?.reactions
+        );
+        filteredConversation[0].localSavedEpoch = convertedConversation.localSavedEpoch
+        filteredConversation[0].attachmentUploadedEpoch = convertedConversation.attachmentUploadedEpoch
+      }
     })
   } finally {
     realm.close();
