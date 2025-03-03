@@ -215,7 +215,7 @@ export async function saveConversationData(
 
         if (matchingConversations?.length) {
           const existingConversation = matchingConversations[0];
-        
+          // adding the timestamps to the conversations fetched from sync api
           if (existingConversation.localSavedEpoch) {
             conversation.localCreatedEpoch = existingConversation.localSavedEpoch;
           }
@@ -246,6 +246,7 @@ export async function saveConversationData(
             Realm.UpdateMode.All
           );
           if (matchingConversations?.length) {
+            // delete the previous temporary conversation object
             realm.delete(matchingConversations)
           }
         }
@@ -446,6 +447,7 @@ export async function updateConversationData(
         data.replyConversationObject = stringifiedConversation[0];
       }
 
+      // query the conversation object with the matching temporaryId
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
         .filtered(`temporaryId = "${data?.temporaryId}"`);
@@ -462,6 +464,7 @@ export async function updateConversationData(
       }
 
       if (filteredConversation) {
+        // create a realm object from the updated conversation
         const convertedConversation = convertToConversationRO(
           realm,
           data,
@@ -472,6 +475,7 @@ export async function updateConversationData(
           filteredConversation[0]?.polls,
           filteredConversation[0]?.reactions
         );
+        // updating the timestamps in the existing conversation object in local db
         filteredConversation[0].localSavedEpoch = convertedConversation.localSavedEpoch
         filteredConversation[0].attachmentUploadedEpoch = convertedConversation.attachmentUploadedEpoch
       }
@@ -693,6 +697,7 @@ export async function paginateUp(
   return conversationObject;
 }
 
+// to replace the temporary attachment with updated attachment inside a conversation
 export async function updateAttachment(ConversationID: string, attachment: Attachment) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
@@ -710,6 +715,7 @@ export async function updateAttachment(ConversationID: string, attachment: Attac
         }
       )
 
+      // replace the older attachment i
       if (filteredConversation[0]) {
         filteredConversation[0].attachments[filteredAttachmentIndex] = attachment
       }
