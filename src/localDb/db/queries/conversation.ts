@@ -715,7 +715,7 @@ export async function updateAttachment(ConversationID: string, attachment: Attac
         }
       )
 
-      // replace the older attachment i
+      // replace the older attachment in the conversation object
       if (filteredConversation[0]) {
         filteredConversation[0].attachments[filteredAttachmentIndex] = attachment
       }
