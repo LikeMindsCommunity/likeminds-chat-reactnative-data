@@ -175,6 +175,10 @@ import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/netw
 import DBLibrary from "./core/services/networkLibrary";
 import { ChatroomRO } from "./localDb/models/ChatroomRO";
 import { Attachment } from "./shared/responseModels/Attachment";
+import { UpdateConversationDataRequest } from "./localDb/models/requestModels/UpdateConversationDataRequest";
+import { UpdateAttachmentRequest } from "./localDb/models/requestModels/UpdateAttachmentRequest";
+import UpdateAttachmentRequestBuilder from "./localDb/models/requestModels/UpdateAttachmentRequestBuilder"
+import UpdateConversationDataRequestBuilder from "./localDb/models/requestModels/UpdateConversationDataRequestBuilder"
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -896,12 +900,12 @@ class LMChatClient {
     return updateChatroomViewed(chatroomId);
   }
 
-  async updateConversationData(data: ConversationModel, widgets?: Record<string, any>) {
-    return updateConversationData(data, widgets);
+  async updateConversationData(request: UpdateConversationDataRequest) {
+    return updateConversationData(request);
   }
 
-  async updateAttachment(conversationID: string, attachment: Attachment) {
-    return updateAttachment(conversationID, attachment);
+  async updateAttachment(request: UpdateAttachmentRequest) {
+    return updateAttachment(request);
   }
 
   // Method to toggle followStatus in localDB
@@ -960,6 +964,10 @@ export {
   SyncChatroomRequest,
   SyncConversationRequest,
   GetConversationsRequestBuilder,
+  UpdateConversationDataRequest,
+  UpdateAttachmentRequest,
+  UpdateConversationDataRequestBuilder,
+  UpdateAttachmentRequestBuilder,
   ConversationState,
   LMSDKCallbacks,
   InitUserWithUuid,

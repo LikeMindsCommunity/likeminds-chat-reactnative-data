@@ -24,6 +24,8 @@ import { getFilterConversationState } from "./filterConversationState";
 import { WidgetRO } from "../../models/WidgetRO";
 import { Attachment } from "../../../shared/responseModels/Attachment";
 import { AttachmentRO } from "src/localDb/models/AttachmentRO";
+import { UpdateConversationDataRequest } from "src/localDb/models/requestModels/UpdateConversationDataRequest";
+import { UpdateAttachmentRequest } from "src/localDb/models/requestModels/UpdateAttachmentRequest";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -431,34 +433,34 @@ export async function replaceSavedConversation(
 }
 
 export async function updateConversationData(
-  data: Conversation,
-  widgets: Record<string, any>
+ updateConversationDataRequest: UpdateConversationDataRequest
 ) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
+  const {conversation, widgets} = updateConversationDataRequest
   try {
     realm.write(() => {
 
-      const replyConv = data?.replyConversation;
+      const replyConv = conversation?.replyConversation;
       if (chatDbUtil.isNull(replyConv)) {
         const conversations = realm.objects(ConversationRO.schema.name);
-        const conversation = conversations.filtered(`id = "${replyConv}"`);
+        const conversation: any = conversations.filtered(`id = "${replyConv}"`);
         const stringifiedConversation = JSON.parse(JSON.stringify(conversation));
-        data.replyConversationObject = stringifiedConversation[0];
+        conversation.replyConversationObject = stringifiedConversation[0];
       }
 
       // query the conversation object with the matching temporaryId
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
-        .filtered(`temporaryId = "${data?.temporaryId}"`);
+        .filtered(`temporaryId = "${conversation?.temporaryId}"`);
 
 
-      const memberRO = convertToMemberRO(data?.member, data?.communityId);
-      const conversationWidget = data.widgetId ? widgets[data.widgetId] : null;
+      const memberRO = convertToMemberRO(conversation?.member, conversation?.communityId);
+      const conversationWidget = conversation.widgetId ? widgets[conversation.widgetId] : null;
       let conversationWidgetRO;
       if (Object.keys(conversationWidget || {}).length > 0) {
         conversationWidgetRO = convertToWidget(
-          data.widgetId,
+          conversation.widgetId,
           conversationWidget
         );
       }
@@ -467,9 +469,9 @@ export async function updateConversationData(
         // create a realm object from the updated conversation
         const convertedConversation = convertToConversationRO(
           realm,
-          data,
+          conversation,
           memberRO,
-          data?.chatroomId,
+          conversation?.chatroomId,
           conversationWidgetRO,
           filteredConversation[0]?.attachments,
           filteredConversation[0]?.polls,
@@ -698,9 +700,10 @@ export async function paginateUp(
 }
 
 // to replace the temporary attachment with updated attachment inside a conversation
-export async function updateAttachment(ConversationID: string, attachment: Attachment) {
+export async function updateAttachment(updateAttachmentRequest: UpdateAttachmentRequest) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
+  const {ConversationID, attachment} = updateAttachmentRequest
   try {
     realm.write(() => {
       const filteredConversation: any = realm
