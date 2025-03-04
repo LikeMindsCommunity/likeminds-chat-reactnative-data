@@ -1,6 +1,7 @@
 import {
   ATTACHMENT_META_RO,
   ATTACHMENT_RO,
+  BOOLEAN,
   OPTIONAL_INT,
   OPTIONAL_STRING,
   STRING,
@@ -13,6 +14,7 @@ export class AttachmentRO extends Realm.Object<AttachmentRO> {
   url!: string;
   chatroomId!: string;
   communityId!: string;
+  isUploaded!: boolean;
   name?: string | null;
   type!: string;
   index?: number | null;
@@ -35,6 +37,7 @@ export class AttachmentRO extends Realm.Object<AttachmentRO> {
       url: STRING,
       chatroomId: STRING,
       communityId: STRING,
+      isUploaded: BOOLEAN,
       name: OPTIONAL_STRING,
       type: STRING,
       index: OPTIONAL_INT,
