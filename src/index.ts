@@ -175,10 +175,8 @@ import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/netw
 import DBLibrary from "./core/services/networkLibrary";
 import { ChatroomRO } from "./localDb/models/ChatroomRO";
 import { Attachment } from "./shared/responseModels/Attachment";
-import { UpdateConversationDataRequest } from "./localDb/models/requestModels/UpdateConversationDataRequest";
-import { UpdateAttachmentRequest } from "./localDb/models/requestModels/UpdateAttachmentRequest";
-import UpdateAttachmentRequestBuilder from "./localDb/models/requestModels/UpdateAttachmentRequestBuilder"
-import UpdateConversationDataRequestBuilder from "./localDb/models/requestModels/UpdateConversationDataRequestBuilder"
+import UpdateConversationDataRequest from "./localDb/models/requestModels/UpdateConversationDataRequest";
+import UpdateAttachmentRequest from "./localDb/models/requestModels/UpdateAttachmentRequest";
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -966,8 +964,6 @@ export {
   GetConversationsRequestBuilder,
   UpdateConversationDataRequest,
   UpdateAttachmentRequest,
-  UpdateConversationDataRequestBuilder,
-  UpdateAttachmentRequestBuilder,
   ConversationState,
   LMSDKCallbacks,
   InitUserWithUuid,

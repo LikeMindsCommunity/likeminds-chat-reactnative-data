@@ -24,8 +24,8 @@ import { getFilterConversationState } from "./filterConversationState";
 import { WidgetRO } from "../../models/WidgetRO";
 import { Attachment } from "../../../shared/responseModels/Attachment";
 import { AttachmentRO } from "src/localDb/models/AttachmentRO";
-import { UpdateConversationDataRequest } from "src/localDb/models/requestModels/UpdateConversationDataRequest";
-import { UpdateAttachmentRequest } from "src/localDb/models/requestModels/UpdateAttachmentRequest";
+import UpdateAttachmentRequest from "../../models/requestModels/UpdateAttachmentRequest";
+import UpdateConversationDataRequest from "../../models/requestModels/UpdateConversationDataRequest";
 
 export async function saveConversationData(
   data: SyncConversationResponse,
@@ -703,12 +703,12 @@ export async function paginateUp(
 export async function updateAttachment(updateAttachmentRequest: UpdateAttachmentRequest) {
   const realm = new Realm(Db.getInstance());
   const chatDbUtil = new ChatDBUtil();
-  const {ConversationID, attachment} = updateAttachmentRequest
+  const {conversationID, attachment} = updateAttachmentRequest
   try {
     realm.write(() => {
       const filteredConversation: any = realm
         .objects<ConversationRO>(ConversationRO.schema.name)
-        .filtered(`id = "${ConversationID}"`);
+        .filtered(`id = "${conversationID}"`);
 
       const filteredAttachmentIndex = filteredConversation[0]?.attachments?.findIndex(
         attachmentObject => {
