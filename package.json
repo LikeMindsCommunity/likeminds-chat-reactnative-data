@@ -1,7 +1,7 @@
 {
   "name": "@likeminds.community/chat-rn",
-  "versionCode": "23",
-  "version": "1.8.2",
+  "versionCode": "24",
+  "version": "1.9.0",
   "description": "LikeMinds ReactNative SDK for chat APIs",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -36,7 +36,7 @@
     "url": "git+https://github.com/LikeMindsCommunity/ReactNative-Chat-Data.git"
   },
   "dependencies": {
-    "@likeminds.community/chat-js": "1.12.1",
+    "@likeminds.community/chat-js": "1.14.0",
     "axios": "0.22.0",
     "firebase": "10.1.0",
     "react": "18.2.0",
