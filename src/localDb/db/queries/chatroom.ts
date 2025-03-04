@@ -566,7 +566,7 @@ export async function getUnreadChatrooms(
           ? lastConversation.widget[lastConversation.widgetId]
           : null;
         let widgetRO;
-        if (Object.keys(lastConversationWidget || {}).length > 0) {
+        if (Object.keys(lastConversationWidget ?? {}).length > 0) {
           widgetRO = convertToWidget(
             lastConversation.widgetId,
             lastConversationWidget
@@ -586,26 +586,25 @@ export async function getUnreadChatrooms(
           convertedMemberRO,
           Realm.UpdateMode.All
         );
-
-        realm.create(WidgetRO.schema.name, widgetRO, Realm.UpdateMode.All);
+        if (widgetRO) {
+          realm.create(WidgetRO.schema.name, widgetRO, Realm.UpdateMode.All);
+        }
 
         realm.create(
           ConversationRO.schema.name,
           convertedConversationRO,
           Realm.UpdateMode.All
         );
-
         realm.create(
           LastConversationRO.schema.name,
           convertedLastConversationRO,
           Realm.UpdateMode.All
         );
-
         chatroomWithID[0].lastConversation = convertedConversationRO;
         chatroomWithID[0].lastConversationRO = convertedLastConversationRO;
         chatroomWithID[0].unseenCount = chatroomWithID[0].unseenCount + 1;
         chatroomWithID[0].unreadConversationsCount =
-          chatroomWithID[0].unreadConversationsCount + 1;
+        chatroomWithID[0].unreadConversationsCount + 1;
         chatroomWithID[0].lastConversationId = lastConversation.id;
       });
 

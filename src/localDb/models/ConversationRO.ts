@@ -52,7 +52,8 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
   userId?: string;
   attachmentsUploaded?: boolean | null;
   uploadWorkerUUID?: string | null;
-  localSavedEpoch!: number;
+  localSavedEpoch?: number | null;
+  attachmentUploadedEpoch?: number | null;
   temporaryId?: string | null;
   reactions!: Realm.List<ReactionRO>;
   isAnonymous?: boolean | null;
@@ -104,7 +105,8 @@ export class ConversationRO extends Realm.Object<ConversationRO> {
       attachmentCount: OPTIONAL_INT,
       attachmentsUploaded: OPTIONAL_BOOLEAN,
       uploadWorkerUUID: OPTIONAL_STRING,
-      localSavedEpoch: INT,
+      localSavedEpoch: OPTIONAL_INT,
+      attachmentUploadedEpoch: OPTIONAL_INT,
       temporaryId: OPTIONAL_STRING,
       reactions: LIST_REACTION_RO,
       hasFiles: OPTIONAL_BOOLEAN,

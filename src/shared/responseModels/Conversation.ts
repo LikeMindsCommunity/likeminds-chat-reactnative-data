@@ -30,6 +30,7 @@ export interface Conversation {
   uploadWorkerUUID?: string;
   temporaryId?: string;
   localCreatedEpoch?: number;
+  attachmentUploadedEpoch?: number;
   reactions?: Reaction[];
   isAnonymous?: boolean;
   allowAddOption?: boolean;
