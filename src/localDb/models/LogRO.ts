@@ -1,7 +1,7 @@
 import Realm from "realm";
-import { STRING, INT, OPTIONAL_STRING } from "../constants";
+import { STRING, INT, OPTIONAL_STRING, LM_STACK_TRACE_RO, OPTIONAL_LMSDK_MetaDB_RO } from "../constants";
 
-export class LMStackTraceDBModel extends Realm.Object<LMStackTraceDBModel> {
+export class LMStackTraceDBModelRO extends Realm.Object<LMStackTraceDBModelRO> {
   exception!: string;
   trace!: string;
 
@@ -11,13 +11,13 @@ export class LMStackTraceDBModel extends Realm.Object<LMStackTraceDBModel> {
       exception: STRING,
       trace: STRING,
     },
+    embedded: true,
   };
 }
 
-export class LMSDKMetaDBModel extends Realm.Object<LMSDKMetaDBModel> {
+export class LMSDKMetaDBModelRO extends Realm.Object<LMSDKMetaDBModelRO> {
   dataLayerVersion?: string | null;
   coreVersion?: string | null;
-  severity?: string | null;
 
   static schema: Realm.ObjectSchema = {
     name: "LMSDKMetaDBModel",
@@ -26,20 +26,23 @@ export class LMSDKMetaDBModel extends Realm.Object<LMSDKMetaDBModel> {
       coreVersion: OPTIONAL_STRING,
       severity: OPTIONAL_STRING,
     },
+    embedded: true,
   };
 }
 
-export class LMLogDBModel extends Realm.Object<LMLogDBModel> {
+export class LMLogDBModelRO extends Realm.Object<LMLogDBModelRO> {
   timestamp!: number;
-  stack_trace!: LMStackTraceDBModel;
-  sdk_meta?: LMSDKMetaDBModel | null;
+  stack_trace!: LMStackTraceDBModelRO;
+  sdk_meta?: LMSDKMetaDBModelRO | null;
+  severity?: string | null
 
   static schema: Realm.ObjectSchema = {
     name: "LMLogDBModel",
     properties: {
       timestamp: INT,
-      stack_trace: "LMStackTraceDBModel",
-      sdk_meta: "LMSDKMetaDBModel?",
+      stack_trace: LM_STACK_TRACE_RO,
+      sdk_meta: OPTIONAL_LMSDK_MetaDB_RO,
+      severity: OPTIONAL_STRING
     },
     primaryKey: "timestamp",
   };
