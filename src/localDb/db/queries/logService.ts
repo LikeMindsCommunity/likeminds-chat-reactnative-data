@@ -1,17 +1,29 @@
+import { Log } from "@likeminds.community/chat-js";
 import Db from "../db";
+import { convertToLMLogDBModel, convertToLMSDKMetaDBModel, convertToLMStackTraceDBModel } from "../ROConverter";
+import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../../../localDb/models/LogRO";
+import { LMClearLogsRequest } from "../../../localDb/models/requestModels/LMClearLogsRequest";
 
-export async function insertLog(insertLogRequest) {
+export async function insertLog(insertLogRequest: Log) {
     const realm = new Realm(Db.getInstance());
     try {
       realm.write(() => {
-        const stackTrace = realm.create("LMStackTraceDBModel", insertLogRequest.stackTrace);
-        const sdkMeta = insertLogRequest.sdkMeta ? realm.create("LMSDKMetaDBModel", insertLogRequest.sdkMeta) : null;
-        realm.create("LMLogDBModel", {
-          timestamp: insertLogRequest.timestamp,
-          stack_trace: stackTrace,
-          sdk_meta: sdkMeta,
-          severity: insertLogRequest.severity,
-        });
+
+        const stackTraceRO = convertToLMStackTraceDBModel(insertLogRequest?.stackTrace)
+        if (stackTraceRO) {
+          realm.create(LMStackTraceDBModelRO.schema.name, stackTraceRO, Realm.UpdateMode.All)
+        }
+
+        const sdkMetaRO = convertToLMSDKMetaDBModel(insertLogRequest?.sdkMeta)
+        if (sdkMetaRO) {
+          realm.create(LMSDKMetaDBModelRO.schema.name, sdkMetaRO, Realm.UpdateMode.All)
+        }
+
+        const errorLogRO = convertToLMLogDBModel(insertLogRequest, stackTraceRO, sdkMetaRO);
+        if (stackTraceRO && sdkMetaRO) {
+          let res = realm.create(LMLogDBModelRO.schema.name, errorLogRO, Realm.UpdateMode.All);
+          console.log(res?.sdk_meta, res?.stack_trace)
+        }
       });
     } finally {
       realm.close();
@@ -21,18 +33,19 @@ export async function insertLog(insertLogRequest) {
   export async function getLogs() {
     const realm = new Realm(Db.getInstance());
     try {
-      const logs = realm.objects("LMLogDBModel");
+      const logs = realm.objects(LMLogDBModelRO.schema.name);
+      console.log("log", logs[0])
       return JSON.parse(JSON.stringify(logs));
     } finally {
       realm.close();
     }
   }
   
-  export async function clearLogs(clearLogsRequest) {
+  export async function clearLogs(clearLogsRequest: LMClearLogsRequest) {
     const realm = new Realm(Db.getInstance());
     try {
       realm.write(() => {
-        const logsToDelete = realm.objects("LMLogDBModel").filtered(`timestamp < ${clearLogsRequest.timestamp}`);
+        const logsToDelete = realm.objects(LMLogDBModelRO.schema.name).filtered(`timestamp < ${clearLogsRequest.timestamp}`);
         realm.delete(logsToDelete);
       });
     } finally {

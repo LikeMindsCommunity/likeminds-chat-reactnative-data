@@ -55,6 +55,9 @@ export const OPTIONAL_LIST_COMMUNITY_RO = "CommunityRO[]?";
 export const LIST_POLL_RO = "PollRO[]";
 export const LIST_ATTACHMENT_RO = "AttachmentRO[]";
 export const OPTIONAL_REPLY_CONVERSATION_RO = "ConversationRO?";
+export const OPTIONAL_LMSDK_MetaDB_RO = "LMSDKMetaDBModel?"
+export const OPTIONAL_LM_STACK_TRACE_RO = "LMStackTraceDBModel?";
+export const LM_STACK_TRACE_RO = "LMStackTraceDBModel";
 
 // others
 export const ID = "id";

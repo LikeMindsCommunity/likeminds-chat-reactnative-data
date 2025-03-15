@@ -166,14 +166,16 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks, Log } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
 import DBLibrary from "./core/services/networkLibrary";
 import { ChatroomRO } from "./localDb/models/ChatroomRO";
-import { LMInitiateLoggerRequest } from "./shared/responseModels/InitiateLoggerRequest";
-import { LMChatLogger } from "./core/services/LMChatLogger";
+import LMInitiateLoggerRequest from "./shared/responseModels/LMInitiateLoggerRequest";
+import { clearLogs, getLogs, insertLog } from "./localDb/db/queries/logService";
+import { LMClearLogsRequest } from "./localDb/models/requestModels/LMClearLogsRequest";
+import LMChatLogger from "./pages/errorLogger/LMChatLogger";
 
 class LMChatClient {
   private static versionCode: number | null = null;
@@ -263,13 +265,10 @@ class LMChatClient {
       xSdkSource: "chat",
       excludedConversationStates:[]
     });
+    
     if (this.initiateLoggerRequest) {
-      LMChatLogger.initialise(this.initiateLoggerRequest);
-
-      if (this.initiateLoggerRequest) {
-        LMChatLogger.initialise(this.initiateLoggerRequest);
-      }
-  }
+      LMChatLogger.initialize(this.initiateLoggerRequest);
+    }
     setFilterConversationState(this.filterConversationState  ?? [] );
 
     const lmChatClient = new LMChatClient();
@@ -946,6 +945,18 @@ class LMChatClient {
   // Method to get user schema
   async getUserSchema() {
     return getUserSchema();
+  }
+
+  async insertLog(request: Log) {
+    return insertLog(request)
+  }
+
+  async getLogs() {
+    return getLogs()
+  }
+
+  async clearLogs(request: LMClearLogsRequest) {
+    clearLogs(request)
   }
 
   // Method to set user schema
