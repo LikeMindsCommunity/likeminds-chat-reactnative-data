@@ -29,6 +29,8 @@ import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { ConversationState } from "src/enums";
 import { WidgetRO } from "../models/WidgetRO";
 import { Widget } from "../../shared/responseModels/Widget";
+import { LMSDKMeta, LMSeverity, LMStackTrace, Log } from "@likeminds.community/chat-js";
+import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../models/LogRO";
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
 export const convertToAppConfigRO = (): AppConfigRO => {
@@ -548,3 +550,30 @@ export const convertToChatroomRO = (
 
   return chatroomRO;
 };
+
+export const convertToLMStackTraceDBModel = (LMStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
+  return {
+    exception: LMStackTrace?.exception?.toString(),
+    trace: LMStackTrace?.trace?.toString(),
+    ...dummyKeys(LMStackTrace)
+  }
+}
+
+export const convertToLMSDKMetaDBModel = (LMSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
+  return {
+    dataLayerVersion: LMSDKMeta?.dataLayerVersion?.toString(),
+    coreVersion: LMSDKMeta?.coreVersion?.toString(),
+    ...dummyKeys(LMSDKMeta)
+  }
+}
+
+export const convertToLMLogDBModel = (log: Log, LMStackTrace: LMStackTraceDBModelRO, LMSDKMeta: LMSDKMetaDBModelRO): LMLogDBModelRO => {
+  return {
+    stack_trace: LMStackTrace,
+    sdk_meta: LMSDKMeta,
+    severity: (log?.severity as LMSeverity)?.toString(),
+    timestamp: Date.now(),
+    ...dummyKeys(log)
+  }
+}
+
