@@ -1,4 +1,4 @@
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSeverity } from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
@@ -7,6 +7,7 @@ import {
 } from "@likeminds.community/chat-js/dist/pages/search/types";
 import { SearchChatroomResponse } from "./responseModels/SearchChatroomResponse";
 import { SearchConversationResponse } from "./responseModels/SearchConversationResponse";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 class SearchClient {
   async searchChatroom(
@@ -19,6 +20,11 @@ class SearchClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchChatroomResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<SearchChatroomResponse>(
         null,
         error.message || "An error occured",
@@ -41,6 +47,11 @@ class SearchClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<SearchConversationResponse>(
         null,
         error.message || "An error occured",

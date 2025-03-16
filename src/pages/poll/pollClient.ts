@@ -1,4 +1,4 @@
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSeverity } from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
@@ -11,6 +11,7 @@ import { PostPollConversationResponse } from "./responseModels/PostPollConversat
 import { GetPollUsersResponse } from "./responseModels/GetPollUserResponse";
 import { AddPollResponse } from "./responseModels/AddPollResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 class PollClient {
   async postPollConversation(
@@ -29,6 +30,11 @@ class PollClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<PostPollConversationResponse>(
         null,
         error.message || "An error occured",
@@ -47,6 +53,11 @@ class PollClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetPollUsersResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetPollUsersResponse>(
         null,
         error.message || "An error occured",
@@ -65,6 +76,11 @@ class PollClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<AddPollResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<AddPollResponse>(
         null,
         error.message || "An error occured",
@@ -82,6 +98,11 @@ class PollClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",

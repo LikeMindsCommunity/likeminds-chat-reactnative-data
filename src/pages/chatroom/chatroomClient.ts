@@ -30,7 +30,7 @@ import { GetConversationsResponse } from "./responseModels/GetConversationsRespo
 import { PutMultimediaResponse } from "./responseModels/PutMultimediaResponse";
 import { DecodeUrlResponse } from "./responseModels/DecodeUrlResponse";
 import { ModelConverter } from "src/utils/ModelConverter";
-import DLClient, { GetAIChatbotsResponse } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSeverity } from "@likeminds.community/chat-js";
 import { Nothing } from "src/shared/responseModels/Nothing";
 import { PostConversationsResponse } from "./responseModels/PostConversationResponse";
 import { EditConversationResponse } from "./responseModels/EditConversationResponse";
@@ -42,6 +42,7 @@ import { GetChatroomResponse } from "./responseModels/GetChatroomResponse";
 import { updateChatroomTopic } from "src/localDb/db/queries/chatroom";
 import SyncChatroomRequest from "src/sync/model/syncChatroomRequest";
 import SyncClient from "src/sync/api";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 
 class ChatroomClient {
@@ -54,6 +55,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occurred",
@@ -90,6 +96,11 @@ class ChatroomClient {
         return new LMResponse<GetChatroomResponse>(responseData, null, true);
       })
       .catch((error) => {
+        LMChatLogger.handleException(
+          error,
+          error?.stack,
+          LMSeverity.INFO
+        )
         return new LMResponse<GetChatroomResponse>(
           null,
           error.message || "An error occurred",
@@ -107,6 +118,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -129,6 +145,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<ShareChatroomUrlResponse>(
         null,
         error.message || "An error occured",
@@ -152,6 +173,11 @@ class ChatroomClient {
       );
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -170,6 +196,11 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetTaggingListResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetTaggingListResponse>(
         null,
         error.message || "An error occured",
@@ -187,6 +218,11 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetAIChatbotsResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetAIChatbotsResponse>(
         null,
         error.message || "An error occured",
@@ -209,6 +245,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetConversationsResponse>(
         null,
         error.message || "An error occured",
@@ -231,6 +272,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<PostConversationsResponse>(
         null,
         error.message || "An error occured",
@@ -261,6 +307,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<EditConversationResponse>(
         null,
         error.message || "An error occured",
@@ -283,6 +334,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<DeleteConversationsResponse>(
         null,
         error.message || "An error occured",
@@ -300,6 +356,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -317,6 +378,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -336,6 +402,11 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DecodeUrlResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<DecodeUrlResponse>(
         null,
         error.message || "An error occured",
@@ -354,6 +425,11 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetReportTagsResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetReportTagsResponse>(
         null,
         error.message || "An error occured",
@@ -371,6 +447,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -388,6 +469,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -405,6 +491,11 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -427,6 +518,11 @@ class ChatroomClient {
         true
       );
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<FetchConversationResponse>(
         null,
         error.message || "An error occured",
@@ -439,7 +535,16 @@ class ChatroomClient {
     chatroomSeen: ChatroomSeenWithUuid,
     dlClient: DLClient
   ) {
-    return await dlClient.chatroomSeenWithUuid(chatroomSeen);
+    try {
+      return await dlClient.chatroomSeenWithUuid(chatroomSeen);
+    } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
+      return null;
+    }
   }
 
 
@@ -449,26 +554,44 @@ class ChatroomClient {
     maxTimeStamp: number,
     dlClient: DLClient
   ) {
-    const syncClient = new SyncClient();
-    const chatroomTypes = [0, 7, 10];
-    const res = await syncClient.syncChatroom(
-      SyncChatroomRequest.builder()
-        .setPage(page)
-        .setPageSize(50)
-        .setChatroomTypes(chatroomTypes)
-        .setMaxTimestamp(maxTimeStamp)
-        .setMinTimestamp(minTimeStamp)
-        .build(),
-      dlClient
-    );
-    return res;
+    try {
+      const syncClient = new SyncClient();
+      const chatroomTypes = [0, 7, 10];
+      const res = await syncClient.syncChatroom(
+        SyncChatroomRequest.builder()
+          .setPage(page)
+          .setPageSize(50)
+          .setChatroomTypes(chatroomTypes)
+          .setMaxTimestamp(maxTimeStamp)
+          .setMinTimestamp(minTimeStamp)
+          .build(),
+        dlClient
+      );
+      return res;
+    } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
+      return null
+    }
   }
 
   async paginatedSyncAPI(page: number, dlClient: DLClient) {
-    const maxTimeStampNow = Math.floor(Date.now() / 1000);
-    const val: any = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
-    const DB_RESPONSE = val?.data;
-    return { dbRes: DB_RESPONSE };
+    try {
+      const maxTimeStampNow = Math.floor(Date.now() / 1000);
+      const val: any = await this.syncChatroomAPI(page, 0, maxTimeStampNow, dlClient);
+      const DB_RESPONSE = val?.data;
+      return { dbRes: DB_RESPONSE };
+    } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
+      return { dbRes: null };
+    }
   }
 
   async getUnseenCount(dlClient: DLClient) {
@@ -482,6 +605,11 @@ class ChatroomClient {
       }
       return count;
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       console.log(error);
     }
   }

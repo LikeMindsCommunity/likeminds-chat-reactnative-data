@@ -1,4 +1,4 @@
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSeverity } from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import { HomeFeedResponse } from "./responseModels/HomeFeedResponse";
@@ -13,6 +13,7 @@ import { GetInvitesResponse } from "./responseModels/GetInvitesResponse";
 import { Nothing } from "src/shared/responseModels/Nothing";
 import { GetExploreTabCountResponse } from "./responseModels/GetExploreTabCountResponse";
 import { API } from "src/shared/constants/api.constant";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 class HomeFeedClient {
   async getExploreTabCount(
@@ -32,6 +33,11 @@ class HomeFeedClient {
         );
       })
       .catch((error) => {
+        LMChatLogger.handleException(
+          error,
+          error?.stack,
+          LMSeverity.INFO
+        )
         return new LMResponse<GetExploreTabCountResponse>(
           null,
           error.message || "An error occurred",
@@ -50,6 +56,11 @@ class HomeFeedClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<HomeFeedResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<HomeFeedResponse>(
         null,
         error.message || "An error occured",
@@ -68,6 +79,11 @@ class HomeFeedClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetInvitesResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<GetInvitesResponse>(
         null,
         error.message || "An error occured",
@@ -85,6 +101,11 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -102,6 +123,11 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -119,6 +145,11 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -131,6 +162,11 @@ class HomeFeedClient {
     try {
       return dlClient.fbInstance();
     } catch (error) {
+      LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return error.message;
     }
   }
@@ -139,6 +175,11 @@ class HomeFeedClient {
     try {
       return dlClient.homeFeedListener(callback, route);
     } catch (error) {
+      LMChatLogger.handleException(
+        error,
+        error?.stack,
+        LMSeverity.INFO
+      )
       return error.message;
     }
   }
