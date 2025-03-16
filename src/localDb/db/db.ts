@@ -8,6 +8,7 @@ import { LinkRO } from "../models/LinkRO";
 import { MemberRO } from "../models/MemberRO";
 import { PollRO } from "../models/PollRO";
 import { SDKClientInfoRO } from "../models/SDKClientInfoRO";
+import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../models/LogRO"
 import { UserRO } from "../models/UserRO";
 import { AttachmentMetaRO } from "../models/AttachmentMetaRO";
 import { AttachmentRO } from "../models/AttachmentRO";
@@ -51,6 +52,9 @@ export default class Db {
       TokenSchemaRO,
       FilterConversationStateRO,
       WidgetRO,
+      LMLogDBModelRO,
+      LMSDKMetaDBModelRO,
+      LMStackTraceDBModelRO
     ], // Update with your actual models
     schemaVersion: DB_SCHEMA_VERSION, // Increment when you change the schema
     onMigration: realmDbMigration,

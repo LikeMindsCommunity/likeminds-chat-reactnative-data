@@ -166,7 +166,7 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks, Log } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks, LMSeverity, LMStackTrace, Log } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
@@ -238,7 +238,7 @@ class LMChatClient {
     this.filterConversationState = filterConversationState;
     return this;
   }
-  private initiateLoggerRequest: LMInitiateLoggerRequest | null = null;
+
 
   static setInitiateLoggerRequest(initiateLoggerRequest: LMInitiateLoggerRequest): typeof LMChatClient {
     this.initiateLoggerRequest = initiateLoggerRequest;
@@ -967,6 +967,19 @@ class LMChatClient {
   async setChatroomIdWithAIChatbot(chatroomID: string): Promise<LMResponse<any>> {
     return setChatroomIdWithAIChatbot(chatroomID);
   }
+
+  getErrorLoggerInstance() {
+    return LMChatLogger.getInstance();
+  }
+
+  async flushLogs() {
+    return LMChatLogger.flushLogs(LMChatClient.dlClient);
+  }
+
+  async handleException(exception: Error, stackTrace: LMStackTrace, severity: LMSeverity) {
+    return LMChatLogger.handleException(exception, stackTrace, severity);
+  }
+
   
 }
 

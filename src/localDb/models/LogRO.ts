@@ -6,7 +6,7 @@ export class LMStackTraceDBModelRO extends Realm.Object<LMStackTraceDBModelRO> {
   trace!: string;
 
   static schema: Realm.ObjectSchema = {
-    name: "LMStackTraceDBModel",
+    name: "LMStackTraceDBModelRO",
     properties: {
       exception: STRING,
       trace: STRING,
@@ -20,7 +20,7 @@ export class LMSDKMetaDBModelRO extends Realm.Object<LMSDKMetaDBModelRO> {
   coreVersion?: string | null;
 
   static schema: Realm.ObjectSchema = {
-    name: "LMSDKMetaDBModel",
+    name: "LMSDKMetaDBModelRO",
     properties: {
       dataLayerVersion: OPTIONAL_STRING,
       coreVersion: OPTIONAL_STRING,
@@ -37,7 +37,7 @@ export class LMLogDBModelRO extends Realm.Object<LMLogDBModelRO> {
   severity?: string | null
 
   static schema: Realm.ObjectSchema = {
-    name: "LMLogDBModel",
+    name: "LMLogDBModelRO",
     properties: {
       timestamp: INT,
       stack_trace: LM_STACK_TRACE_RO,

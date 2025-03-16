@@ -5,51 +5,45 @@ import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../..
 import { LMClearLogsRequest } from "../../../localDb/models/requestModels/LMClearLogsRequest";
 
 export async function insertLog(insertLogRequest: Log) {
-    const realm = new Realm(Db.getInstance());
-    try {
-      realm.write(() => {
+  const realm = new Realm(Db.getInstance());
+  try {
+    realm.write(() => {
+      const stackTraceRO = insertLogRequest?.stackTrace ? convertToLMStackTraceDBModel(insertLogRequest.stackTrace) : null;
+      const sdkMetaRO = insertLogRequest?.sdkMeta ? convertToLMSDKMetaDBModel(insertLogRequest.sdkMeta) : null;
 
-        const stackTraceRO = convertToLMStackTraceDBModel(insertLogRequest?.stackTrace)
-        if (stackTraceRO) {
-          realm.create(LMStackTraceDBModelRO.schema.name, stackTraceRO, Realm.UpdateMode.All)
-        }
 
-        const sdkMetaRO = convertToLMSDKMetaDBModel(insertLogRequest?.sdkMeta)
-        if (sdkMetaRO) {
-          realm.create(LMSDKMetaDBModelRO.schema.name, sdkMetaRO, Realm.UpdateMode.All)
-        }
+      // Directly assign embedded objects while creating the parent object
+      const errorLogRO = {
+        ...convertToLMLogDBModel(insertLogRequest, stackTraceRO, sdkMetaRO),
+      };
 
-        const errorLogRO = convertToLMLogDBModel(insertLogRequest, stackTraceRO, sdkMetaRO);
-        if (stackTraceRO && sdkMetaRO) {
-          let res = realm.create(LMLogDBModelRO.schema.name, errorLogRO, Realm.UpdateMode.All);
-          console.log(res?.sdk_meta, res?.stack_trace)
-        }
-      });
-    } finally {
-      realm.close();
-    }
+      let res = realm.create(LMLogDBModelRO.schema.name, errorLogRO, Realm.UpdateMode.All);
+      console.log(res?.sdk_meta, res?.stack_trace);
+    });
+  } finally {
+    realm.close();
   }
-  
-  export async function getLogs() {
-    const realm = new Realm(Db.getInstance());
-    try {
-      const logs = realm.objects(LMLogDBModelRO.schema.name);
-      console.log("log", logs[0])
-      return JSON.parse(JSON.stringify(logs));
-    } finally {
-      realm.close();
-    }
+}
+
+export async function getLogs() {
+  const realm = new Realm(Db.getInstance());
+  try {
+    const logs = realm.objects(LMLogDBModelRO.schema.name);
+    console.log("log", logs[0])
+    return JSON.parse(JSON.stringify(logs));
+  } finally {
+    realm.close();
   }
-  
-  export async function clearLogs(clearLogsRequest: LMClearLogsRequest) {
-    const realm = new Realm(Db.getInstance());
-    try {
-      realm.write(() => {
-        const logsToDelete = realm.objects(LMLogDBModelRO.schema.name).filtered(`timestamp < ${clearLogsRequest.timestamp}`);
-        realm.delete(logsToDelete);
-      });
-    } finally {
-      realm.close();
-    }
+}
+
+export async function clearLogs(clearLogsRequest: LMClearLogsRequest) {
+  const realm = new Realm(Db.getInstance());
+  try {
+    realm.write(() => {
+      const logsToDelete = realm.objects(LMLogDBModelRO.schema.name).filtered(`timestamp < ${clearLogsRequest.timestamp}`);
+      realm.delete(logsToDelete);
+    });
+  } finally {
+    realm.close();
   }
-  
+}

@@ -24,7 +24,7 @@ class LMChatLogger {
         }
     }
 
-    static getInstance() {
+    static getInstance(): LMChatLogger {
         return this.instance
     }
 
@@ -55,27 +55,35 @@ class LMChatLogger {
 
     static async flushLogs(dlClient: DLClient) {
         if (!this.instance) return;
-    
+
         const currentTimestamp = Date.now();
         const logs = await getLogs();
         if (!logs.length) return;
-    
+
         const deviceDetails = await getDeviceDetails();
-        const logsWithDevice = logs.map(log => ({ ...log, deviceDetails }));
-    
-        try {
-          // Use sdkConfig from LMChatLogger's request
-          const sdkConfig = this.instance.request.sdkConfig;
-          const pushLogsResponse = await dlClient?.pushLogs({ logs: logsWithDevice });
-    
-          console.log("Push Logs Response:", pushLogsResponse);
-          if (pushLogsResponse?.success) {
-            await clearLogs({timestamp: Date.now()?.toString()});
-          }
-        } catch (error) {
-          console.error("Error in flushLogs:", error);
+        const parsedDeviceDetails = {
+            os: deviceDetails?.os,
+            version_os: deviceDetails?.versionOS,
+            device_name: deviceDetails?.deviceName,
+            screen_height: deviceDetails?.screenHeight,
+            screen_width: deviceDetails?.screenWidth,
+            wifi: deviceDetails?.wifi ?? false
         }
-      }
+        const logsWithDevice = logs.map(log => ({ ...log, device_meta: parsedDeviceDetails }));
+
+        try {
+            // Use sdkConfig from LMChatLogger's request
+
+            const pushLogsResponse = await dlClient?.pushLogs({ logs: logsWithDevice });
+
+            console.log("Push Logs Response:", pushLogsResponse);
+            if (pushLogsResponse?.success) {
+                await clearLogs({ timestamp: Date.now()?.toString() });
+            }
+        } catch (error) {
+            console.error("Error in flushLogs:", error);
+        }
+    }
 
 
 }
