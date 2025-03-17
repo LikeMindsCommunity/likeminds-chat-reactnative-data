@@ -1,4 +1,6 @@
-import { LMSeverity, LMStackTrace, LMSDKMeta, LMDeviceDetails}  from "@likeminds.community/chat-js"; 
+import { LMSeverity } from "../../../enums/LMSeverity";
+import { LMSDKMeta } from "../../../shared/responseModels/LMSDKMeta";
+import { LMStackTrace } from "../../../shared/responseModels/LMStackTrace";
 
 export default interface LMInitiateLoggerRequest {
     sdkConfig: LMSDKMeta;

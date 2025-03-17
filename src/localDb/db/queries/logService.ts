@@ -1,4 +1,4 @@
-import { Log } from "@likeminds.community/chat-js";
+import { Log } from "../../../shared/responseModels/Log";
 import Db from "../db";
 import { convertToLMLogDBModel, convertToLMSDKMetaDBModel, convertToLMStackTraceDBModel } from "../ROConverter";
 import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../../../localDb/models/LogRO";

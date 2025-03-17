@@ -168,7 +168,7 @@ import { GetConversationsRequest } from "./localDb/models/requestModels/GetConve
 import { GetConversationNotificationUnreadResponse } from "./pages/chatroom/responseModels/GetConversationNotificationUnreadResponse";
 import { getUserSchema, setUserSchema } from "./localDb/db/queries/userSchema";
 import { setFilterConversationState } from "./localDb/db/queries/filterConversationState";
-import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks, LMSeverity, LMStackTrace, Log } from "@likeminds.community/chat-js";
+import DLClient, { GetAIChatbotsResponse, LMSDKCallbacks } from "@likeminds.community/chat-js";
 import { AddMemberToCohort } from "./pages/user/responseModels/AddMemberToCohort";
 import RNInitiateUserClient from "./initiateUser/RNInitiateUserClient";
 import NetworkLibrary from "@likeminds.community/chat-js/dist/core/services/networklibrary";
@@ -177,11 +177,16 @@ import { ChatroomRO } from "./localDb/models/ChatroomRO";
 import { Attachment } from "./shared/responseModels/Attachment";
 import UpdateConversationDataRequest from "./localDb/models/requestModels/UpdateConversationDataRequest";
 import UpdateAttachmentRequest from "./localDb/models/requestModels/UpdateAttachmentRequest";
-import LMInitiateLoggerRequest from "./shared/responseModels/LMInitiateLoggerRequest";
 import { clearLogs, getLogs, insertLog } from "./localDb/db/queries/logService";
 import { LMClearLogsRequest } from "./localDb/models/requestModels/LMClearLogsRequest";
 import LMChatLogger from "./pages/errorLogger/LMChatLogger";
-
+import { LMSeverity } from "./enums/LMSeverity";
+import LMInitiateLoggerRequest from "./pages/errorLogger/requestModels/LMInitiateLoggerRequest";
+import { LMStackTrace } from "./shared/responseModels/LMStackTrace";
+import { Log } from "./shared/responseModels/Log";
+import { LMDeviceDetails } from "./shared/responseModels/LMDeviceDetails";
+import { LMSDKMeta } from "./shared/responseModels/LMSDKMeta";
+import { LMPushLogsRequest } from "./pages/errorLogger/requestModels/LMPushLogsRequest"
 class LMChatClient {
   private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;
@@ -1008,4 +1013,9 @@ export {
   LMSDKCallbacks,
   InitUserWithUuid,
   ValidateUser,
+  LMDeviceDetails,
+  LMPushLogsRequest,
+  LMSDKMeta,
+  LMSeverity,
+  LMStackTrace
 };

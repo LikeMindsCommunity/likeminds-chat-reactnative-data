@@ -1,10 +1,8 @@
+import { LMStackTrace } from "../../shared/responseModels/LMStackTrace";
+import { LMSeverity } from "../../enums/LMSeverity";
 import { clearLogs, getLogs, insertLog } from "../../localDb/db/queries/logService";
-import DLClient from "@likeminds.community/chat-js";
-import LMInitiateLoggerRequest from "../../shared/responseModels/LMInitiateLoggerRequest";
-import { LMDeviceDetails, LMSeverity, LMStackTrace } from "@likeminds.community/chat-js"
-import { Base } from "@likeminds.community/chat-js/dist/base";
-import { getDevice } from "react-native-device-info";
 import getDeviceDetails from "../../utils/getDeviceDetails";
+import LMInitiateLoggerRequest from "./requestModels/LMInitiateLoggerRequest";
 
 class LMChatLogger {
     static instance = null;
@@ -51,7 +49,7 @@ class LMChatLogger {
 
     }
 
-    static async flushLogs(dlClient: DLClient) {
+    static async flushLogs(dlClient) {
         if (!this.instance) return;
 
         const logs = await getLogs();
