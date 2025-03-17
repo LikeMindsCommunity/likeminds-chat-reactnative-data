@@ -551,26 +551,26 @@ export const convertToChatroomRO = (
   return chatroomRO;
 };
 
-export const convertToLMStackTraceDBModel = (LMStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
+export const convertToLMStackTraceDBModel = (lmStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
   return {
-    exception: LMStackTrace?.exception?.toString(),
-    trace: LMStackTrace?.trace?.toString(),
-    ...dummyKeys(LMStackTrace)
+    exception: lmStackTrace?.exception?.toString(),
+    trace: lmStackTrace?.trace?.toString(),
+    ...dummyKeys(lmStackTrace)
   }
 }
 
-export const convertToLMSDKMetaDBModel = (LMSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
+export const convertToLMSDKMetaDBModel = (lmSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
   return {
-    dataLayerVersion: LMSDKMeta?.dataLayerVersion?.toString(),
-    coreVersion: LMSDKMeta?.coreVersion?.toString(),
-    ...dummyKeys(LMSDKMeta)
+    dataLayerVersion: lmSDKMeta?.dataLayerVersion?.toString(),
+    coreVersion: lmSDKMeta?.coreVersion?.toString(),
+    ...dummyKeys(lmSDKMeta)
   }
 }
 
-export const convertToLMLogDBModel = (log: Log, LMStackTrace: LMStackTraceDBModelRO, LMSDKMeta: LMSDKMetaDBModelRO): LMLogDBModelRO => {
+export const convertToLMLogDBModel = (log: Log, lmStackTrace: LMStackTraceDBModelRO, lmSDKMeta: LMSDKMetaDBModelRO): LMLogDBModelRO => {
   return {
-    stack_trace: LMStackTrace,
-    sdk_meta: LMSDKMeta,
+    stack_trace: lmStackTrace,
+    sdk_meta: lmSDKMeta,
     severity: (log?.severity as LMSeverity)?.toString(),
     timestamp: Date.now(),
     ...dummyKeys(log)
