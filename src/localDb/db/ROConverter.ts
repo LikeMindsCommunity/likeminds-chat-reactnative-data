@@ -567,10 +567,10 @@ export const convertToLMSDKMetaDBModel = (lmSDKMeta: LMSDKMeta): LMSDKMetaDBMode
   }
 }
 
-export const convertToLMLogDBModel = (log: Log, LMStackTrace: LMStackTraceDBModelRO, LMSDKMeta: LMSDKMetaDBModelRO): LMLogDBModelRO => {
+export const convertToLMLogDBModel = (log: Log, lmStackTrace: LMStackTraceDBModelRO, lmSDKMeta: LMSDKMetaDBModelRO): LMLogDBModelRO => {
   return {
-    stack_trace: LMStackTrace,
-    sdk_meta: LMSDKMeta,
+    stack_trace: lmStackTrace,
+    sdk_meta: lmSDKMeta,
     severity: (log?.severity as LMSeverity)?.toString(),
     timestamp: Date.now(),
     ...dummyKeys(log)
