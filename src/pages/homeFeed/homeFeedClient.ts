@@ -36,7 +36,7 @@ class HomeFeedClient {
         LMChatLogger.handleException(
           error,
           error?.stack,
-          LMSeverity.INFO
+          LMSeverity.ERROR
         )
         return new LMResponse<GetExploreTabCountResponse>(
           null,
@@ -59,7 +59,7 @@ class HomeFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<HomeFeedResponse>(
         null,
@@ -82,7 +82,7 @@ class HomeFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetInvitesResponse>(
         null,
@@ -104,7 +104,7 @@ class HomeFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -126,7 +126,7 @@ class HomeFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -148,7 +148,7 @@ class HomeFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -165,7 +165,7 @@ class HomeFeedClient {
       LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return error.message;
     }
@@ -178,7 +178,7 @@ class HomeFeedClient {
       LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return error.message;
     }

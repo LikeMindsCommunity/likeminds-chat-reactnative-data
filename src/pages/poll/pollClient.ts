@@ -33,7 +33,7 @@ class PollClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<PostPollConversationResponse>(
         null,
@@ -56,7 +56,7 @@ class PollClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetPollUsersResponse>(
         null,
@@ -79,7 +79,7 @@ class PollClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<AddPollResponse>(
         null,
@@ -101,7 +101,7 @@ class PollClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,

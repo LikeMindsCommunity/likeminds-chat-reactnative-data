@@ -19,7 +19,7 @@ class ExploreFeedClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<ExploreFeedResponse>(
         null,

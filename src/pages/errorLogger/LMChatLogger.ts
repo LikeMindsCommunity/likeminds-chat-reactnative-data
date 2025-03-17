@@ -77,8 +77,6 @@ class LMChatLogger {
             console.error("Error in flushLogs:", error);
         }
     }
-
-
 }
 
 export default LMChatLogger;

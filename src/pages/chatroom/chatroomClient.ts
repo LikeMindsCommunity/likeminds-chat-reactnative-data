@@ -58,7 +58,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -99,7 +99,7 @@ class ChatroomClient {
         LMChatLogger.handleException(
           error,
           error?.stack,
-          LMSeverity.INFO
+          LMSeverity.ERROR
         )
         return new LMResponse<GetChatroomResponse>(
           null,
@@ -121,7 +121,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -148,7 +148,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<ShareChatroomUrlResponse>(
         null,
@@ -176,7 +176,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -199,7 +199,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetTaggingListResponse>(
         null,
@@ -221,7 +221,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetAIChatbotsResponse>(
         null,
@@ -248,7 +248,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetConversationsResponse>(
         null,
@@ -275,7 +275,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<PostConversationsResponse>(
         null,
@@ -310,7 +310,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<EditConversationResponse>(
         null,
@@ -337,7 +337,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<DeleteConversationsResponse>(
         null,
@@ -359,7 +359,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -381,7 +381,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -405,7 +405,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<DecodeUrlResponse>(
         null,
@@ -428,7 +428,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetReportTagsResponse>(
         null,
@@ -450,7 +450,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -472,7 +472,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -494,7 +494,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -521,7 +521,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<FetchConversationResponse>(
         null,
@@ -541,7 +541,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return null;
     }
@@ -572,7 +572,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return null
     }
@@ -588,7 +588,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return { dbRes: null };
     }
@@ -608,7 +608,7 @@ class ChatroomClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       console.log(error);
     }

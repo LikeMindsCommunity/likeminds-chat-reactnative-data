@@ -41,7 +41,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -63,7 +63,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,
@@ -92,7 +92,7 @@ class UserClient {
         LMChatLogger.handleException(
           error,
           error?.stack,
-          LMSeverity.INFO
+          LMSeverity.ERROR
         )
         return new LMResponse<Nothing>(
           null,
@@ -114,7 +114,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetMemberStateResponse>(
         null,
@@ -137,7 +137,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<SearchMembersResponse>(
         null,
@@ -160,7 +160,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetAllMembersResponse>(
         null,
@@ -182,7 +182,7 @@ class UserClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
         null,

@@ -23,7 +23,7 @@ class SearchClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<SearchChatroomResponse>(
         null,
@@ -50,7 +50,7 @@ class SearchClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<SearchConversationResponse>(
         null,

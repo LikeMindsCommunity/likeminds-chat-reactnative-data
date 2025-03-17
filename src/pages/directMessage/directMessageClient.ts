@@ -35,7 +35,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<FetchDMResponse>(
         null,
@@ -58,7 +58,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<DMStatusResponse>(
         null,
@@ -95,7 +95,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<SendDMRequestResponse>(
         null,
@@ -118,7 +118,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<BlockDMRequestResponse>(
         null,
@@ -140,7 +140,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<CheckDMTabResponse>(
         null,
@@ -163,7 +163,7 @@ class DirectMessageClient {
       await LMChatLogger.handleException(
         error,
         error?.stack,
-        LMSeverity.INFO
+        LMSeverity.ERROR
       )
       return new LMResponse<GetDMFeedResponse>(
         null,
