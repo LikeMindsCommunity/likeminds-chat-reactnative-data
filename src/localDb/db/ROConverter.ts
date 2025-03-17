@@ -551,11 +551,11 @@ export const convertToChatroomRO = (
   return chatroomRO;
 };
 
-export const convertToLMStackTraceDBModel = (LMStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
+export const convertToLMStackTraceDBModel = (lmStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
   return {
-    exception: LMStackTrace?.exception?.toString(),
-    trace: LMStackTrace?.trace?.toString(),
-    ...dummyKeys(LMStackTrace)
+    exception: lmStackTrace?.exception?.toString(),
+    trace: lmStackTrace?.trace?.toString(),
+    ...dummyKeys(lmStackTrace)
   }
 }
 
