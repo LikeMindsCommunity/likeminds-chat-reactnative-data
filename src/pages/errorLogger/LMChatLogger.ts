@@ -34,19 +34,17 @@ class LMChatLogger {
         if (this.initiateLoggerRequest?.logLevel > severity) return;
 
         if (this.initiateLoggerRequest?.shareLogsWithLM) {
-            console.log("inserting log");
             await insertLog({
                 timestamp: Date.now(),
                 deviceMeta: await getDeviceDetails(),
                 stackTrace: stackTrace,
                 sdkMeta: {
-                    coreVersion: "1.9.0",
-                    dataLayerVersion: "1.9.0",
+                    coreVersion: this.initiateLoggerRequest?.sdkConfig?.coreVersion,
+                    dataLayerVersion: this.initiateLoggerRequest?.sdkConfig?.dataLayerVersion
                 },
                 severity: severity
             })
 
-            console.log("calling error handler")
             this.initiateLoggerRequest?.onErrorHandler(exception?.message, stackTrace)
         }
 
@@ -56,7 +54,6 @@ class LMChatLogger {
     static async flushLogs(dlClient: DLClient) {
         if (!this.instance) return;
 
-        const currentTimestamp = Date.now();
         const logs = await getLogs();
         if (!logs.length) return;
 
@@ -72,11 +69,7 @@ class LMChatLogger {
         const logsWithDevice = logs.map(log => ({ ...log, device_meta: parsedDeviceDetails }));
 
         try {
-            // Use sdkConfig from LMChatLogger's request
-
             const pushLogsResponse = await dlClient?.pushLogs({ logs: logsWithDevice });
-
-            console.log("Push Logs Response:", pushLogsResponse);
             if (pushLogsResponse?.success) {
                 await clearLogs({ timestamp: Date.now()?.toString() });
             }
