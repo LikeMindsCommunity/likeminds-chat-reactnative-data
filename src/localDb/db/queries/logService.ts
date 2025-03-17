@@ -18,7 +18,6 @@ export async function insertLog(insertLogRequest: Log) {
       };
 
       let res = realm.create(LMLogDBModelRO.schema.name, errorLogRO, Realm.UpdateMode.All);
-      console.log(res?.sdk_meta, res?.stack_trace);
     });
   } finally {
     realm.close();
@@ -29,7 +28,6 @@ export async function getLogs() {
   const realm = new Realm(Db.getInstance());
   try {
     const logs = realm.objects(LMLogDBModelRO.schema.name);
-    console.log("log", logs[0])
     return JSON.parse(JSON.stringify(logs));
   } finally {
     realm.close();
