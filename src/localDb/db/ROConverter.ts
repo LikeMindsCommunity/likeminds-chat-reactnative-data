@@ -559,11 +559,11 @@ export const convertToLMStackTraceDBModel = (lmStackTrace: LMStackTrace): LMStac
   }
 }
 
-export const convertToLMSDKMetaDBModel = (LMSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
+export const convertToLMSDKMetaDBModel = (lmSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
   return {
-    dataLayerVersion: LMSDKMeta?.dataLayerVersion?.toString(),
-    coreVersion: LMSDKMeta?.coreVersion?.toString(),
-    ...dummyKeys(LMSDKMeta)
+    dataLayerVersion: lmSDKMeta?.dataLayerVersion?.toString(),
+    coreVersion: lmSDKMeta?.coreVersion?.toString(),
+    ...dummyKeys(lmSDKMeta)
   }
 }
 
