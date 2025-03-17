@@ -10,15 +10,6 @@ const getDeviceDetails = async () => {
     const netInfo = await NetInfo.fetch();
     const wifi = netInfo.type === 'wifi';
 
-    console.log("returning", {
-        os,
-        versionOS,
-        deviceName,
-        screenHeight,
-        screenWidth,
-        wifi,
-    })
-
     return {
         os,
         versionOS,
