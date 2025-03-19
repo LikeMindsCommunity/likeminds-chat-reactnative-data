@@ -7,6 +7,7 @@ import { FilterConversationStateRO } from "../models/FilterConversationStateRO";
 import { TokenSchemaRO } from "../models/TokenSchemaRO";
 import { UserRO } from "../models/UserRO";
 import { AttachmentRO } from "../models/AttachmentRO";
+import { LMLogDBModelRO } from "../models/LogRO";
 
 export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
   let oldSchemaVersion = oldVersion.schemaVersion;
@@ -124,7 +125,10 @@ export const realmDbMigration = (oldVersion: Realm, newVersion: Realm) => {
     oldVersion._updateSchema(newVersion.schema);
     oldSchemaVersion++;
   }
+  if (oldSchemaVersion == 7) {
+    oldSchemaVersion++;
+  }
 };
 
 export const DB_SCHEMA_NAME = "likeminds-chat-sdk-rn";
-export const DB_SCHEMA_VERSION = 7;
+export const DB_SCHEMA_VERSION = 8;
