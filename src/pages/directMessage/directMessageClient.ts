@@ -9,7 +9,7 @@ import {
   CreateDMChatroomWithUuidRequest as CreateDMChatroomWithUuid,
   CANDMWithUuid,
 } from "@likeminds.community/chat-js/dist/pages/direct-message/types";
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSeverity } from "@likeminds.community/chat-js";
 import { FetchDMResponse } from "./responseModels/FetchDMResponse";
 import { DMStatusResponse } from "./responseModels/DMStatusResponse";
 import { SendDMRequestResponse } from "./responseModels/SendDMRequestResponse";
@@ -19,6 +19,7 @@ import { CreateDMChatroomResponse } from "./responseModels/CreateDMChatroomRespo
 import { BlockDMRequestResponse } from "./responseModels/BlockDMRequestResponse";
 import { GetDMFeedResponse } from "./responseModels/GetDMFeedResponse";
 import { CanDMFeedResponse } from "./responseModels/CanDMFeedResponse";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 class DirectMessageClient {
   async fetchDMFeed(
@@ -31,6 +32,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<FetchDMResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<FetchDMResponse>(
         null,
         error.message || "An error occured",
@@ -49,6 +58,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DMStatusResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<DMStatusResponse>(
         null,
         error.message || "An error occured",
@@ -81,6 +98,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SendDMRequestResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<SendDMRequestResponse>(
         null,
         error.message || "An error occured",
@@ -99,6 +124,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<BlockDMRequestResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<BlockDMRequestResponse>(
         null,
         error.message || "An error occured",
@@ -116,6 +149,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<CheckDMTabResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<CheckDMTabResponse>(
         null,
         error.message || "An error occured",
@@ -134,6 +175,14 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetDMFeedResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<GetDMFeedResponse>(
         null,
         error.message || "An error occured",
