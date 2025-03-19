@@ -43,8 +43,9 @@ class LMChatLogger {
                 severity: severity
             })
 
-            this.initiateLoggerRequest?.onErrorHandler(exception?.message, stackTrace)
         }
+        
+        this.initiateLoggerRequest?.onErrorHandler(exception?.message, stackTrace)
 
 
     }
