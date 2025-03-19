@@ -1,5 +1,4 @@
-import { LMStackTrace } from "../../shared/responseModels/LMStackTrace";
-import { LMSeverity } from "../../enums/LMSeverity";
+import { LMStackTrace, LMSeverity } from "@likeminds.community/chat-js"
 import { clearLogs, getLogs, insertLog } from "../../localDb/db/queries/logService";
 import getDeviceDetails from "../../utils/getDeviceDetails";
 import LMInitiateLoggerRequest from "./requestModels/LMInitiateLoggerRequest";
@@ -44,7 +43,6 @@ class LMChatLogger {
             })
 
         }
-        
         this.initiateLoggerRequest?.onErrorHandler(exception?.message, stackTrace)
 
 

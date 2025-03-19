@@ -180,13 +180,8 @@ import UpdateAttachmentRequest from "./localDb/models/requestModels/UpdateAttach
 import { clearLogs, getLogs, insertLog } from "./localDb/db/queries/logService";
 import { LMClearLogsRequest } from "./localDb/models/requestModels/LMClearLogsRequest";
 import LMChatLogger from "./pages/errorLogger/LMChatLogger";
-import { LMSeverity } from "./enums/LMSeverity";
 import LMInitiateLoggerRequest from "./pages/errorLogger/requestModels/LMInitiateLoggerRequest";
-import { LMStackTrace } from "./shared/responseModels/LMStackTrace";
-import { Log } from "./shared/responseModels/Log";
-import { LMDeviceDetails } from "./shared/responseModels/LMDeviceDetails";
-import { LMSDKMeta } from "./shared/responseModels/LMSDKMeta";
-import { LMPushLogsRequest } from "./pages/errorLogger/requestModels/LMPushLogsRequest"
+import {LMPushLogsRequest, LMSDKMeta, LMDeviceDetails, Log, LMStackTrace, LMSeverity} from "@likeminds.community/chat-js"
 class LMChatClient {
   private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;

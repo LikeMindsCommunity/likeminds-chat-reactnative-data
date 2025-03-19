@@ -30,10 +30,7 @@ import { ConversationState } from "src/enums";
 import { WidgetRO } from "../models/WidgetRO";
 import { Widget } from "../../shared/responseModels/Widget";
 import { LMLogDBModelRO, LMSDKMetaDBModelRO, LMStackTraceDBModelRO } from "../models/LogRO";
-import { LMSeverity } from "../../enums/LMSeverity";
-import { LMStackTrace } from "../../shared/responseModels/LMStackTrace";
-import { LMSDKMeta } from "../../shared/responseModels/LMSDKMeta";
-import { Log } from "../../shared/responseModels/Log";
+import {LMSeverity, LMStackTrace, LMSDKMeta, Log } from "@likeminds.community/chat-js"
 
 // convertToAppConfigRO method takes AppConfig and converts it to AppConfigRO
 export const convertToAppConfigRO = (): AppConfigRO => {
