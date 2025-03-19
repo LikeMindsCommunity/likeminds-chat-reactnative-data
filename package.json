@@ -1,7 +1,7 @@
 {
   "name": "@likeminds.community/chat-rn",
-  "versionCode": "24",
-  "version": "1.9.0",
+  "versionCode": "25",
+  "version": "1.10.0",
   "description": "LikeMinds ReactNative SDK for chat APIs",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -27,20 +27,26 @@
     "eslint": "^8.51.0",
     "microbundle": "^0.15.1",
     "prettier": "^3.0.3",
+    "react": ">=18.2.0",
+    "react-native": ">=0.71.1",
     "ts-loader": "^9.4.2",
     "webpack": "^5.83.0",
     "webpack-cli": "^5.1.1"
+  },
+  "peerDependencies": {
+    "@react-native-community/netinfo": ">=9.3.10",
+    "react": ">=18.2.0",
+    "react-native": ">=0.71.1",
+    "react-native-device-info": ">=10.4.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LikeMindsCommunity/ReactNative-Chat-Data.git"
   },
   "dependencies": {
-    "@likeminds.community/chat-js": "1.14.0",
-    "axios": "0.22.0",
+    "@likeminds.community/chat-js": "1.15.0",
+    "axios": ">=0.22.0",
     "firebase": "10.1.0",
-    "react": "18.2.0",
-    "react-native": "0.72.4",
     "realm": "11.10.2"
   }
 }

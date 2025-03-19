@@ -177,10 +177,16 @@ import { ChatroomRO } from "./localDb/models/ChatroomRO";
 import { Attachment } from "./shared/responseModels/Attachment";
 import UpdateConversationDataRequest from "./localDb/models/requestModels/UpdateConversationDataRequest";
 import UpdateAttachmentRequest from "./localDb/models/requestModels/UpdateAttachmentRequest";
-
+import { clearLogs, getLogs, insertLog } from "./localDb/db/queries/logService";
+import { LMClearLogsRequest } from "./localDb/models/requestModels/LMClearLogsRequest";
+import LMChatLogger from "./pages/errorLogger/LMChatLogger";
+import LMInitiateLoggerRequest from "./pages/errorLogger/requestModels/LMInitiateLoggerRequest";
+import {LMPushLogsRequest, LMSDKMeta, LMDeviceDetails, Log, LMStackTrace, LMSeverity} from "@likeminds.community/chat-js"
 class LMChatClient {
   private static versionCode: number | null = null;
   private static filterConversationState: number[] | null = null;
+  private static initiateLoggerRequest: LMInitiateLoggerRequest | null = null; 
+
   // private static apiKey: string | null = null;
   public static dlClient: DLClient;
   private networkLibrary: NetworkLibrary;
@@ -238,6 +244,12 @@ class LMChatClient {
     return this;
   }
 
+
+  static setInitiateLoggerRequest(initiateLoggerRequest: LMInitiateLoggerRequest): typeof LMChatClient {
+    this.initiateLoggerRequest = initiateLoggerRequest;
+    return this;
+  }
+
   public static build(): LMChatClient {
     // Perform any necessary validation or configuration checks
     if (!this.versionCode) {
@@ -258,7 +270,10 @@ class LMChatClient {
       xSdkSource: "chat",
       excludedConversationStates:[]
     });
-
+    
+    if (this.initiateLoggerRequest) {
+      LMChatLogger.initialize(this.initiateLoggerRequest);
+    }
     setFilterConversationState(this.filterConversationState  ?? [] );
 
     const lmChatClient = new LMChatClient();
@@ -945,6 +960,18 @@ class LMChatClient {
     return getUserSchema();
   }
 
+  async insertLog(request: Log) {
+    return insertLog(request)
+  }
+
+  async getLogs() {
+    return getLogs()
+  }
+
+  async clearLogs(request: LMClearLogsRequest) {
+    clearLogs(request)
+  }
+
   // Method to set user schema
   async setUserSchema(userUniqueID: string, userName: string, apiKey:string) {
     return setUserSchema(userUniqueID, userName, apiKey);
@@ -953,6 +980,19 @@ class LMChatClient {
   async setChatroomIdWithAIChatbot(chatroomID: string): Promise<LMResponse<any>> {
     return setChatroomIdWithAIChatbot(chatroomID);
   }
+
+  getErrorLoggerInstance() {
+    return LMChatLogger.getInstance();
+  }
+
+  async flushLogs() {
+    return LMChatLogger.flushLogs(LMChatClient.dlClient);
+  }
+
+  async handleException(exception: Error, stackTrace: LMStackTrace, severity: LMSeverity) {
+    return LMChatLogger.handleException(exception, stackTrace, severity);
+  }
+
   
 }
 
@@ -968,4 +1008,9 @@ export {
   LMSDKCallbacks,
   InitUserWithUuid,
   ValidateUser,
+  LMDeviceDetails,
+  LMPushLogsRequest,
+  LMSDKMeta,
+  LMSeverity,
+  LMStackTrace
 };

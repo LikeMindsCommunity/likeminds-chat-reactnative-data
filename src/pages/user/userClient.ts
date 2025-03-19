@@ -1,4 +1,4 @@
-import DLClient from "@likeminds.community/chat-js";
+import DLClient, { LMSeverity } from "@likeminds.community/chat-js";
 import LMResponse from "src/core/services/lmresponse";
 import { ModelConverter } from "../../utils/ModelConverter";
 import {
@@ -17,6 +17,7 @@ import { Nothing } from "src/shared/responseModels/Nothing";
 import { API } from "src/shared/constants/api.constant";
 import { AddMemberToCohort } from "./responseModels/AddMemberToCohort";
 import { clearDb } from "src/localDb/db/queries/appConfig";
+import LMChatLogger from "../errorLogger/LMChatLogger";
 
 class UserClient {
   async initiateUser(
@@ -37,6 +38,14 @@ class UserClient {
       await clearDb();
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -54,6 +63,14 @@ class UserClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
@@ -78,6 +95,11 @@ class UserClient {
         return new LMResponse<Nothing>(responseData, null, true);
       })
       .catch((error) => {
+        LMChatLogger.handleException(
+          error,
+          error?.stack,
+          LMSeverity.ERROR
+        )
         return new LMResponse<Nothing>(
           null,
           error.message || "An error occurred",
@@ -95,6 +117,14 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetMemberStateResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<GetMemberStateResponse>(
         null,
         error.message || "An error occured",
@@ -113,6 +143,14 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchMembersResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<SearchMembersResponse>(
         null,
         error.message || "An error occured",
@@ -131,6 +169,14 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<GetAllMembersResponse>(
         null,
         error.message || "An error occured",
@@ -148,6 +194,14 @@ class UserClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
+      await LMChatLogger?.handleException(
+        error,
+        {
+          exception: error,
+          trace: error?.stack
+        },
+        LMSeverity.ERROR
+      )
       return new LMResponse<Nothing>(
         null,
         error.message || "An error occured",
