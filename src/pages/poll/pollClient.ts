@@ -30,9 +30,12 @@ class PollClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<PostPollConversationResponse>(
@@ -53,9 +56,12 @@ class PollClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetPollUsersResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetPollUsersResponse>(
@@ -76,9 +82,12 @@ class PollClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<AddPollResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<AddPollResponse>(
@@ -98,9 +107,12 @@ class PollClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(

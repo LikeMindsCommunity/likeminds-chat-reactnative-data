@@ -56,9 +56,12 @@ class HomeFeedClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<HomeFeedResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<HomeFeedResponse>(
@@ -79,9 +82,12 @@ class HomeFeedClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetInvitesResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetInvitesResponse>(
@@ -101,9 +107,12 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -123,9 +132,12 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -145,9 +157,12 @@ class HomeFeedClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -162,9 +177,12 @@ class HomeFeedClient {
     try {
       return dlClient.fbInstance();
     } catch (error) {
-      LMChatLogger.handleException(
+      LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return error.message;
@@ -175,9 +193,12 @@ class HomeFeedClient {
     try {
       return dlClient.homeFeedListener(callback, route);
     } catch (error) {
-      LMChatLogger.handleException(
+      LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return error.message;

@@ -38,9 +38,12 @@ class UserClient {
       await clearDb();
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -60,9 +63,12 @@ class UserClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -111,9 +117,12 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetMemberStateResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetMemberStateResponse>(
@@ -134,9 +143,12 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchMembersResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<SearchMembersResponse>(
@@ -157,9 +169,12 @@ class UserClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetAllMembersResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetAllMembersResponse>(
@@ -179,9 +194,12 @@ class UserClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(

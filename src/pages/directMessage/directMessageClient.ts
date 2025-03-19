@@ -32,9 +32,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<FetchDMResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<FetchDMResponse>(
@@ -55,9 +58,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DMStatusResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<DMStatusResponse>(
@@ -92,9 +98,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SendDMRequestResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<SendDMRequestResponse>(
@@ -115,9 +124,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<BlockDMRequestResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<BlockDMRequestResponse>(
@@ -137,9 +149,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<CheckDMTabResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<CheckDMTabResponse>(
@@ -160,9 +175,12 @@ class DirectMessageClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetDMFeedResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetDMFeedResponse>(

@@ -16,9 +16,12 @@ class ExploreFeedClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<ExploreFeedResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<ExploreFeedResponse>(

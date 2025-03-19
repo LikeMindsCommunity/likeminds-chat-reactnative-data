@@ -20,9 +20,12 @@ class SearchClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<SearchChatroomResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<SearchChatroomResponse>(
@@ -47,9 +50,12 @@ class SearchClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<SearchConversationResponse>(

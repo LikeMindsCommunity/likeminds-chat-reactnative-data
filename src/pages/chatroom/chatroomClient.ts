@@ -55,9 +55,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -118,9 +121,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -145,9 +151,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<ShareChatroomUrlResponse>(
@@ -173,9 +182,12 @@ class ChatroomClient {
       );
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -196,9 +208,12 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetTaggingListResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetTaggingListResponse>(
@@ -218,9 +233,12 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetAIChatbotsResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetAIChatbotsResponse>(
@@ -245,9 +263,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetConversationsResponse>(
@@ -272,9 +293,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<PostConversationsResponse>(
@@ -307,9 +331,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<EditConversationResponse>(
@@ -334,9 +361,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<DeleteConversationsResponse>(
@@ -356,9 +386,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -378,9 +411,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -402,9 +438,12 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<DecodeUrlResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<DecodeUrlResponse>(
@@ -425,9 +464,12 @@ class ChatroomClient {
         ModelConverter.responseBodyParser(resp);
       return new LMResponse<GetReportTagsResponse>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<GetReportTagsResponse>(
@@ -447,9 +489,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -469,9 +514,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -491,9 +539,12 @@ class ChatroomClient {
       const convertedResp: Nothing = ModelConverter.responseBodyParser(resp);
       return new LMResponse<Nothing>(convertedResp, null, true);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<Nothing>(
@@ -518,9 +569,12 @@ class ChatroomClient {
         true
       );
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return new LMResponse<FetchConversationResponse>(
@@ -538,9 +592,12 @@ class ChatroomClient {
     try {
       return await dlClient.chatroomSeenWithUuid(chatroomSeen);
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return null;
@@ -569,9 +626,12 @@ class ChatroomClient {
       );
       return res;
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return null
@@ -585,9 +645,12 @@ class ChatroomClient {
       const DB_RESPONSE = val?.data;
       return { dbRes: DB_RESPONSE };
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       return { dbRes: null };
@@ -605,9 +668,12 @@ class ChatroomClient {
       }
       return count;
     } catch (error) {
-      await LMChatLogger.handleException(
+      await LMChatLogger?.handleException(
         error,
-        error?.stack,
+        {
+          exception: error,
+          trace: error?.stack
+        },
         LMSeverity.ERROR
       )
       console.log(error);
