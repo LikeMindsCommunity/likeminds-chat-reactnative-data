@@ -1,9 +1,10 @@
+import { Widget } from "../../../shared/responseModels/Widget";
 import { Conversation } from "../../../shared/responseModels/Conversation";
 export default class UpdateConversationDataRequest {
     conversation: Conversation;
-    widgets?: Record<string, any>;
+    widgets?: Widget
 
-    constructor(conversation: Conversation, widgets?: Record<string, any>) {
+    constructor(conversation: Conversation, widgets?: Widget) {
         this.conversation = conversation;
         this.widgets = widgets;
     }
@@ -15,14 +16,14 @@ export default class UpdateConversationDataRequest {
 
 class UpdateConversationDataRequestBuilder {
     private conversation: Conversation;
-    private widgets: Record<string, any>;
+    private widgets: Widget
 
     public setConversation(conversation: Conversation): UpdateConversationDataRequestBuilder {
         this.conversation = conversation;
         return this;
     }
 
-    public setWidgets(widgets: Record<string, any>): UpdateConversationDataRequestBuilder {
+    public setWidgets(widgets: Widget): UpdateConversationDataRequestBuilder {
         this.widgets = widgets;
         return this;
     }
