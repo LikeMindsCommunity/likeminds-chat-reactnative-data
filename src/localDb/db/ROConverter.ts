@@ -553,16 +553,16 @@ export const convertToChatroomRO = (
 
 export const convertToLMStackTraceDBModel = (lmStackTrace: LMStackTrace): LMStackTraceDBModelRO => {
   return {
-    exception: lmStackTrace?.exception?.toString(),
-    trace: lmStackTrace?.trace?.toString(),
+    exception: lmStackTrace?.exception?.toString() ?? "",
+    trace: lmStackTrace?.trace?.toString() ?? "",
     ...dummyKeys(lmStackTrace)
   }
 }
 
 export const convertToLMSDKMetaDBModel = (lmSDKMeta: LMSDKMeta): LMSDKMetaDBModelRO => {
   return {
-    dataLayerVersion: lmSDKMeta?.dataLayerVersion?.toString(),
-    coreVersion: lmSDKMeta?.coreVersion?.toString(),
+    dataLayerVersion: lmSDKMeta?.dataLayerVersion?.toString() ?? "",
+    coreVersion: lmSDKMeta?.coreVersion?.toString() ?? "",
     ...dummyKeys(lmSDKMeta)
   }
 }
