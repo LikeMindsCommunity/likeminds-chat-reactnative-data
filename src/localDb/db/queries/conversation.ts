@@ -124,8 +124,8 @@ export async function saveConversationData(
         // save conversation widget
         const conversationCreatorRO = convertToMemberRO(creator, communityId);
         const conversationWidget = conversation.widgetId
-          ? data.widgets[conversation.widgetId] ?? Object.keys(widgets ?? {})?.length ? widgets[conversation.widgetId] ?? null : null
-          : null;
+        ? data.widgets[conversation.widgetId] ?? (Object.keys(widgets ?? {})?.length ? widgets[conversation.widgetId] ?? null : null)
+        : null;
         let conversationWidgetRO;
         if (Object.keys(conversationWidget || {}).length > 0) {
           conversationWidgetRO = convertToWidget(
@@ -480,7 +480,7 @@ export async function updateConversationData(
 
 
       const memberRO = convertToMemberRO(conversation?.member, conversation?.communityId);
-      const conversationWidget = conversation.widgetId ? widgets[conversation.widgetId] : null;
+      const conversationWidget = (conversation.widgetId && widgets) ? widgets : null;
       let conversationWidgetRO;
       if (Object.keys(conversationWidget || {}).length > 0) {
         conversationWidgetRO = convertToWidget(

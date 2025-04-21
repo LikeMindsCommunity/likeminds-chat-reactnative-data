@@ -820,15 +820,17 @@ class LMChatClient {
   // Method to save conversation in localDB
   async saveConversationData(
     data: SyncConversationResponse,
-    chatroomData: Chatroom[],
+    chatroomData: { [key: string]: Chatroom },
     conversationData: ConversationModel[],
-    communityId: string
+    communityId: string,
+    widgets?: { [key: string]: any }
   ) {
     return saveConversationData(
       data,
       chatroomData,
       conversationData,
-      communityId
+      communityId,
+      widgets
     );
   }
 
